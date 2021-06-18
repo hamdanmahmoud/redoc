@@ -9,14 +9,13 @@ export interface ExampleProps {
   example: ExampleModel;
   mimeType: string;
   editable?: boolean;
-  handleRequestBodyChange?: (string) => void;
 }
 
-export function Example({ example, mimeType, editable, handleRequestBodyChange }: ExampleProps) {
+export function Example({ example, mimeType, editable }: ExampleProps) {
   if (example.value === undefined && example.externalValueUrl) {
-    return <ExternalExample example={example} mimeType={mimeType} editable={editable}/>;
+    return <ExternalExample example={example} mimeType={mimeType} editable={editable} />;
   } else {
-    return <ExampleValue value={example.value} mimeType={mimeType} editable={editable} handleRequestBodyChange={handleRequestBodyChange}/>;
+    return <ExampleValue value={example.value} mimeType={mimeType} editable={editable} />;
   }
 }
 
@@ -43,5 +42,5 @@ export function ExternalExample({ example, mimeType, editable }: ExampleProps) {
     );
   }
 
-  return <ExampleValue value={value} mimeType={mimeType} editable={editable}/>;
+  return <ExampleValue value={value} mimeType={mimeType} editable={editable} />;
 }

@@ -12,7 +12,6 @@ export interface JsonProps {
   data: any;
   className?: string;
   editable?: boolean;
-  handleRequestBodyChange?: (string) => void;
 }
 
 const JsonViewerWrap = styled.div`
@@ -31,11 +30,11 @@ const StatusCodeSpan = styled.div<{ type: string }>`
   margin-bottom: 4px;
   width: 20%;
 
-  color: ${(props) => props.theme.colors.responses[props.type].color};
-  background-color: ${(props) => props.theme.colors.responses[props.type].backgroundColor};
+  color: ${(props) => props.theme.colors.responses[props.type]?.color};
+  background-color: ${(props) => props.theme.colors.responses[props.type]?.backgroundColor};
   &:focus {
     outline: auto;
-    outline-color: ${(props) => props.theme.colors.responses[props.type].color};
+    outline-color: ${(props) => props.theme.colors.responses[props.type]?.color};
   }
 `;
 
@@ -44,9 +43,6 @@ class Json extends React.PureComponent<JsonProps> {
 
   constructor(props) {
     super(props);
-
-    // workaround to update Operation state from here
-    this.props.handleRequestBodyChange?.(JSON.stringify(this.props.data.content || this.props.data));
   }
 
   render() {
@@ -75,7 +71,6 @@ class Json extends React.PureComponent<JsonProps> {
                   __html: jsonToHTML(this.props.data.content || this.props.data, options.jsonSampleExpandLevel),
                 }}
                 contentEditable={this.props.editable} // <-- TODO ref: this line right here
-                onInput={(e) => this.props.handleRequestBodyChange?.(e.currentTarget.textContent)}
                 spellCheck={false}
               />
             </>
@@ -104,7 +99,6 @@ class Json extends React.PureComponent<JsonProps> {
                 __html: jsonToHTML(this.props.data.content || this.props.data, options.jsonSampleExpandLevel),
               }}
               contentEditable={this.props.editable}
-              onInput={(e) => this.props.handleRequestBodyChange?.(e.currentTarget.textContent)}
               spellCheck={false}
             />
           </>

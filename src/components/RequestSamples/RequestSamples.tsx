@@ -9,7 +9,6 @@ import { OptionsContext } from '../OptionsProvider';
 export interface RequestSamplesProps {
   operation: OperationModel;
   editable?: boolean;
-  handleRequestBodyChange: (string) => void;
 }
 
 export interface RequestSamplesState {
@@ -31,29 +30,29 @@ export class RequestSamples extends React.Component<RequestSamplesProps, Request
   }
 
   render() {
-    const { operation, editable, handleRequestBodyChange } = this.props;
+    const { operation, editable } = this.props;
     const samples = operation.codeSamples;
 
     const hasSamples = samples.length > 0;
     return (
       (
         <div>
-          {editable && <RightPanelHeader> {`Request Body`} </RightPanelHeader> }
+          {editable && <RightPanelHeader> {`Request Body`} </RightPanelHeader>}
           {editable
-          ? <div>
-              <PayloadSamples editable={editable} handleRequestBodyChange={handleRequestBodyChange}/>
+            ? <div>
+              <PayloadSamples editable={editable} />
             </div>
-          : <>
-          {
-              hasSamples ? samples.map(sample => (
-                isPayloadSample(sample) ? (
+            : <>
+              {
+                hasSamples ? samples.map(sample => (
+                  isPayloadSample(sample) ? (
                     <div>
-                      <PayloadSamples content={sample.requestBodyContent} editable={editable} handleRequestBodyChange={handleRequestBodyChange}/>
+                      <PayloadSamples content={sample.requestBodyContent} editable={editable} />
                     </div>
                   ) : null
-            )) : `No request samples to display`} 
+                )) : `No request samples to display`}
             </>
-            }
+          }
         </div>
       ) ||
       null

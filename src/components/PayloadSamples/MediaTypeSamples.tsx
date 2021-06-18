@@ -12,7 +12,6 @@ export interface PayloadSamplesProps {
   mediaType: MediaTypeModel;
   renderDropdown: (props: DropdownProps) => JSX.Element;
   editable?: boolean;
-  handleRequestBodyChange?: (string) => void;
 }
 
 interface MediaTypeSamplesState {
@@ -33,8 +32,7 @@ export class MediaTypeSamples extends React.Component<PayloadSamplesProps, Media
     const examples = this.props.mediaType.examples || {};
     const mimeType = this.props.mediaType.name;
     const editable = this.props.editable;
-    const handleRequestBodyChange = this.props.handleRequestBodyChange;
-    
+
     const noSample = <NoSampleLabel>No sample</NoSampleLabel>;
 
     const examplesNames = Object.keys(examples);
@@ -66,7 +64,7 @@ export class MediaTypeSamples extends React.Component<PayloadSamplesProps, Media
           </DropdownWrapper>
           <div>
             {description && <Markdown source={description} />}
-            <Example example={example} mimeType={mimeType} editable={editable} handleRequestBodyChange={handleRequestBodyChange}/>
+            <Example example={example} mimeType={mimeType} editable={editable} />
           </div>
         </SamplesWrapper>
       );
@@ -75,7 +73,7 @@ export class MediaTypeSamples extends React.Component<PayloadSamplesProps, Media
       return (
         <SamplesWrapper>
           {example.description && <Markdown source={example.description} />}
-          <Example example={example} mimeType={mimeType} editable={editable}/>
+          <Example example={example} mimeType={mimeType} editable={editable} />
         </SamplesWrapper>
       );
     }

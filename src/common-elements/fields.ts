@@ -38,11 +38,11 @@ export const TypePrefix = styled(FieldLabel)`
 `;
 
 export const TypeName = styled(FieldLabel)`
-  color: ${props => props.theme.schema.typeNameColor};
+  color: ${props => props.color || props.theme.schema.typeNameColor};
 `;
 
 export const TypeTitle = styled(FieldLabel)`
-  color: ${props => props.theme.schema.typeTitleColor};
+  color: ${props => props.color || props.theme.schema.typeTitleColor};
   word-break: break-word;
 `;
 

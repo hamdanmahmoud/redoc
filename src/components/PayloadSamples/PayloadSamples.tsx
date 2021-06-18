@@ -13,7 +13,6 @@ export interface PayloadSamplesProps {
   content?: MediaContentModel;
   editable?: boolean;
   customData?: any;
-  handleRequestBodyChange?: (string) => void;
 }
 
 @observer
@@ -22,14 +21,13 @@ export class PayloadSamples extends React.Component<PayloadSamplesProps> {
     const mimeContent = this.props.content;
     const editable = this.props.editable;
     const customData = this.props.customData;
-    const handleRequestBodyChange = this.props.handleRequestBodyChange;
-    
+
     if (customData) {
-      return <JsonViewer data={customData} editable={editable} handleRequestBodyChange={handleRequestBodyChange}/>
+      return <JsonViewer data={customData} editable={editable} />
     }
-    
+
     if (mimeContent === undefined) {
-      return <JsonViewer data={defaultJSON} editable={editable} handleRequestBodyChange={handleRequestBodyChange}/>
+      return <JsonViewer data={defaultJSON} editable={editable} />
     }
 
     return (
@@ -40,7 +38,6 @@ export class PayloadSamples extends React.Component<PayloadSamplesProps> {
             mediaType={mediaType}
             renderDropdown={this.renderDropdown}
             editable={editable}
-            handleRequestBodyChange={handleRequestBodyChange}
           />
         )}
       </MediaTypesSwitch>
