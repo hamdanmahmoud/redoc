@@ -29,7 +29,7 @@ text-align: left;
 padding: 1.7% 0% 0% 8.5%;
 
 
-`;  
+`;
 const SideMenuHeader = styled.div`
 color: white;
 font-weight: 100;
@@ -40,13 +40,13 @@ text-align: left;
 padding-top: 8%;
 padding-left: 6%;
 font-size: 18px;
-`;  
+`;
 export class Redoc extends React.Component<RedocProps> {
   static propTypes = {
     store: PropTypes.instanceOf(AppStore).isRequired,
   };
 
-componentDidMount() {
+  componentDidMount() {
     this.props.store.onDidMount();
   }
 
@@ -65,7 +65,7 @@ componentDidMount() {
           <OptionsProvider value={options}>
             <RedocWrap className="redoc-wrap">
               <StickyResponsiveSidebar menu={menu} className="menu-content">
-              <SideMenuHeader> API DOCS</SideMenuHeader>
+                <SideMenuHeader>API DOCS</SideMenuHeader>
                 <ApiLogo info={spec.info} />
                 {(!options.disableSearch && (
                   <SearchBox
@@ -79,8 +79,7 @@ componentDidMount() {
                 <SideMenu menu={menu} />
               </StickyResponsiveSidebar>
               <ApiContentWrap className="api-content">
-              <NavBarHeader> 
-                Application Service Engine
+                <NavBarHeader>
                 </NavBarHeader>
                 <ApiInfo store={store} />
                 <ContentItems items={menu.items as any} />
