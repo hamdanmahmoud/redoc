@@ -7,6 +7,7 @@ export {
   StyledDropdown,
   SimpleDropdown,
   DropdownOption,
+  ShelfIcon,
 } from './common-elements/';
 export { OpenAPIEncoding } from './types';
 export * from './services';
