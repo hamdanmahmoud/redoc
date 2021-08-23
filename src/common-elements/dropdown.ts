@@ -17,7 +17,7 @@ export interface DropdownProps {
 export const StyledDropdown = styled(Dropdown)`
   && {
     box-sizing: border-box;
-    min-width: 100px;
+    min-width: 8rem;
     outline: none;
     display: inline-block;
     border-radius: 2px;

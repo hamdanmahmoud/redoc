@@ -11,7 +11,6 @@ import { ObjectSchema } from './ObjectSchema';
 import { OneOfSchema } from './OneOfSchema';
 
 import { l } from '../../services/Labels';
-
 export interface SchemaOptions {
   showTitle?: boolean;
   skipReadOnly?: boolean;
@@ -26,6 +25,7 @@ export interface SchemaProps extends SchemaOptions {
 export class Schema extends React.Component<Partial<SchemaProps>> {
   render() {
     const { schema } = this.props;
+
     if (!schema) {
       return <em> Schema not provided </em>;
     }
