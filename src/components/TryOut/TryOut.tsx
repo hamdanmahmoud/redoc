@@ -153,9 +153,9 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
                 onChange={(value) => onChange && onChange(name, value, undefined, parents, item.in)}
                 />
                 : <Input
-                placeholder={`${example || description || ''}`}
+                placeholder={`${example || description || schema.default || ''}`} // TODO: remove default when we support defaultValue
                 type={format}
-                defaultValue={schema.default}
+                // defaultValue={schema.default}
                 onChange={(e) => onChange && onChange(name, e.target.value, undefined, parents, item.in)}/>
             );
         case FormItemType.array: {
@@ -349,6 +349,31 @@ const getObjectChange = (object, name, value, indexInArray, parents: string[] = 
         : getNestedChange(object, name, value, indexInArray, parents || []);
 }
 
+const getCleanRequest = (request) => {
+    const cleanEmptyFields = (obj) => {
+        const entries = Object.entries(obj);
+        if (entries.length === 0) return obj;
+  
+        entries.forEach(
+          ([key, value]) => {
+            _.isEmpty(obj[key].replace(/\s/g, ""))
+            ? delete obj[key]
+            : value
+          }
+        );
+  
+        return obj;
+    }
+  
+    return {
+        ...request,
+        queryParams: cleanEmptyFields(request.queryParams),
+        pathParams: cleanEmptyFields(request.pathParams),
+        cookieParams: cleanEmptyFields(request.cookieParams),
+        headers: cleanEmptyFields(request.headers)
+    }
+  } 
+
 interface TryOutProps {
     operation: OperationModel;
     customResponse: any;
@@ -485,7 +510,7 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
                 </>
             )}
             <ResponseSamples customResponse={customResponse} />
-            <RunButton disabled={pendingRequest} onClick={() => handleApiCall(request)}>{`Run`}</RunButton>
+            <RunButton disabled={pendingRequest} onClick={() => handleApiCall(getCleanRequest(request))}>{`Run`}</RunButton>
         </>
     );
 };
