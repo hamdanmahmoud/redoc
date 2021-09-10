@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import styled, { media } from '../../styled-components';
 
-import { Link, UnderlinedHeader } from '../../common-elements/';
+import { UnderlinedHeader } from '../../common-elements/';
 import { SecurityRequirementModel } from '../../services/models/SecurityRequirement';
 import { linksCss } from '../Markdown/styled.elements';
 
@@ -70,7 +70,6 @@ export class SecurityRequirement extends React.PureComponent<SecurityRequirement
         {security.schemes.map(scheme => {
           return (
             <SecurityRequirementAndWrap key={scheme.id}>
-              <Link to={scheme.sectionId}>{scheme.id}</Link>
               {scheme.scopes.length > 0 && ' ('}
               {scheme.scopes.map(scope => (
                 <ScopeName key={scope}>{scope}</ScopeName>

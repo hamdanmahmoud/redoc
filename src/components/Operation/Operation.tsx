@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as _ from 'lodash';
 
 import { Badge, RightPanel, H2, MiddlePanel, Row, Tab, TabList, TabPanel, Tabs } from '../../common-elements';
-import { ShareLink } from '../../common-elements/linkify';
 import { OperationModel } from '../../services/models';
 import styled from '../../styled-components';
 import { CallbacksList } from '../Callbacks';
@@ -246,7 +245,6 @@ export class Operation extends React.Component<OperationProps, OperationState> {
           <OperationRow>
             <MiddlePanel>
               <H2>
-                <ShareLink to={operation.id} />
                 {summary} {deprecated && <Badge type="warning"> Deprecated </Badge>}
                 {isWebhook && <Badge type="primary"> Webhook </Badge>}
               </H2>
