@@ -79,7 +79,6 @@ export const MenuItemUl = styled.ul<{ expanded: boolean }>`
   background-color: #1E4F70;
   border-bottom: 1px solid #4E7A93 !important;
 
-
   & & {
     font-size: 0.929em;
   }

@@ -6,31 +6,31 @@ import { MenuItemLabel } from '../SideMenu/styled.elements';
 
 export const SearchWrap = styled.div`
   padding: 5px 0;
-  border-bottom: 1px solid #4E7A93;
-padding-bottom: 30px;
+  border-bottom: 1px solid white;
+  padding-bottom: 30px;
 `;
 
 export const SearchInput = styled.input.attrs(() => ({
   className: 'search-input',
 }))`
-margin: 9.5% 0% 0% 5.5%;
-background: white;
-border-radius: 4px;
-max-height: 100%;
-width: 89%;
-box-sizing: border-box;
-padding: 5px 10px 5px 35px;
-border: 0;
-    border-bottom-color: #4E7A93;
-    border-bottom-style: none;
-    border-bottom-width: 0px;
-border-bottom: 1px solid #4E7A93;
-font-family: Arial;
-font-weight: 100;
-font-size: 14px;
-color: #58585B;
-outline: none;
-line-height:1.5em;
+  margin: 9.5% 0% 0% 5.5%;
+  background: white;
+  border-radius: 4px;
+  max-height: 100%;
+  width: 89%;
+  box-sizing: border-box;
+  padding: 5px 10px 5px 35px;
+  border: 0;
+  border-bottom-color: #4E7A93;
+  border-bottom-style: none;
+  border-bottom-width: 0px;
+  border-bottom: 1px solid #4E7A93;
+  font-family: Arial;
+  font-weight: 100;
+  font-size: 14px;
+  color: #58585B;
+  outline: none;
+  line-height:1.5em;
 `;
 
 export const SearchIcon = styled((props: { className?: string }) => (

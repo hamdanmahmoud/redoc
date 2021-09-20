@@ -40,7 +40,6 @@ export class RedocStandalone extends React.PureComponent<RedocStandaloneProps> {
   render() {
     const { spec, specUrl, options = {}, onLoaded } = this.props;
     const hideLoading = options.hideLoading !== undefined;
-
     const normalizedOpts = new RedocNormalizedOptions(options);
 
     return (

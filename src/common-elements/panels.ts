@@ -51,9 +51,10 @@ export const RightPanel = styled.div`
   color: ${({ theme }) => theme.rightPanel.textColor};
   padding: 40px ${props => props.theme.spacing.sectionHorizontal}px;
   background: white;
-  box-shadow: 0px 0px 9px 5px #DDDDDD;
+  border-left: 3px solid #017CAD;
+  box-shadow: 0 10px 24px -6px rgb(0 0 0 / 25%);
   min-height: 470px;
-width:43.75%;
+  width:43.75%;
 
   ${media.lessThan('medium', true)`
     width: 100%;

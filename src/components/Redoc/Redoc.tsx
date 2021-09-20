@@ -18,6 +18,7 @@ import styled from '../../styled-components';
 export interface RedocProps {
   store: AppStore;
 }
+
 const NavBarHeader = styled.div`
 color: #58585B;
 font-weight: lighter;
@@ -27,9 +28,8 @@ border-bottom: 1px #F2F2F2 solid;
 font-size: 24px;
 text-align: left;
 padding: 1.7% 0% 0% 8.5%;
-
-
 `;
+
 const SideMenuHeader = styled.div`
 color: white;
 font-weight: 100;
@@ -41,6 +41,7 @@ padding-top: 8%;
 padding-left: 6%;
 font-size: 18px;
 `;
+
 export class Redoc extends React.Component<RedocProps> {
   static propTypes = {
     store: PropTypes.instanceOf(AppStore).isRequired,

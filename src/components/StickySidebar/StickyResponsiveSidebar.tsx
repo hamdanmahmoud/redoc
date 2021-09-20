@@ -28,7 +28,7 @@ const stickyfill = Stickyfill && Stickyfill();
 const StyledStickySidebar = styled.div<{ open?: boolean }>`
   width: ${props => props.theme.sidebar.width};
   // background-color: #056682;
-  background-color:  #1E4F70;
+  background-color:  ${props => props.theme.sidebar.backgroundColor || '#1E4F70'};
   overflow: hidden;
   display: flex;
   flex-direction: column;

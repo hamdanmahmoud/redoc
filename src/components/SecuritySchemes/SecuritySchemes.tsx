@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { SecuritySchemesModel } from '../../services/models';
 
-import { H2, MiddlePanel, Row, Section, ShareLink } from '../../common-elements';
+import { H2, MiddlePanel, Row, Section } from '../../common-elements';
 import { OpenAPISecurityScheme } from '../../types';
 import { titleize } from '../../utils/helpers';
 import { Markdown } from '../Markdown/Markdown';
@@ -72,7 +72,6 @@ export class SecurityDefs extends React.PureComponent<SecurityDefsProps> {
         <Row>
           <MiddlePanel>
             <H2>
-              <ShareLink to={scheme.sectionId} />
               {scheme.id}
             </H2>
             <Markdown source={scheme.description || ''} />

@@ -3,7 +3,7 @@ const defaultTheme: ThemeInterface = {
   spacing: {
     unit: 5,
     sectionHorizontal: ({ spacing }) => spacing.unit * 8,
-    sectionVertical: ({ spacing }) => spacing.unit * 8,
+    sectionVertical: ({ spacing }) => spacing.unit * 4,
   },
   breakpoints: {
     small: '50rem',
