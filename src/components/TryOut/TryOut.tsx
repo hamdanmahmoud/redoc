@@ -78,6 +78,21 @@ const Input = styled.input`
   }
 `;
 
+const Dropdown = styled.select`
+  padding: 0.5em;
+  margin: 0.5em 0em 0.5em 0;
+  width: 8rem;
+  font-size: 13px;
+  color: #1e1e1e;
+  background: white;
+  border-style: solid;
+  border-width: thin;
+  border-radius: 4px;
+  ::placeholder {
+    color: grey;
+  }
+`;
+
 const RunButton = styled.button<{ disabled: boolean }>`
   border-radius: 20px;
   line-height: 2.5em;
@@ -99,6 +114,7 @@ enum RequestObjectType {
 enum FormItemType {
     string = 'string',
     integer = 'integer',
+    boolean = 'boolean',
     array = 'array',
     any = 'any',
     object = 'object',
@@ -158,6 +174,16 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
                 // defaultValue={schema.default}
                 onChange={(e) => onChange && onChange(name, e.target.value, undefined, parents, item.in)}/>
             );
+        case FormItemType.boolean: {
+            return (
+                <Dropdown 
+                onChange={(selectObject) => onChange && onChange(name, selectObject.target.value, undefined, parents, item.in)}
+                >
+                    <option value="false">false</option>
+                    <option value="true">true</option>
+                </Dropdown>
+            );
+        }
         case FormItemType.array: {
             const { schema: subSchema } = schema;
             return <ArrayInputs name={name} schema={subSchema} required={required} onChange={onChange} parents={parents} />;
