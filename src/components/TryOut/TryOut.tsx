@@ -9,6 +9,7 @@ import { FieldModel, OperationModel, SchemaModel } from '../../services';
 import { DiscriminatorDropdown } from '../Schema/DiscriminatorDropdown';
 import { ShelfIcon } from '../../common-elements/shelfs';
 import styled from '../../styled-components';
+import { OpenAPIParameterLocation } from '../../types';
 
 const ActionOnArrayButton = styled.button<{ disabled: boolean }>`
   border-radius: 20px;
@@ -159,8 +160,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
     const { schema, name, example, description, required, format = 'text' } = item;
 
     switch (schema.type) {
-        case FormItemType.string:
-        case FormItemType.integer:
+        case FormItemType.string: {
             return (
                 discriminator && discriminator.fieldName === name
                 ? <DiscriminatorDropdown
@@ -169,18 +169,38 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
                 onChange={(value) => onChange && onChange(name, value, undefined, parents, item.in)}
                 />
                 : <Input
-                placeholder={`${example || description || schema.default || ''}`} // TODO: remove default when we support defaultValue
+                placeholder={`${example || description || ''}`}
                 type={format}
-                // defaultValue={schema.default}
+                defaultValue={schema.default}
                 onChange={(e) => onChange && onChange(name, e.target.value, undefined, parents, item.in)}/>
             );
+        }
+        case FormItemType.integer: {
+            return (
+                <Input
+                placeholder={`${example || description || ''}`}
+                type={format}
+                defaultValue={schema.default}
+                onChange={(e) => onChange && onChange(name, !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value, undefined, parents, item.in)}/>
+            );
+        }
         case FormItemType.boolean: {
             return (
                 <Dropdown 
-                onChange={(selectObject) => onChange && onChange(name, selectObject.target.value, undefined, parents, item.in)}
+                onChange={(selectObject) => {onChange && onChange(name, selectObject.target.value === 'true' ? true : false, undefined, parents, item.in)}}
                 >
-                    <option value="false">false</option>
-                    <option value="true">true</option>
+                    {schema.default === false && (
+                        <>
+                            <option value="false">false</option>
+                            <option value="true">true</option>
+                        </>
+                    )}
+                    {schema.default === true && (
+                        <>
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </>
+                    )}
                 </Dropdown>
             );
         }
@@ -382,7 +402,7 @@ const getCleanRequest = (request) => {
   
         entries.forEach(
           ([key, value]) => {
-            _.isEmpty(obj[key].replace(/\s/g, ""))
+            typeof(obj[key]) === 'string' && _.isEmpty(obj[key].replace(/\s/g, ""))
             ? delete obj[key]
             : value
           }
@@ -410,6 +430,54 @@ interface TryOutProps {
 export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCall }: TryOutProps) => {
     const [request, setRequest] = React.useState({queryParams: {}, pathParams: {}, cookieParams: {}, headers: {}, body: {}});
 
+    const mapParameterLocationToRequestField = (paramLocation: OpenAPIParameterLocation | "body"): string => {
+        switch (paramLocation) {
+            case 'header': return 'headers';
+            case 'query': return 'queryParams';
+            case 'path': return 'pathParams';
+            case 'cookie': return 'cookieParams';
+            case 'body': return 'body';
+            default: throw Error(`Parameter does not support ${paramLocation} as location. Location can be one of: header, query, path, cookie, body.`);
+        }
+    }
+
+    React.useEffect(() => {
+        const defaultRequest = request;
+        operation.parameters?.forEach(
+            (param) => {
+                const { schema, name } = param;
+                if (schema.default !== undefined && param.in) {
+                    defaultRequest[mapParameterLocationToRequestField(param.in)][name] = schema.default;
+                }
+            }
+        );
+
+        const schema = operation.requestBody?.content?.active?.schema;
+
+        if (schema) {
+            const hasDiscriminator: boolean = schema!.oneOf ? true : false;
+            const hasOwnFields: boolean = schema!.fields && schema!.fields.length !== 0 ? true : false;
+            const hasOwnItems: boolean = schema!.items ? true : false;
+        
+            const fields: FieldModel[] | undefined = hasDiscriminator
+                ? schema!.oneOf![schema!.activeOneOf!].fields
+                : (hasOwnFields ? schema!.fields : (hasOwnItems ? schema!.items!.fields : []));
+        
+            if (fields?.length !== 0) {
+                fields?.forEach(
+                    (param) => {
+                        const { schema, name } = param;
+                        if (schema.default !== undefined && param.in) {
+                            defaultRequest[mapParameterLocationToRequestField(param.in)][name] = schema.default;
+                        }
+                    }
+                )
+            }
+        }
+
+        setRequest(defaultRequest);
+    }, []);
+
     const handleRequestChange = (type: RequestObjectType, change) => {
         setRequest(request => ({
             ...request,
@@ -418,7 +486,6 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
                 ...change
             }
         }));
-        
     }
 
     const onRequestInputChange = (type: RequestObjectType, name: string, value: any, indexInArray?: number, parents?: string[], location?: string) => {
