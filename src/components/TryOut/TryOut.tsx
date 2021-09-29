@@ -189,16 +189,16 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
                 <Dropdown 
                 onChange={(selectObject) => {onChange && onChange(name, selectObject.target.value === 'true' ? true : false, undefined, parents, item.in)}}
                 >
-                    {schema.default === false && (
-                        <>
-                            <option value="false">false</option>
-                            <option value="true">true</option>
-                        </>
-                    )}
                     {schema.default === true && (
                         <>
                             <option value="true">true</option>
                             <option value="false">false</option>
+                        </>
+                    )}
+                    {schema.default !== true && (
+                        <>
+                            <option value="false">false</option>
+                            <option value="true">true</option>
                         </>
                     )}
                 </Dropdown>
