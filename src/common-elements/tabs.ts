@@ -63,10 +63,9 @@ export const Tabs = styled(ReactTabs)`
   }
   > .react-tabs__tab-panel {
     background: white;
-    & > div,
     & > pre {
       background: transparent;
-    background-color: transparent;
+      background-color: transparent;
     }
 
     & > div > pre {
