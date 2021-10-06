@@ -79,6 +79,11 @@ const Input = styled.input`
   }
 `;
 
+const TextArea = styled.textarea`
+  margin: 1em 0em;
+  width: 100%;
+`;
+
 const Dropdown = styled.select`
   padding: 0.5em;
   margin: 0.5em 0em 0.5em 0;
@@ -328,40 +333,52 @@ const ParamsSection = ({ params, onHeaderChange }) => {
 
 interface SchemaSectionProps {
     schema?: SchemaModel;
+    contentType?: string;
     parents?: string[];
     onChange?: any;
     requestBody?: any;
     setRequestBody?: any;
 }
 
-const SchemaSection = observer(({ schema, onChange, parents = [] }: SchemaSectionProps) => {
+const SchemaSection = observer(({ schema, contentType, onChange, parents = [] }: SchemaSectionProps) => {
     if (!schema) return null;
 
-    const hasDiscriminator: boolean = schema!.oneOf ? true : false;
-    const hasOwnFields: boolean = schema!.fields && schema!.fields.length !== 0 ? true : false;
-    const hasOwnItems: boolean = schema!.items ? true : false;
-
-    const fields: FieldModel[] | undefined = hasDiscriminator
-        ? schema!.oneOf![schema!.activeOneOf!].fields
-        : (hasOwnFields ? schema!.fields : (hasOwnItems ? schema!.items!.fields : []));
-
-    if (!fields || fields.length === 0) {
-        // requestBody stays {}
-        return (<>Body has no fields, that usually means expected payload is binary (e.g. uploading images)</>);
+    switch (contentType) {
+        case 'text/plain': {
+            return (
+                <TextArea onChange={(e) => onChange(e.target.value)}/>
+            );
+        }
+        default: {
+            const hasDiscriminator: boolean = schema!.oneOf ? true : false;
+            const hasOwnFields: boolean = schema!.fields && schema!.fields.length !== 0 ? true : false;
+            const hasOwnItems: boolean = schema!.items ? true : false;
+        
+            const fields: FieldModel[] | undefined = hasDiscriminator
+                ? schema!.oneOf![schema!.activeOneOf!].fields
+                : (hasOwnFields ? schema!.fields : (hasOwnItems ? schema!.items!.fields : []));
+        
+            if (!fields || fields.length === 0) {
+                return (<>Body has no fields, that usually means expected payload is binary (e.g. uploading images)</>);
+            }
+        
+            return (
+                <FormSection 
+                    title={``}
+                    items={fields}
+                    parents={parents}
+                    onChange={onChange}
+                    discriminator={{
+                        fieldName: schema.discriminatorProp,
+                        parentSchema: schema,
+                    }}
+                />
+            );
+        }
     }
 
-    return (
-        <FormSection 
-            title={``}
-            items={fields}
-            parents={parents}
-            onChange={onChange}
-            discriminator={{
-                fieldName: schema.discriminatorProp,
-                parentSchema: schema,
-            }}
-        />
-    );
+    return null;
+
 });
 
 const getUpdatedArrayFromObject = (object, arrayFieldName, newValue, indexInArray) => {
@@ -427,7 +444,7 @@ interface TryOutProps {
     handleApiCall: (request: any) => void;
 }
 
-export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCall }: TryOutProps) => {
+export const TryOut = observer(({ operation, customResponse, pendingRequest, handleApiCall }: TryOutProps) => {
     const [request, setRequest] = React.useState({queryParams: {}, pathParams: {}, cookieParams: {}, headers: {}, body: {}});
 
     const mapParameterLocationToRequestField = (paramLocation: OpenAPIParameterLocation | "body"): string => {
@@ -441,6 +458,9 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
         }
     }
 
+    /**
+     * Following effect hook handles state management for default request parameters
+     */
     React.useEffect(() => {
         const defaultRequest = request;
         operation.parameters?.forEach(
@@ -538,6 +558,7 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
     reaction(
         () => operation && operation!.requestBody!?.content!?.active!?.schema!?.activeOneOf,
         (activeOneOf, prevActiveOneOf) => {
+            console.log(`Content active schema changed from ${prevActiveOneOf} to ${activeOneOf}`);
             const schema = operation && operation!.requestBody!?.content!?.active!?.schema;
             const discriminatorProp = schema!?.discriminatorProp;
             const discriminatorTitle = schema!?.oneOf![activeOneOf].title;
@@ -547,6 +568,17 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
                 ...request,
                 body: _.omit(_.omit(_.omit(request.body, fieldToBeRemoved), fieldToBeRemoved.toLowerCase()), fieldToBeRemoved.toUpperCase()) // super hacky, just for the moment
             });
+        }
+    )
+
+    reaction(
+        () => operation && operation!.requestBody!?.content!?.active!?.name,
+        (activeName, prevActiveName) => {
+            console.log(`Content type change from ${prevActiveName} to ${activeName}`);
+            setRequest({
+                ...request,
+                body: {}
+            })
         }
     )
 
@@ -598,7 +630,15 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
                     <TryOutHeader>Body</TryOutHeader>
                     <SchemaSection
                         schema={operation.requestBody.content!.active!.schema}
-                        onChange={(name, value, indexInArray, parents) => onRequestInputChange(RequestObjectType.BODY, name, value, indexInArray, parents)}
+                        contentType={operation.requestBody.content!.active!.name}
+                        onChange={
+                            operation.requestBody.content!.active!.name === 'application/json' 
+                            ? (name, value, indexInArray, parents) => onRequestInputChange(RequestObjectType.BODY, name, value, indexInArray, parents)
+                            : (value) => setRequest(request => ({ // 'text/plain'
+                                ...request,
+                                body: value
+                            }))
+                        }
                     />
                 </>
             )}
@@ -606,4 +646,4 @@ export const TryOut = ({ operation, customResponse, pendingRequest, handleApiCal
             <RunButton disabled={pendingRequest} onClick={() => handleApiCall(getCleanRequest(request))}>{`Run`}</RunButton>
         </>
     );
-};
+});

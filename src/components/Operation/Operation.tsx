@@ -161,7 +161,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
   };
 
   getCleanedObject = (obj) => {
-    if (!obj) return obj;
+    if (!obj || typeof(obj) !== 'object') return obj;
 
     // Cleans input array from any falsy values
     const getCleanedArray = (arr) => {
