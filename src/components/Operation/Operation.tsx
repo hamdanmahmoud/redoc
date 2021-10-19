@@ -54,7 +54,7 @@ export interface OperationProps {
 }
 
 export interface OperationState {
-  customResponse: any;
+  response: any;
   tabIndex: number;
   pendingRequest: boolean;
   [x: string]: any;
@@ -104,7 +104,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
     super(props);
     
     this.state = {
-      customResponse: '',
+      response: '',
       tabIndex: 0,
       pendingRequest: false,
     };
@@ -145,7 +145,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
           data => {
             console.log("Parsed response is:", data);
             this.setState({
-              customResponse: {
+              response: {
                 type: this.mapStatusCodeToType(statusCode),
                 code: statusCode || 0,
                 content: data,
@@ -156,7 +156,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
 
         return response;
       })
-      .catch((e) => setTimeout(() => {console.log(e); if (!this.state.customResponse.code) this.setState({ customResponse: CLIENT_ERROR_RESPONSE })}, 1000))
+      .catch((e) => setTimeout(() => {console.log(e); if (!this.state.response.code) this.setState({ response: CLIENT_ERROR_RESPONSE })}, 1000))
       .finally(() => setTimeout(() => this.setState({ pendingRequest: false }), 1000));
   };
 
@@ -277,7 +277,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
                 <TabPanel key={'Try out panel'}>
                   <TryOut
                     operation={operation}
-                    customResponse={this.state.customResponse}
+                    response={this.state.response}
                     pendingRequest={this.state.pendingRequest}
                     handleApiCall={this.handleApiCall}
                   />
