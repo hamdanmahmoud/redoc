@@ -8,30 +8,9 @@ import { FieldModel, OperationModel } from '../../services';
 import { OpenAPIParameterLocation } from '../../types';
 import { FormSection } from './FormSection';
 import { SchemaSection } from './SchemaSection';
-import styled from '../../styled-components';
 
+import { SectionHeader, RunButton } from './styled.elements';
 import { getObjectChange, getCleanRequest } from '../../utils/tryout';
-
-const SectionHeader = styled.div`
-  color: #58585B;
-  font-weight: bold;
-  background: transparent;
-  font-size: 14px;
-  margin: 10% 0% 0% 0%;
-`;
-
-const RunButton = styled.button<{ disabled: boolean }>`
-  border-radius: 20px;
-  line-height: 2.5em;
-  width: 7em;
-  background-color: ${props => props.disabled ? `#AEAEAE` : `#1E4F70`};
-  color: #FFFFFF;
-  font-weight: bolder;
-  outline: none;
-  float: right;
-  cursor: pointer;
-  margin-top: 10px;
-`;
 
 enum RequestObjectType {
     HEADERS = 'headers',
@@ -117,7 +96,7 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
         }));
     }
 
-    const onRequestInputChange = (type: RequestObjectType, name: string, value: any, indexInArray?: number, parents?: string[], location?: string) => {
+    const onRequestInputChange = (type: RequestObjectType, name: string, value: any, indexInArray?: number, parents?: string[], location?: string, toBeRemoved?: boolean) => {
         const parentsCopy = parents && _.cloneDeep(parents); // directly mutating original parents would lead to inconsistencies across inputs
         switch (location) {
             case 'path': {
@@ -156,17 +135,27 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
                 break;
             }
             default: {
-                const change = getObjectChange(request[type], name, value, indexInArray, parentsCopy);
-                handleRequestChange(type, change);
+                setRequest(request => {
+                    // Because react updates state in ways I sometimes don't fully understand, a deep
+                    // clone of parents is passed to avoid parents array being empty on follow-up executions
+                    // of the initial setRequest call, thus avoiding request body nested object keys
+                    // being spread throughout the root request body as well
+                    const change = getObjectChange(request[type], name, value, indexInArray, _.cloneDeep(parentsCopy), toBeRemoved);
+                    handleRequestChange(type, change);
+                    return {
+                        ...request,
+                    }
+                });
                 break;
             }
         }
-    }
+    };
 
     // this currently works only for first level of nesting, TODO: think more general for a depth of n
     reaction(
         () => operation && operation?.requestBody!?.content!?.active!?.schema!?.activeOneOf,
         (activeOneOf, prevActiveOneOf) => {
+            
             console.log(`Content active schema changed from ${prevActiveOneOf} to ${activeOneOf}`);
             const schema = operation && operation?.requestBody!?.content!?.active!?.schema;
             const discriminatorProp = schema!?.discriminatorProp;
@@ -242,7 +231,7 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
                         contentType={operation.requestBody.content?.active?.name}
                         onChange={
                             operation.requestBody.content?.active?.name === 'application/json' 
-                            ? (name, value, indexInArray, parents) => onRequestInputChange(RequestObjectType.BODY, name, value, indexInArray, parents)
+                            ? (name, value, indexInArray, parents, toBeRemoved) => onRequestInputChange(RequestObjectType.BODY, name, value, indexInArray, parents, undefined, toBeRemoved)
                             : (value) => setRequest(request => ({ // 'text/plain'
                                 ...request,
                                 body: value
