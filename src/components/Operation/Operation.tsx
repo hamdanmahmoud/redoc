@@ -271,7 +271,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
               <Details>Details</Details>
               <Tabs defaultIndex={0} onSelect={tabIndex => this.setState({ tabIndex })}>
                 <TabList>
-                  <Tab className={'tab-try-out'} key={'Try out'}>{'Try It'}</Tab>
+                  <Tab className={'tab-try-out'} key={'Try out'}>{'Run'}</Tab>
                   <Tab className={'tab-examples'} key={'Examples'}>{'Example'}</Tab>
                 </TabList>
                 <TabPanel key={'Try out panel'}>
