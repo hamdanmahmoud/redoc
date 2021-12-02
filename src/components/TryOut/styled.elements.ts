@@ -14,7 +14,7 @@ export const Label = styled.label`
 export const Input = styled.input<{ margin?: string, borderColor?: string, color?: string }>`
   padding: 0.5em;
   margin: ${props => props.margin || `0.5em 0em 0.5em 0`};
-  width: 8rem;
+  width: 100%;
   font-size: 13px;
   color: ${props => props.color || `#1e1e1e`};
   background: white;
@@ -27,16 +27,18 @@ export const Input = styled.input<{ margin?: string, borderColor?: string, color
   }
 `;
 
-export const Dropdown = styled.select`
+export const Dropdown = styled.select<{ width?: string, borderStyle?: string, outline?: string, cursor?: string }>`
   padding: 0.5em;
   margin: 0.5em 0em 0.5em 0;
-  width: 8rem;
+  width: ${props => props.width || '8rem'};
   font-size: 13px;
   color: #1e1e1e;
   background: white;
-  border-style: solid;
+  border-style: ${props => props.borderStyle || 'solid'};
   border-width: thin;
   border-radius: 4px;
+  outline: ${props => props.outline || ''};
+  cursor: ${props => props.cursor || ''};
   ::placeholder {
     color: grey;
   }
@@ -44,7 +46,7 @@ export const Dropdown = styled.select`
 
 // DictionaryForm
 
-export const RowIcon = styled.i<{ marginRight?: string, color?: string, cursor?: string}>`
+export const RowIcon = styled.i<{ marginLeft?: string, marginRight?: string, color?: string, cursor?: string}>`
   display: inline-block;
   width: ${props => props.theme.spacing.unit * 2}px;
   text-align: center;
@@ -60,15 +62,14 @@ export const RowIcon = styled.i<{ marginRight?: string, color?: string, cursor?:
 
 export const ActionOnArrayButton = styled.button<{ disabled: boolean, width?: string }>`
   border-radius: 20px;
-  background-color: ${props => props.disabled ? `#AEAEAE` : `#1E4F70`};
-  line-height: 1.5em;
+  background-color: ${props => props.disabled ? `#AEAEAE` : `#21608a`};
   margin: 0 0.25rem;
-  width: ${props => props.width || `2em`};
   color: #FFFFFF;
   font-weight: bolder;
   outline: none;
   float: right;
   cursor: pointer;
+  font-size: medium;
 `;
 
 // TryOut
@@ -79,6 +80,8 @@ export const SectionHeader = styled.div`
   background: transparent;
   font-size: 14px;
   margin: 10% 0% 0% 0%;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const RunButton = styled.button<{ disabled: boolean }>`

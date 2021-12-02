@@ -1,9 +1,10 @@
 import * as React from 'react';
+
+import { DEFAULT_OPTIONS } from '../services/AppStore';
 import { RedocNormalizedOptions } from '../services/RedocNormalizedOptions';
 import { Loading } from './Loading/Loading';
 import { Redoc } from './Redoc/Redoc';
 import { StoreBuilder } from './StoreBuilder';
-import { DEFAULT_OPTIONS } from '../services/AppStore';
 
 const DEFAULT_SPEC = {
   "openapi": "3.0.0",

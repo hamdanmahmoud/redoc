@@ -1,4 +1,5 @@
 import { darken, desaturate, lighten, readableColor, transparentize } from 'polished';
+
 const defaultTheme: ThemeInterface = {
   spacing: {
     unit: 5,
@@ -7,7 +8,7 @@ const defaultTheme: ThemeInterface = {
   },
   breakpoints: {
     small: '50rem',
-    medium: '75rem',
+    medium: '85rem',
     large: '105rem',
   },
   colors: {

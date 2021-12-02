@@ -1,29 +1,19 @@
-import * as React from 'react';
+import * as _ from 'lodash';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import * as _ from 'lodash';
+import * as React from 'react';
 
+import { OperationModel } from '../../services';
+import { getCleanRequest, getUpdatedPayload } from '../../utils/tryout';
 import { ResponseSamples as ResponseSection } from '../ResponseSamples/ResponseSamples';
-import { FieldModel, OperationModel } from '../../services';
-import { OpenAPIParameterLocation } from '../../types';
-import { FormSection } from './FormSection';
-import { SchemaSection } from './SchemaSection';
-
-import { SectionHeader, RunButton } from './styled.elements';
-import { getObjectChange, getCleanRequest } from '../../utils/tryout';
+import { Body } from './Body';
+import { Params } from './Params';
+import { RunButton } from './styled.elements';
 
 enum RequestObjectType {
-    HEADERS = 'headers',
+    HEADER = 'header',
     BODY = 'body'
 };
-
-const ParamsSection = ({ params, onHeaderChange }) => {
-    if (!params && params.length) {
-        return null;
-    }
-
-    return (<FormSection items={params} onChange={onHeaderChange} />);
-}
 
 interface TryOutProps {
     operation: OperationModel;
@@ -32,79 +22,56 @@ interface TryOutProps {
     handleApiCall: (request: any) => void;
 }
 
-export const TryOut = observer(({ operation, response, pendingRequest, handleApiCall }: TryOutProps) => {
-    const [request, setRequest] = React.useState({queryParams: {}, pathParams: {}, cookieParams: {}, headers: {}, body: {}});
+export type RequestBodyPayloadType = string | number | object | null;
 
-    const mapParameterLocationToRequestField = (paramLocation: OpenAPIParameterLocation | "body"): string => {
-        switch (paramLocation) {
-            case 'header': return 'headers';
-            case 'query': return 'queryParams';
-            case 'path': return 'pathParams';
-            case 'cookie': return 'cookieParams';
-            case 'body': return 'body';
-            default: throw Error(`Parameter does not support ${paramLocation} as location. Location can be one of: header, query, path, cookie, body.`);
-        }
+const getInitialBodyByOperation = (operation: OperationModel): RequestBodyPayloadType => {
+    if (!operation.requestBody) return null;
+    const schemaType = operation.requestBody?.content?.mediaTypes[0]?.schema?.type;
+    switch (schemaType) {
+        case 'string': return '';
+        case 'number': return 0;
+        case 'array': return [];
+        case 'object': return {};
+        default: throw Error(`Schema of type ${schemaType} not yet supported. Supported schema types: string, number, object.`);
     }
+}
+
+export const TryOut = observer(({ operation, response, pendingRequest, handleApiCall }: TryOutProps) => {
+    const [request, setRequest] = React.useState({queryParams: {}, pathParams: {}, cookieParams: {}, header: {}, body: getInitialBodyByOperation(operation)});
+    const [isFormData, setIsFormData] = React.useState(true);
+    const [error, setError] = React.useState(undefined);
+    const [showError, setShowError] = React.useState(false);
+
+    React.useEffect(() => {
+        if (isFormData) {
+            setRequest(request => ({
+                ...request,
+                body: getInitialBodyByOperation(operation) // if isFormData set to true, body state is reset
+            }));
+        }
+    }, [isFormData]);
 
     /**
-     * Following effect hook handles state management for default request parameters
+     * 
+     * @param fieldName Field that will be changed
+     * @param value Corresponding (new) value for which field is changed to
+     * @param arrayIndex If fieldName is an array field, value will be set to this index inside the array
+     * @param ancestors Considering fieldName a node inside a JSON object which is in fact a tree, 
+     * this list contains all ancestors of this node (i.e. of all ancesators of the field). 
+     * If field is at the top of JSON object, this list is empty.
+     * @param location From OAS 3 specification: OpenAPI 3.0 distinguishes between the following parameter types based on the parameter location. 
+     * The location is determined by the parameter’s in key, for example, in: query or in: path.
      */
-    React.useEffect(() => {
-        const defaultRequest = request;
-        operation.parameters?.forEach(
-            (param) => {
-                const { schema, name } = param;
-                if (schema.default !== undefined && param.in) {
-                    defaultRequest[mapParameterLocationToRequestField(param.in)][name] = schema.default;
-                }
-            }
-        );
-
-        const schema = operation.requestBody?.content?.active?.schema;
-
-        if (schema) {
-            const hasDiscriminator: boolean = schema?.oneOf ? true : false;
-            const hasOwnFields: boolean = schema?.fields && schema?.fields.length !== 0 ? true : false;
-            const hasOwnItems: boolean = schema?.items ? true : false;
-        
-            const fields: FieldModel[] | undefined = hasDiscriminator
-                ? schema?.oneOf![schema?.activeOneOf!].fields
-                : (hasOwnFields ? schema?.fields : (hasOwnItems ? schema?.items?.fields : []));
-        
-            if (fields?.length !== 0) {
-                fields?.forEach(
-                    (param) => {
-                        const { schema, name } = param;
-                        if (schema.default !== undefined && param.in) {
-                            defaultRequest[mapParameterLocationToRequestField(param.in)][name] = schema.default;
-                        }
-                    }
-                )
-            }
-        }
-
-        setRequest(defaultRequest);
-    }, []);
-
-    const handleRequestChange = (type: RequestObjectType, change) => {
-        setRequest(request => ({
-            ...request,
-            [type]: {
-                ...(type === RequestObjectType.HEADERS ? request.headers : request.body),
-                ...change
-            }
-        }));
-    }
-
-    const onRequestInputChange = (type: RequestObjectType, name: string, value: any, indexInArray?: number, parents?: string[], location?: string, toBeRemoved?: boolean) => {
-        const parentsCopy = parents && _.cloneDeep(parents); // directly mutating original parents would lead to inconsistencies across inputs
+    const onRequestInputChange = (fieldName?: string, value?: any, arrayIndex?: number, ancestors?: string[], location?: string) => {
+        if (location && !fieldName) throw Error(`If location parameter is defined as ${location}, it is mandatory for fieldName to be defined as well.`);
+        const ancestorsCopy = ancestors && _.cloneDeep(ancestors); // directly mutating original ancestors would lead to inconsistencies across inputs
         switch (location) {
             case 'path': {
                 setRequest(request => ({
                     ...request,
                     pathParams: {
                         ...request.pathParams,
-                        [name]: value
+                        [fieldName as string]: value
                     }
                 }));
                 break;
@@ -114,7 +81,7 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
                     ...request,
                     queryParams: {
                         ...request.queryParams,
-                        [name]: value
+                        [fieldName as string]: value
                     }
                 }));
                 break;
@@ -124,26 +91,34 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
                     ...request,
                     cookieParams: {
                         ...request.cookieParams,
-                        [name]: value
+                        [fieldName as string]: value
                     }
                 }));
                 break;
             }
             case 'header': {
-                const change = getObjectChange(request[type], name, value, indexInArray, parentsCopy);
-                handleRequestChange(type, change);
+                setRequest(request => ({
+                    ...request,
+                    header: {
+                        ...request.header,
+                        [fieldName as string]: value
+                    }
+                }));
                 break;
             }
-            default: {
+            default: { // location is undefined only for body
                 setRequest(request => {
                     // Because react updates state in ways I sometimes don't fully understand, a deep
-                    // clone of parents is passed to avoid parents array being empty on follow-up executions
+                    // clone of ancestors is passed to avoid ancestors array being empty on follow-up executions
                     // of the initial setRequest call, thus avoiding request body nested object keys
                     // being spread throughout the root request body as well
-                    const change = getObjectChange(request[type], name, value, indexInArray, _.cloneDeep(parentsCopy), toBeRemoved);
-                    handleRequestChange(type, change);
+                    const updatedObject = getUpdatedPayload(request.body, fieldName, value, arrayIndex, _.cloneDeep(ancestorsCopy));
+
+                    if (typeof(request.body) !== 'object') throw Error(`Request body expected to be of type object, found type ${typeof(request.body)} instead.`);
+
                     return {
                         ...request,
+                        [RequestObjectType.BODY]: updatedObject
                     }
                 });
                 break;
@@ -152,22 +127,23 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
     };
 
     // this currently works only for first level of nesting, TODO: think more general for a depth of n
-    reaction(
-        () => operation && operation?.requestBody!?.content!?.active!?.schema!?.activeOneOf,
-        (activeOneOf, prevActiveOneOf) => {
+    // furthermore, it assumes JSON content, so TODO: tweak it to support multiple content types
+    // reaction(
+    //     () => operation && operation?.requestBody!?.content!?.active!?.schema!?.activeOneOf,
+    //     (activeOneOf, prevActiveOneOf) => {
             
-            console.log(`Content active schema changed from ${prevActiveOneOf} to ${activeOneOf}`);
-            const schema = operation && operation?.requestBody!?.content!?.active!?.schema;
-            const discriminatorProp = schema!?.discriminatorProp;
-            const discriminatorTitle = schema!?.oneOf![activeOneOf].title;
-            setTimeout(() => onRequestInputChange(RequestObjectType.BODY, discriminatorProp, discriminatorTitle, undefined), 0); // timeout to avoid MiddlePanel not triggering proper state change due to Mobx observables taking a bit + only works for one level of nesting
-            const fieldToBeRemoved = schema!?.oneOf![prevActiveOneOf].title; // nested object field that got changed through dropdown
-            setRequest({
-                ...request,
-                body: _.omit(_.omit(_.omit(request.body, fieldToBeRemoved), fieldToBeRemoved.toLowerCase()), fieldToBeRemoved.toUpperCase()) // super hacky, just for the moment
-            });
-        }
-    )
+    //         console.log(`Content active schema changed from ${prevActiveOneOf} to ${activeOneOf}`);
+    //         const schema = operation && operation?.requestBody!?.content!?.active!?.schema;
+    //         const discriminatorProp = schema!?.discriminatorProp;
+    //         const discriminatorTitle = schema!?.oneOf![activeOneOf].title;
+    //         setTimeout(() => onRequestInputChange(discriminatorProp, discriminatorTitle, undefined), 0); // timeout to avoid MiddlePanel not triggering proper state change due to Mobx observables taking a bit + only works for one level of nesting
+    //         const fieldToBeRemoved = schema!?.oneOf![prevActiveOneOf].title; // nested object field that got changed through dropdown
+    //         setRequest({
+    //             ...request,
+    //             body: _.omit(_.omit(_.omit(request.body, fieldToBeRemoved), fieldToBeRemoved.toLowerCase()), fieldToBeRemoved.toUpperCase()) // super hacky, just for the moment
+    //         });
+    //     }
+    // )
 
     reaction(
         () => operation && operation?.requestBody!?.content!?.active!?.name,
@@ -175,7 +151,7 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
             console.log(`Content type changed from ${prevActiveName} to ${activeName}`);
             setRequest({
                 ...request,
-                body: {}
+                body: getInitialBodyByOperation(operation)
             })
         }
     )
@@ -185,63 +161,48 @@ export const TryOut = observer(({ operation, response, pendingRequest, handleApi
     const pathParams = operation.parameters?.filter(param => param.in === 'path');
     const cookieParams = operation.parameters?.filter(param => param.in === 'cookie');
 
+    const isJsonContent = _.toLower(operation?.requestBody?.content?.active?.name) === 'application/json' ;
+
+    const schemaType = operation.requestBody?.content?.mediaTypes[0]?.schema?.type;
+
+    const onHeaderChange = (fieldName, value, arrayIndex, ancestors, location) => onRequestInputChange(fieldName, value, arrayIndex, ancestors, location);
+    const onBodyChange = isFormData && isJsonContent && schemaType === 'object' 
+        ? (fieldName, value, arrayIndex, ancestors) => onRequestInputChange(fieldName, value, arrayIndex, ancestors, undefined) 
+        : (value) => {
+            setRequest(request => ({
+                ...request,
+                body: value
+            }));
+        };
+
+    const handleRunClick = () => {
+        if (error) {
+            setShowError(true);
+        } else {
+            setShowError(false);
+            handleApiCall(getCleanRequest(request));
+        }
+    }
+
     return (
         <>
-            {pathParams?.length !== 0 && (
-                <>
-                    <SectionHeader>Path params</SectionHeader>
-                    <ParamsSection
-                        params={pathParams}
-                        onHeaderChange={(name, value, indexInArray, parents, location) => onRequestInputChange(RequestObjectType.HEADERS, name, value, indexInArray, parents, location)}
-                    />
-                </>
+            <Params params={pathParams} location={'path'} onChange={onHeaderChange}/>
+            <Params params={queryParams} location={'query'} onChange={onHeaderChange}/>
+            <Params params={headerParams} location={'header'} onChange={onHeaderChange}/>
+            <Params params={cookieParams} location={'cookie'} onChange={onHeaderChange}/>
+            {showError && (
+                <>{error}</>
             )}
-            {queryParams?.length !== 0 && (
-                <>
-                    <SectionHeader>Query params</SectionHeader>
-                    <ParamsSection
-                        params={queryParams}
-                        onHeaderChange={(name, value, indexInArray, parents, location) => onRequestInputChange(RequestObjectType.HEADERS, name, value, indexInArray, parents, location)}
-                    />
-                </>
-            )}
-            {headerParams?.length !== 0 && (
-                <>
-                    <SectionHeader>Custom headers</SectionHeader>
-                    <ParamsSection
-                        params={headerParams}
-                        onHeaderChange={(name, value, indexInArray, parents, location) => onRequestInputChange(RequestObjectType.HEADERS, name, value, indexInArray, parents, location)}
-                    />
-                </>
-            )}
-            {cookieParams?.length !== 0 && (
-                <>
-                    <SectionHeader>Cookie params</SectionHeader>
-                    <ParamsSection
-                        params={cookieParams}
-                        onHeaderChange={(name, value, indexInArray, parents, location) => onRequestInputChange(RequestObjectType.HEADERS, name, value, indexInArray, parents, location)}
-                    />
-                </>
-            )}
-            {operation.requestBody && (
-                <>
-                    <SectionHeader>Body</SectionHeader>
-                    <SchemaSection
-                        schema={operation.requestBody.content?.active?.schema}
-                        contentType={operation.requestBody.content?.active?.name}
-                        onChange={
-                            operation.requestBody.content?.active?.name === 'application/json' 
-                            ? (name, value, indexInArray, parents, toBeRemoved) => onRequestInputChange(RequestObjectType.BODY, name, value, indexInArray, parents, undefined, toBeRemoved)
-                            : (value) => setRequest(request => ({ // 'text/plain'
-                                ...request,
-                                body: value
-                            }))
-                        }
-                    />
-                </>
-            )}
+            <Body 
+                specBody={operation.requestBody} 
+                requestBody={request.body} 
+                onChange={onBodyChange} 
+                isFormData={isFormData} 
+                setIsFormData={setIsFormData} 
+                setError={setError} 
+            />
             <ResponseSection customResponse={response} />
-            <RunButton disabled={pendingRequest} onClick={() => handleApiCall(getCleanRequest(request))}>{`Run`}</RunButton>
+            <RunButton disabled={pendingRequest} onClick={handleRunClick}>{`Run`}</RunButton>
         </>
     );
 });

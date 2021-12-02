@@ -54,7 +54,7 @@ export const RightPanel = styled.div`
   border-left: 3px solid #017CAD;
   box-shadow: 0 10px 24px -6px rgb(0 0 0 / 25%);
   min-height: 470px;
-  width:43.75%;
+  width: 50%;
 
   ${media.lessThan('medium', true)`
     width: 100%;

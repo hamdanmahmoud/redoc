@@ -1,12 +1,12 @@
+import * as _ from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import * as _ from 'lodash';
 
-import { Badge, RightPanel, H2, MiddlePanel, Row, Tab, TabList, TabPanel, Tabs } from '../../common-elements';
+import { Badge, H2, MiddlePanel, RightPanel, Row, Tab, TabList, TabPanel, Tabs } from '../../common-elements';
 import { OperationModel } from '../../services/models';
 import styled from '../../styled-components';
+import { appendParamsToPath, mapStatusCodeToType, setCookieParams } from '../../utils/tryout';
 import { CallbacksList } from '../Callbacks';
-//import { CallbackSamples } from '../CallbackSamples/CallbackSamples';
 import { Endpoint } from '../Endpoint/Endpoint';
 import { ExternalDocumentation } from '../ExternalDocumentation/ExternalDocumentation';
 import { Extensions } from '../Fields/Extensions';
@@ -48,61 +48,30 @@ enum NoRequestBodyHttpVerb {
 }
 
 const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
-const CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error'};
-export interface OperationProps {
+const DEFAULT_CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error'};
+
+interface OperationProps {
   operation: OperationModel;
 }
 
-export interface OperationState {
+interface OperationState {
   response: any;
   tabIndex: number;
   pendingRequest: boolean;
-  [x: string]: any;
 }
 
 interface Request {
-  headers?: HeadersInit;
-  body?: BodyInit | null;
+  header?: HeadersInit;
   queryParams?: any;
   pathParams?: any;
   cookieParams?: any;
-}
-
-const appendPathParamsToPath = (path, pathParams) => {
-  const entries = Object.entries(pathParams);
-  for (let i = 0; i < entries.length; i++) {
-    const [key, value] = entries[i];
-    path = path.replace(`{${key}}`, value);
-  }
-  return path;
-}
-
-const appendQueryParamsToPath = (path, queryParams) => {
-  const entries = Object.entries(queryParams);
-  let paramsSuffix = '';
-
-  for (let i = 0; i < entries.length; i++) {
-    const [key, value] = entries[i];
-    paramsSuffix += paramsSuffix === '' ? `${key}=${value}`: `&${key}=${value}`;
-  }
-  return paramsSuffix === '' ? path : `${path}?${paramsSuffix}`;
-}
-
-const setCookieParams = (cookieParams) => {
-  const entries = Object.entries(cookieParams);
-  const cookies: string[] = [];
-  for (let i = 0; i < entries.length; i++) {
-    const [key, value] = entries[i];
-    cookies.push(`${key}=${value}`)
-  }
-  document.cookie = cookies.join(';');
+  body?: BodyInit | null;
 }
 
 @observer
 export class Operation extends React.Component<OperationProps, OperationState> {
   constructor(props) {
     super(props);
-    
     this.state = {
       response: '',
       tabIndex: 0,
@@ -110,13 +79,17 @@ export class Operation extends React.Component<OperationProps, OperationState> {
     };
   }
 
-  handleApiCall = ({ queryParams, pathParams, cookieParams, headers, body }: Request) => {
+  /**
+   * Mapping between 'header' and 'headers' needed due to the fact that openapi standard
+   * defines param location as being one of 'path', 'query', 'cookie' or 'header', while
+   * fetch API defines request as having RequestInit type, which has 'headers' as a member field
+   */
+  handleApiCall = ({ queryParams, pathParams, cookieParams, header: headers, body }: Request) => {
     let { operation: { httpVerb, path } } = this.props;
     
     headers = { ...DEFAULT_HEADERS, ...headers };
-    body = JSON.stringify(this.getCleanedObject(body));
     
-    const request = (Object.values(NoRequestBodyHttpVerb).map(value => String(value)).indexOf(httpVerb) !== -1)
+    const request: RequestInit = (Object.values(NoRequestBodyHttpVerb).map(value => String(value)).indexOf(httpVerb) !== -1)
       ? {
         method: httpVerb,
         headers,
@@ -124,12 +97,10 @@ export class Operation extends React.Component<OperationProps, OperationState> {
       : {
         method: httpVerb,
         headers,
-        body
+        body: JSON.stringify(body)
       };
 
-    path = appendPathParamsToPath(path, pathParams);
-    path = appendQueryParamsToPath(path, queryParams);
-
+    path = appendParamsToPath(path, pathParams, queryParams);
     setCookieParams(cookieParams);
 
     this.setState({ pendingRequest: true });
@@ -146,7 +117,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
             console.log("Parsed response is:", data);
             this.setState({
               response: {
-                type: this.mapStatusCodeToType(statusCode),
+                type: mapStatusCodeToType(statusCode),
                 code: statusCode || 0,
                 content: data,
               }
@@ -156,83 +127,9 @@ export class Operation extends React.Component<OperationProps, OperationState> {
 
         return response;
       })
-      .catch((e) => setTimeout(() => {console.log(e); if (!this.state.response.code) this.setState({ response: CLIENT_ERROR_RESPONSE })}, 1000))
+      .catch((e) => setTimeout(() => {console.log(e); if (!this.state.response.code) this.setState({ response: DEFAULT_CLIENT_ERROR_RESPONSE })}, 1000))
       .finally(() => setTimeout(() => this.setState({ pendingRequest: false }), 1000));
   };
-
-  getCleanedObject = (obj) => {
-    if (!obj || typeof(obj) !== 'object') return obj;
-
-    // Cleans input array from any falsy values
-    const getCleanedArray = (arr) => {
-      let i = 0;
-      while (i < arr.length) {
-        if (!arr[i]) { // might be a source of unexpected bugs if array items are boolean
-          arr.splice(i, 1);
-        } else {
-          ++i;
-        }
-      }
-      return arr;
-    }
-
-    const decorate = (obj) => {
-      return {
-        ...obj,
-        removeUndefinedFields: function removeUndefinedFields () {
-          const entries = Object.entries(this);
-          if (entries.length === 0) return this;
-
-          entries.forEach(
-            ([key, value]) => {
-              this[key] === undefined 
-              ? delete this[key]
-              : typeof(this[key]) === 'object' ? removeUndefinedFields.bind(this[key])() : value
-            }
-          );
-          return this;
-        },
-        cleanArrayFields: function cleanArrayFields () {
-          const entries = Object.entries(this);
-          if (entries.length === 0) return this;
-
-          entries.forEach(
-            ([key, value]) => {
-              this[key] = Array.isArray(value) 
-              ? getCleanedArray(value)
-              : typeof(this[key]) === 'object' ? cleanArrayFields.bind(this[key])() : value
-            }
-          )
-          return this;
-        },
-        omitFunctionFields: function () {
-          return _.omitBy(this, _.isFunction);
-        }
-      }
-    }
-
-    const decoratedObject = decorate(obj);
-
-    return decoratedObject
-      .removeUndefinedFields()
-      .cleanArrayFields()
-      .omitFunctionFields();
-  }
-
-  mapStatusCodeToType = (code) => {
-    switch (true) {
-      case (_.inRange(code, 100, 200)):
-        return 'info';
-      case (_.inRange(code, 200, 300)):
-        return 'success';
-      case (_.inRange(code, 300, 400)):
-        return 'redirect';
-      case (_.inRange(code, 400, 600)):
-        return 'error';
-      default:
-        return '';
-    }
-  }
 
   render() {
     const { operation } = this.props;

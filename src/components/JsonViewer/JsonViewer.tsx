@@ -1,9 +1,9 @@
 import * as React from 'react';
-import styled from '../../styled-components';
 
 import { SampleControls } from '../../common-elements';
 import { CopyButtonWrapper } from '../../common-elements/CopyButtonWrapper';
 import { PrismDiv } from '../../common-elements/PrismDiv';
+import styled from '../../styled-components';
 import { jsonToHTML } from '../../utils/jsonToHtml';
 import { OptionsContext } from '../OptionsProvider';
 import { jsonStyles } from './style';
@@ -12,6 +12,9 @@ export interface JsonProps {
   data: any;
   className?: string;
   editable?: boolean;
+  hideButtons?: boolean;
+  setParsedJSON?: (any) => void;
+  setError?: (string) => void;
 }
 
 const JsonViewerWrap = styled.div`
@@ -40,13 +43,52 @@ const StatusCodeSpan = styled.div<{ type: string }>`
 
 class Json extends React.PureComponent<JsonProps> {
   node: HTMLDivElement;
-
+  
   constructor(props) {
     super(props);
+    this.state = {
+      error: null
+    }
   }
 
   render() {
     return <CopyButtonWrapper data={this.props.data.content || this.props.data}>{this.renderInner}</CopyButtonWrapper>;
+  }
+
+  onInput(e) {
+    try {
+      const parsedJSON = JSON.parse(e.currentTarget.textContent || '{}');
+      this.props.setParsedJSON?.(parsedJSON);
+      this.props.setError?.(undefined);
+    } catch(e) {
+      this.props.setError?.("Invalid JSON Payload");
+    }
+  }
+
+  onKeyDown(e) {
+    if (e.keyCode === 9) { // tab
+      e.preventDefault();
+      document.execCommand('insertHTML', false, '  ');
+    }
+
+    if (e.keyCode === 219) { // bracket
+      e.preventDefault();
+      if (e.shiftKey) { // curly bracket
+        document.execCommand('insertHTML', false, '{}');
+      } else { // square bracket
+        document.execCommand('insertHTML', false, '[]');
+      }
+
+      // move cursor in between brackets for a better UX
+      const selection = document.getSelection();
+      if (selection && selection?.rangeCount > 0) {
+        const textNode = selection.focusNode;
+        const newOffset = selection.focusOffset - 1;
+        if (textNode) {
+          selection.collapse(textNode, Math.min((textNode as any).length, newOffset));
+        }
+      }
+    }
   }
 
   // TODO: Implement this differently, without code duplication,
@@ -54,15 +96,19 @@ class Json extends React.PureComponent<JsonProps> {
   componentDidUpdate() {
     this.renderInner = ({ renderCopyButton }) => (
       <JsonViewerWrap>
-        <SampleControls>
-          {renderCopyButton()}
-          {<button onClick={this.expandAll}> Expand all </button>}
-          {<button onClick={this.collapseAll}> Collapse all </button>}
-        </SampleControls>
+        {
+          !this.props.hideButtons && (
+            <SampleControls>
+              {renderCopyButton()}
+              {<button onClick={this.expandAll}> Expand all </button>}
+              {<button onClick={this.collapseAll}> Collapse all </button>}
+            </SampleControls>
+          )
+        }
         <OptionsContext.Consumer>
           {options => (
             <>
-              {this.props.data.content && <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>}
+              {this.props.data.content && !this.props.editable && <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>}
               <PrismDiv
                 className={this.props.className}
                 // tslint:disable-next-line
@@ -71,7 +117,10 @@ class Json extends React.PureComponent<JsonProps> {
                   __html: jsonToHTML(this.props.data.content || this.props.data, options.jsonSampleExpandLevel),
                 }}
                 contentEditable={this.props.editable} // <-- TODO ref: this line right here
+                onInput={(e) => this.props.editable && this.onInput(e)}
                 spellCheck={false}
+                tabIndex={0}
+                onKeyDown={this.onKeyDown}
               />
             </>
           )}
@@ -82,15 +131,19 @@ class Json extends React.PureComponent<JsonProps> {
 
   renderInner = ({ renderCopyButton }) => (
     <JsonViewerWrap>
-      <SampleControls>
-        {renderCopyButton()}
-        {<button onClick={this.expandAll}> Expand all </button>}
-        {<button onClick={this.collapseAll}> Collapse all </button>}
-      </SampleControls>
+        {
+          !this.props.hideButtons && (
+            <SampleControls>
+              {renderCopyButton()}
+              {<button onClick={this.expandAll}> Expand all </button>}
+              {<button onClick={this.collapseAll}> Collapse all </button>}
+            </SampleControls>
+          )
+        }
       <OptionsContext.Consumer>
         {options => (
           <>
-            {this.props.data.content && <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>}
+            {this.props.data.content && !this.props.editable && <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>}
             <PrismDiv
               className={this.props.className}
               // tslint:disable-next-line
@@ -99,7 +152,10 @@ class Json extends React.PureComponent<JsonProps> {
                 __html: jsonToHTML(this.props.data.content || this.props.data, options.jsonSampleExpandLevel),
               }}
               contentEditable={this.props.editable}
+              onInput={(e) => this.props.editable && this.onInput(e)}
               spellCheck={false}
+              tabIndex={0}
+              onKeyDown={this.onKeyDown}
             />
           </>
         )}

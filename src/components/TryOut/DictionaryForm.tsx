@@ -1,9 +1,11 @@
-import * as React from 'react';
 import * as _ from 'lodash';
+import * as React from 'react';
 
-import { Input, RowIcon, ActionOnArrayButton } from './styled.elements';
+import { ActionOnArrayButton, Input, RowIcon } from './styled.elements';
 
-const FormRow = ({index, onChange, onRemoveRow, parents}) => {
+const addButtonStyle: React.CSSProperties = { display: "flex", justifyContent: "flex-end", alignItems: "center", fontWeight: 700, cursor: 'pointer' };
+
+const FormRow = ({index, onChange, onRemoveRow, ancestors}) => {
     const [key, setKey] = React.useState('');
     const [value, setValue] = React.useState('');
     const [saved, setSaved] = React.useState(false);
@@ -14,7 +16,7 @@ const FormRow = ({index, onChange, onRemoveRow, parents}) => {
             setError('Key cannot be empty');
             return;
         }
-        onChange && onChange(key, value, undefined, parents);
+        onChange && onChange(key, value, undefined, ancestors);
         setSaved(true);
     }
 
@@ -36,7 +38,7 @@ const FormRow = ({index, onChange, onRemoveRow, parents}) => {
 
     const handleRemoveRow = () => {
         onRemoveRow(index);
-        onChange && onChange(key, value, undefined, parents, true);
+        onChange && onChange(key, undefined, undefined, ancestors);
     }
 
     return (
@@ -44,8 +46,8 @@ const FormRow = ({index, onChange, onRemoveRow, parents}) => {
             <div style={{display: 'flex'}}>
                 <Input key={`arr-input-element-key-${index}`} borderColor={_.isEmpty(error) ? 'initial' : 'red'} margin={'0.5rem 0.75rem 0.5rem 0'} placeholder={'key'} disabled={saved} color={saved ? 'lightgrey' : '#1e1e1e'} onChange={(e) => handleOnChange('key', e)} />
                 <Input key={`arr-input-element-value-${index}`} margin={'0.5rem 0 0.5rem 0.75rem'} placeholder={'value'} disabled={saved} color={saved ? 'lightgrey' : '#1e1e1e'} onChange={(e) => handleOnChange('value', e)} />
-                <RowIcon marginRight={'1.5rem'} color={saved ? '#d3d3d3' : 'green'} cursor={saved ? 'auto' : 'pointer'} onClick={onSavedHandler}>&#10003;</RowIcon>
-                <RowIcon onClick={handleRemoveRow}>x</RowIcon>
+                <RowIcon marginRight={'0.2rem'} color={saved ? '#d3d3d3' : 'green'} cursor={saved ? 'auto' : 'pointer'} onClick={onSavedHandler}>&#10003;</RowIcon>
+                <RowIcon color={saved ? 'red' : 'grey'} marginLeft={'0.5rem'} onClick={saved ? handleRemoveRow : f => f}>X</RowIcon>
             </div>
             {!_.isEmpty(error) && (
                 <div style={{color: 'red', fontSize: 'smaller'}}>
@@ -56,7 +58,7 @@ const FormRow = ({index, onChange, onRemoveRow, parents}) => {
     )
 }
 
-export const DictionaryForm = ({ onChange, parents }) => {
+export const DictionaryForm = ({ onChange, ancestors }) => {
     const [array, setArray] = React.useState<any>([]);
 
     const handleRemoveRow = (index) => {
@@ -69,7 +71,7 @@ export const DictionaryForm = ({ onChange, parents }) => {
     React.useEffect(() => {
         const arr: any[] = [];
         const key = String((Math.random() + 1).toString(36).substring(7));
-        arr.push(<FormRow key={key} index={key} onChange={onChange} parents={parents} onRemoveRow={handleRemoveRow}/>);
+        arr.push(<FormRow key={key} index={key} onChange={onChange} ancestors={ancestors} onRemoveRow={handleRemoveRow}/>);
         setArray(arr);
     }, []);
 
@@ -77,7 +79,7 @@ export const DictionaryForm = ({ onChange, parents }) => {
         setArray(array => {
             const newArr = [...array];
             const key = String((Math.random() + 1).toString(36).substring(7));
-            newArr.push(<FormRow key={key} index={key} onChange={onChange} parents={parents} onRemoveRow={handleRemoveRow}/>);
+            newArr.push(<FormRow key={key} index={key} onChange={onChange} ancestors={ancestors} onRemoveRow={handleRemoveRow}/>);
             return newArr;
         });
     }
@@ -85,13 +87,15 @@ export const DictionaryForm = ({ onChange, parents }) => {
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             {array}
-            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline" }}>
+            <div
+                style={{...addButtonStyle, color: '#21608a'}}
+                onClick={handleAddRow}
+            >
                 <ActionOnArrayButton
-                    disabled={false}
-                    width={'4rem'}
-                    onClick={handleAddRow}>
-                    {`Add`}
+                    disabled={false}>
+                    {`+`}
                 </ActionOnArrayButton>
+                <div>{'Add pair'}</div>
             </div>
         </div>
     );
