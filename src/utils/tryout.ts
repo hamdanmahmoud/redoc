@@ -7,28 +7,40 @@ const getUpdatedArrayFromObject = (object, arrayFieldName, newValue, indexInArra
     return newArray;
 }
 
-const getNestedChange = (object, fieldName, fieldValue, indexInArray, parentsCopy: string[]) => {
-    if (parentsCopy.length === 0) throw new Error('Cannot traverse nested objects if no parents specified');
+const handleNestedChange = (object, fieldName, fieldValue, indexInArray, parents: string[], toBeRemoved?: boolean) => {
+    if (parents.length === 0) throw new Error('Cannot traverse nested objects if no parents specified');
 
-    const objectCopy = object;
-    while (parentsCopy && parentsCopy.length) {
-        const parent = parentsCopy.shift() || 0;
-        objectCopy[parent] = parentsCopy.length
-            ? objectCopy[parent] || {}
-            : {
-                ...objectCopy[parent],
-                [fieldName]: indexInArray === undefined ? fieldValue : getUpdatedArrayFromObject(objectCopy[parent] || {}, fieldName, fieldValue, indexInArray)
-            };
+    let temp1 = object;
+    if (toBeRemoved) {
+        while (parents && parents.length) {
+            const parent = parents.shift() || 0;
+            temp1 = temp1[parent];
+        }
+        delete temp1[fieldName];
+        return object;
     }
+
+    let temp2 = object;
+    while (parents && parents.length) {
+        const parent = parents.shift() || 0;
+        temp2[parent] = parents.length
+            ? temp2[parent] || {}
+            : {
+                ...temp2[parent],
+                [fieldName]: indexInArray === undefined ? (fieldValue) : getUpdatedArrayFromObject(temp2[parent] || {}, fieldName, fieldValue, indexInArray)
+            };
+        temp2 = temp2[parent];
+    }
+
     return object;
 }
 
-export const getObjectChange = (object, name, value, indexInArray, parents: string[] = []) => {
+export const getObjectChange = (object, name, value, indexInArray, parents: string[] = [], toBeRemoved?: boolean) => {
     return parents.length === 0
         ? {
             [name]: indexInArray !== undefined ? getUpdatedArrayFromObject(object, name, value, indexInArray) : value
         }
-        : getNestedChange(object, name, value, indexInArray, parents || []);
+        : handleNestedChange(object, name, value, indexInArray, parents || [], toBeRemoved);
 }
 
 export const getCleanRequest = (request) => {
