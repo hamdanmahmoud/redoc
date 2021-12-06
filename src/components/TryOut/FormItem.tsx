@@ -13,7 +13,7 @@ import { ArrayForm } from './ArrayForm';
 import { Input, Dropdown, Label } from './styled.elements';
 
 const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
-    const { schema, name, example, description, required, format = 'text', kind } = item;
+    const { schema, name, example, description, required, kind } = item;
 
     switch (kind) {
         case FormItemKind.field: {
@@ -28,7 +28,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
                         />
                         : <Input
                         placeholder={`${example || description || ''}`}
-                        type={format}
+                        type={schema.format || 'text'}
                         defaultValue={schema.default}
                         onChange={(e) => onChange && onChange(name, e.target.value, undefined, parents, item.in)}/>
                     );
@@ -37,7 +37,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, parents }) => {
                     return (
                         <Input
                         placeholder={`${example || description || ''}`}
-                        type={format}
+                        type={schema.format || 'text'}
                         defaultValue={schema.default}
                         onChange={(e) => onChange && onChange(name, !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value, undefined, parents, item.in)}/>
                     );
