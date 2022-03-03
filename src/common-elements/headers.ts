@@ -22,21 +22,25 @@ export const H1 = styled.h1`
 
 export const H2 = styled.h2`
   ${headerCommonMixin(2)};
-  color: black;
+  color: #58585b;
 
   ${extensionsHook('H2')};
 `;
 
 export const H3 = styled.h2`
   ${headerCommonMixin(3)};
-  color: black;
+  color: #58585b;
 
   ${extensionsHook('H3')};
 `;
 
 export const RightPanelHeader = styled.h3`
-  color: ${({ theme }) => theme.rightPanel.textColor};
-
+  color: #58585B;
+  background: white;
+ box-shadow:0px 0px 15px 1px #C6C7CA
+  width: 40%;
+  font-size:14px;
+  font-weight:bold;
   ${extensionsHook('RightPanelHeader')};
 `;
 

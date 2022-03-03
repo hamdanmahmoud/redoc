@@ -15,8 +15,8 @@ export interface LabelsConfig {
   downloadSpecification: string;
   responses: string;
   callbackResponses: string;
-  requestSamples: string;
-  responseSamples: string;
+  requestBody: string;
+  response: string;
 }
 
 export type LabelsConfigRaw = Partial<LabelsConfig>;
@@ -38,8 +38,8 @@ const labels: LabelsConfig = {
   downloadSpecification: 'Download OpenAPI specification',
   responses: 'Responses',
   callbackResponses: 'Callback responses',
-  requestSamples: 'Request samples',
-  responseSamples: 'Response samples',
+  requestBody: 'Request body',
+  response: 'Response',
 };
 
 export function setRedocLabels(_labels?: LabelsConfigRaw) {

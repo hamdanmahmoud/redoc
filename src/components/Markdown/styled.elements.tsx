@@ -1,4 +1,4 @@
-import { headerCommonMixin, linkifyMixin } from '../../common-elements';
+import { headerCommonMixin } from '../../common-elements';
 import { PrismDiv } from '../../common-elements/PrismDiv';
 import styled, { css, extensionsHook, ResolvedThemeInterface } from '../../styled-components';
 
@@ -26,7 +26,7 @@ export const StyledMarkdownBlock = styled(
     { compact?: boolean; inline?: boolean }
   >,
 )`
-  font-family: ${props => props.theme.typography.fontFamily};
+  font-family: 'Arial';
   font-weight: ${props => props.theme.typography.fontWeightRegular};
   line-height: ${props => props.theme.typography.lineHeight};
 
@@ -158,8 +158,6 @@ export const StyledMarkdownBlock = styled(
     text-align: left;
     font-weight: bold;
   }
-
-  ${linkifyMixin('.share-link')};
 
   ${linksCss}
 

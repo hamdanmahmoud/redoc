@@ -7,7 +7,7 @@ import styled, { css, ResolvedThemeInterface } from '../../styled-components';
 export const OperationBadge = styled.span.attrs((props: { type: string }) => ({
   className: `operation-type ${props.type}`,
 }))<{ type: string }>`
-  width: 9ex;
+  width: 32px;
   display: inline-block;
   height: ${props => props.theme.typography.code.fontSize};
   line-height: ${props => props.theme.typography.code.fontSize};
@@ -16,7 +16,7 @@ export const OperationBadge = styled.span.attrs((props: { type: string }) => ({
   background-repeat: no-repeat;
   background-position: 6px 4px;
   font-size: 7px;
-  font-family: Verdana, sans-serif; // web-safe
+  font-family: Arial; // web-safe
   color: white;
   text-transform: uppercase;
   text-align: center;
@@ -60,10 +60,6 @@ export const OperationBadge = styled.span.attrs((props: { type: string }) => ({
   &.head {
     background-color: ${props => props.theme.colors.http.head};
   }
-
-  &.hook {
-    background-color: ${props => props.theme.colors.primary.main};
-  }
 `;
 
 function menuItemActiveBg(depth, { theme }: { theme: ResolvedThemeInterface }): string {
@@ -79,6 +75,9 @@ function menuItemActiveBg(depth, { theme }: { theme: ResolvedThemeInterface }): 
 export const MenuItemUl = styled.ul<{ expanded: boolean }>`
   margin: 0;
   padding: 0;
+  // border: 0.1em solid ##067FA2;
+  background-color: #1e4f70;
+  border-bottom: 1px solid #4e7a93 !important;
 
   & & {
     font-size: 0.929em;
@@ -92,6 +91,8 @@ export const MenuItemLi = styled.li<{ depth: number }>`
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0;
+  background-color: #163e58;
+
   ${props => (props.depth === 0 ? 'margin-top: 15px' : '')};
 `;
 
@@ -102,17 +103,21 @@ export const menuItemDepth = {
     font-size: 0.8em;
     padding-bottom: 0;
     cursor: default;
+    background-color: #1e4f70;
+
     color: ${props => props.theme.sidebar.textColor};
   `,
   1: css`
     font-size: 0.929em;
     text-transform: ${({ theme }) => theme.sidebar.level1Items.textTransform};
+    background-color: #1e4f70;
     &:hover {
-      color: ${props => props.theme.sidebar.activeTextColor};
+      color: '#13374E';
     }
   `,
   2: css`
     color: ${props => props.theme.sidebar.textColor};
+    background-color: #1e4f70;
   `,
 };
 
@@ -140,7 +145,7 @@ export const MenuItemLabel = styled.label.attrs((props: MenuItemLabelType) => ({
   justify-content: space-between;
   font-family: ${props => props.theme.typography.headings.fontFamily};
   ${props => menuItemDepth[props.depth]};
-  background-color: ${props => (props.active ? menuItemActiveBg(props.depth, props) : '')};
+  background-color: #1e4f70;
 
   ${props => (props.deprecated && deprecatedCss) || ''};
 
@@ -152,7 +157,7 @@ export const MenuItemLabel = styled.label.attrs((props: MenuItemLabelType) => ({
     height: ${({ theme }) => theme.sidebar.arrow.size};
     width: ${({ theme }) => theme.sidebar.arrow.size};
     polygon {
-      fill: ${({ theme }) => theme.sidebar.arrow.color};
+      fill: #4e7a93;
     }
   }
 `;
@@ -177,7 +182,7 @@ export const RedocAttribution = styled.div`
   a,
   a:visited,
   a:hover {
-    color: ${theme.sidebar.textColor} !important;
+    color: white;
     border-top: 1px solid ${darken(0.1, theme.sidebar.backgroundColor)};
     padding: ${theme.spacing.unit}px 0;
     display: block;

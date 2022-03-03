@@ -8,17 +8,18 @@ import { useExternalExample } from './exernalExampleHook';
 export interface ExampleProps {
   example: ExampleModel;
   mimeType: string;
+  editable?: boolean;
 }
 
-export function Example({ example, mimeType }: ExampleProps) {
+export function Example({ example, mimeType, editable }: ExampleProps) {
   if (example.value === undefined && example.externalValueUrl) {
-    return <ExternalExample example={example} mimeType={mimeType} />;
+    return <ExternalExample example={example} mimeType={mimeType} editable={editable} />;
   } else {
-    return <ExampleValue value={example.value} mimeType={mimeType} />;
+    return <ExampleValue value={example.value} mimeType={mimeType} editable={editable} />;
   }
 }
 
-export function ExternalExample({ example, mimeType }: ExampleProps) {
+export function ExternalExample({ example, mimeType, editable }: ExampleProps) {
   const value = useExternalExample(example, mimeType);
 
   if (value === undefined) {
@@ -41,5 +42,5 @@ export function ExternalExample({ example, mimeType }: ExampleProps) {
     );
   }
 
-  return <ExampleValue value={value} mimeType={mimeType} />;
+  return <ExampleValue value={value} mimeType={mimeType} editable={editable} />;
 }

@@ -1,34 +1,36 @@
 import * as React from 'react';
 
-import { darken, getLuminance, lighten } from 'polished';
+import { darken } from 'polished';
 import styled from '../../styled-components';
 import { MenuItemLabel } from '../SideMenu/styled.elements';
 
 export const SearchWrap = styled.div`
   padding: 5px 0;
+  border-bottom: 1px solid white;
+  padding-bottom: 30px;
 `;
 
 export const SearchInput = styled.input.attrs(() => ({
   className: 'search-input',
 }))`
-  width: calc(100% - ${props => props.theme.spacing.unit * 8}px);
+  margin: 9.5% 0% 0% 5.5%;
+  background: white;
+  border-radius: 4px;
+  max-height: 100%;
+  width: 89%;
   box-sizing: border-box;
-  margin: 0 ${props => props.theme.spacing.unit * 4}px;
-  padding: 5px ${props => props.theme.spacing.unit * 2}px 5px
-    ${props => props.theme.spacing.unit * 4}px;
+  padding: 5px 10px 5px 35px;
   border: 0;
-  border-bottom: 1px solid
-    ${({ theme }) =>
-      (getLuminance(theme.sidebar.backgroundColor) > 0.5 ? darken : lighten)(
-        0.1,
-        theme.sidebar.backgroundColor,
-      )};
-  font-family: ${({ theme }) => theme.typography.fontFamily};
-  font-weight: bold;
-  font-size: 13px;
-  color: ${props => props.theme.sidebar.textColor};
-  background-color: transparent;
+  border-bottom-color: #4e7a93;
+  border-bottom-style: none;
+  border-bottom-width: 0px;
+  border-bottom: 1px solid #4e7a93;
+  font-family: Arial;
+  font-weight: 100;
+  font-size: 14px;
+  color: #58585b;
   outline: none;
+  line-height: 1.5em;
 `;
 
 export const SearchIcon = styled((props: { className?: string }) => (
@@ -46,12 +48,11 @@ export const SearchIcon = styled((props: { className?: string }) => (
   className: 'search-icon',
 })`
   position: absolute;
-  left: ${props => props.theme.spacing.unit * 4}px;
-  height: 1.8em;
-  width: 0.9em;
-
+  left: 25px;
+  height: 6em;
+  width: 1.2em;
   path {
-    fill: ${props => props.theme.sidebar.textColor};
+    fill: #626469;
   }
 `;
 
@@ -59,14 +60,14 @@ export const SearchResultsBox = styled.div`
   padding: ${props => props.theme.spacing.unit}px 0;
   background-color: ${({ theme }) => darken(0.05, theme.sidebar.backgroundColor)}};
   color: ${props => props.theme.sidebar.textColor};
-  min-height: 150px;
-  max-height: 250px;
+  max-height: 200px;
   border-top: ${({ theme }) => darken(0.1, theme.sidebar.backgroundColor)}};
   border-bottom: ${({ theme }) => darken(0.1, theme.sidebar.backgroundColor)}};
   margin-top: 10px;
   line-height: 1.4;
   font-size: 0.9em;
-  
+  font-weight: 100;
+font-size: 14px;
   li {
     background-color: inherit;
   }
@@ -74,10 +75,11 @@ export const SearchResultsBox = styled.div`
   ${MenuItemLabel} {
     padding-top: 6px;
     padding-bottom: 6px;
+    background-color: #163E58;
 
     &:hover,
     &.active {
-      background-color: ${({ theme }) => darken(0.1, theme.sidebar.backgroundColor)};
+      background-color: #13374E;
     }
 
     > svg {
@@ -92,7 +94,7 @@ export const ClearIcon = styled.i`
   width: ${props => props.theme.spacing.unit * 2}px;
   text-align: center;
   right: ${props => props.theme.spacing.unit * 4}px;
-  line-height: 2em;
+  line-height: 6em;
   vertical-align: middle;
   margin-right: 2px;
   cursor: pointer;
