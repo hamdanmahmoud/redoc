@@ -22,7 +22,7 @@ interface TryOutProps {
   handleApiCall: (request: any) => void;
 }
 
-export type RequestBodyPayloadType = string | number | object | null;
+export type RequestBodyPayloadType = string | number | boolean | object | null;
 
 const getInitialBodyByOperation = (operation: OperationModel): RequestBodyPayloadType => {
   if (!operation.requestBody) return null;
@@ -31,14 +31,17 @@ const getInitialBodyByOperation = (operation: OperationModel): RequestBodyPayloa
     case 'string':
       return '';
     case 'number':
+    case 'integer':
       return 0;
+    case 'boolean':
+      return false;
     case 'array':
       return [];
     case 'object':
       return {};
     default:
       throw Error(
-        `Schema of type ${schemaType} not yet supported. Supported schema types: string, number, object.`,
+        `Schema of type ${schemaType} not yet supported. Supported schema types: string, number, integer, boolean, array, object.`,
       );
   }
 };
