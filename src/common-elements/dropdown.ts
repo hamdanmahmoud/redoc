@@ -17,7 +17,7 @@ export interface DropdownProps {
 export const StyledDropdown = styled(Dropdown)`
   && {
     box-sizing: border-box;
-    min-width: 100px;
+    min-width: 8rem;
     outline: none;
     display: inline-block;
     border-radius: 2px;
@@ -139,5 +139,5 @@ export const MimeLabel = styled.span`
   margin-left: 10px;
   text-transform: none;
   font-size: 0.929em;
-  color: black;
+  color: #58585b;
 `;

@@ -25,6 +25,7 @@ export * from './MediaTypeSwitch/MediaTypesSwitch';
 export * from './Parameters/Parameters';
 export * from './PayloadSamples/Example';
 export * from './DropdownOrLabel/DropdownOrLabel';
+export * from './TryOut/TryOut';
 
 export * from './ErrorBoundary';
 export * from './StoreBuilder';

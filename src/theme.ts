@@ -4,83 +4,80 @@ const defaultTheme: ThemeInterface = {
   spacing: {
     unit: 5,
     sectionHorizontal: ({ spacing }) => spacing.unit * 8,
-    sectionVertical: ({ spacing }) => spacing.unit * 8,
+    sectionVertical: ({ spacing }) => spacing.unit * 4,
   },
   breakpoints: {
     small: '50rem',
-    medium: '75rem',
+    medium: '85rem',
     large: '105rem',
   },
   colors: {
-    tonalOffset: 0.2,
+    tonalOffset: 0.3,
     primary: {
-      main: '#32329f',
+      main: '#007493',
       light: ({ colors }) => lighten(colors.tonalOffset, colors.primary.main),
       dark: ({ colors }) => darken(colors.tonalOffset, colors.primary.main),
       contrastText: ({ colors }) => readableColor(colors.primary.main),
     },
     success: {
-      main: '#1d8127',
+      main: '#6EBE4A',
       light: ({ colors }) => lighten(colors.tonalOffset * 2, colors.success.main),
       dark: ({ colors }) => darken(colors.tonalOffset, colors.success.main),
       contrastText: ({ colors }) => readableColor(colors.success.main),
     },
     warning: {
-      main: '#ffa500',
+      main: '#FFCC00',
       light: ({ colors }) => lighten(colors.tonalOffset, colors.warning.main),
       dark: ({ colors }) => darken(colors.tonalOffset, colors.warning.main),
       contrastText: '#ffffff',
     },
     error: {
-      main: '#d41f1c',
+      main: '#E2231A',
       light: ({ colors }) => lighten(colors.tonalOffset, colors.error.main),
       dark: ({ colors }) => darken(colors.tonalOffset, colors.error.main),
       contrastText: ({ colors }) => readableColor(colors.error.main),
     },
     gray: {
-      50: '#FAFAFA',
-      100: '#F5F5F5',
+      50: '#DFDFDF',
+      100: '#9E9EA2',
     },
     text: {
-      primary: '#333333',
+      primary: '#626469',
       secondary: ({ colors }) => lighten(colors.tonalOffset, colors.text.primary),
     },
     border: {
       dark: 'rgba(0,0,0, 0.1)',
       light: '#ffffff',
     },
+
     responses: {
       success: {
         color: ({ colors }) => colors.success.main,
         backgroundColor: ({ colors }) => transparentize(0.93, colors.success.main),
-        tabTextColor: ({ colors }) => colors.responses.success.color,
       },
       error: {
         color: ({ colors }) => colors.error.main,
         backgroundColor: ({ colors }) => transparentize(0.93, colors.error.main),
-        tabTextColor: ({ colors }) => colors.responses.error.color,
       },
       redirect: {
         color: ({ colors }) => colors.warning.main,
         backgroundColor: ({ colors }) => transparentize(0.9, colors.responses.redirect.color),
-        tabTextColor: ({ colors }) => colors.responses.redirect.color,
       },
       info: {
         color: '#87ceeb',
         backgroundColor: ({ colors }) => transparentize(0.9, colors.responses.info.color),
-        tabTextColor: ({ colors }) => colors.responses.info.color,
       },
     },
     http: {
-      get: '#2F8132',
-      post: '#186FAF',
-      put: '#95507c',
-      options: '#947014',
-      patch: '#bf581d',
-      delete: '#cc3333',
-      basic: '#707070',
-      link: '#07818F',
-      head: '#A23DAD',
+      get: 'rgb(100, 187, 227)',
+      post: '#6EBE4A',
+      put: '#FBAB18',
+      options: '#d3ca12',
+      patch: '#e09d43',
+      delete: '#E2231A',
+      basic: '#999',
+      link: '#31bbb6',
+      head: '#c167e4',
     },
   },
   schema: {
@@ -107,21 +104,21 @@ const defaultTheme: ThemeInterface = {
     fontWeightRegular: '400',
     fontWeightBold: '600',
     fontWeightLight: '300',
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: 'Arial',
     smoothing: 'antialiased',
     optimizeSpeed: true,
     headings: {
-      fontFamily: 'Montserrat, sans-serif',
+      fontFamily: 'Arial',
       fontWeight: '400',
       lineHeight: '1.6em',
     },
     code: {
       fontSize: '13px',
-      fontFamily: 'Courier, monospace',
+      fontFamily: 'Arial',
       lineHeight: ({ typography }) => typography.lineHeight,
       fontWeight: ({ typography }) => typography.fontWeightRegular,
-      color: '#e53935',
-      backgroundColor: 'rgba(38, 50, 56, 0.05)',
+      color: '#58585B',
+      backgroundColor: '#F2F2F2',
       wrap: false,
     },
     links: {
@@ -131,13 +128,11 @@ const defaultTheme: ThemeInterface = {
     },
   },
   sidebar: {
-    width: '260px',
-    backgroundColor: '#fafafa',
-    textColor: '#333333',
-    activeTextColor: theme =>
-      theme.sidebar.textColor !== defaultTheme.sidebar!.textColor
-        ? theme.sidebar.textColor
-        : theme.colors.primary.main,
+    width: '280px',
+    backgroundColor: '#1E4F70',
+    textColor: '#FFFFFF',
+    activeTextColor: '#FFFFFF',
+
     groupItems: {
       textTransform: 'uppercase',
     },
@@ -155,9 +150,10 @@ const defaultTheme: ThemeInterface = {
     gutter: '2px',
   },
   rightPanel: {
-    backgroundColor: '#263238',
-    width: '40%',
-    textColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
+    width: '43.75%',
+    textColor: '#58585B',
+    border: '#FFFFFF',
   },
   codeBlock: {
     backgroundColor: ({ rightPanel }) => darken(0.1, rightPanel.backgroundColor),
@@ -210,7 +206,6 @@ export interface ColorSetting {
 export interface HTTPResponseColos {
   color: string;
   backgroundColor: string;
-  tabTextColor: string;
 }
 
 export interface FontSettings {
@@ -334,6 +329,7 @@ export interface ResolvedThemeInterface {
     backgroundColor: string;
     textColor: string;
     width: string;
+    border: string;
   };
   codeBlock: {
     backgroundColor: string;

@@ -8,7 +8,8 @@ import { PayloadSamples } from '../PayloadSamples/PayloadSamples';
 import { l } from '../../services/Labels';
 
 export interface ResponseSamplesProps {
-  operation: OperationModel;
+  operation?: OperationModel;
+  customResponse?: any;
 }
 
 @observer
@@ -16,35 +17,44 @@ export class ResponseSamples extends React.Component<ResponseSamplesProps> {
   operation: OperationModel;
 
   render() {
-    const { operation } = this.props;
-    const responses = operation.responses.filter(response => {
+    const { operation, customResponse } = this.props;
+    const responses = operation?.responses.filter(response => {
       return response.content && response.content.hasSample;
     });
+    const hasResponseSamples = responses && responses.length > 0;
 
-    return (
-      (responses.length > 0 && (
-        <div>
-          <RightPanelHeader> {l('responseSamples')} </RightPanelHeader>
-
+    return customResponse || hasResponseSamples ? (
+      <div>
+        {customResponse ? (
+          <>
+            <RightPanelHeader> {l('response')} </RightPanelHeader>
+            <div>
+              <PayloadSamples customData={customResponse} />
+            </div>
+          </>
+        ) : (
           <Tabs defaultIndex={0}>
             <TabList>
-              {responses.map(response => (
-                <Tab className={'tab-' + response.type} key={response.code}>
-                  {response.code}
-                </Tab>
-              ))}
+              {hasResponseSamples
+                ? responses?.map(response => (
+                    <Tab className={'tab-' + response.type} key={response.code}>
+                      {response.code}
+                    </Tab>
+                  ))
+                : null}
             </TabList>
-            {responses.map(response => (
-              <TabPanel key={response.code}>
-                <div>
-                  <PayloadSamples content={response.content!} />
-                </div>
-              </TabPanel>
-            ))}
+            {hasResponseSamples
+              ? responses?.map(response => (
+                  <TabPanel key={response.code}>
+                    <div>
+                      <PayloadSamples content={response.content!} />
+                    </div>
+                  </TabPanel>
+                ))
+              : null}
           </Tabs>
-        </div>
-      )) ||
-      null
-    );
+        )}
+      </div>
+    ) : null;
   }
 }

@@ -13,10 +13,10 @@ const {
 } = styledComponents as unknown as styledComponents.ThemedStyledComponentsModule<ResolvedThemeInterface>;
 
 export const media = {
-  lessThan(breakpoint, print?: boolean, extra?: string) {
+  lessThan(breakpoint, print?: boolean) {
     return (...args) => css`
       @media ${print ? 'print, ' : ''} screen and (max-width: ${props =>
-          props.theme.breakpoints[breakpoint]}) ${extra || ''} {
+          props.theme.breakpoints[breakpoint]}) {
         ${(css as any)(...args)};
       }
     `;
