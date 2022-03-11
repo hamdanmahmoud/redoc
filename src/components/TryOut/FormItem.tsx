@@ -1,13 +1,7 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
 
-import {
-  RequiredLabel,
-  TypeFormat,
-  TypeName,
-  TypePrefix,
-  TypeTitle,
-} from '../../common-elements/fields';
+import { RequiredLabel, TypeFormat, TypeName, TypePrefix } from '../../common-elements/fields';
 import { ShelfIcon } from '../../common-elements/shelfs';
 import { FieldModel, SchemaModel } from '../../services';
 import { DiscriminatorDropdown } from '../Schema/DiscriminatorDropdown';
@@ -106,7 +100,6 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
                   &gt;{' '}
                 </TypeFormat>
               )}
-              {schema.title && <TypeTitle color="black"> ({schema.title}) </TypeTitle>}
             </div>
           );
         }
