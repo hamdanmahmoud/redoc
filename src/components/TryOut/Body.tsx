@@ -7,9 +7,9 @@ import { Dropdown, SectionHeader } from './styled.elements';
 
 interface BodyProps {
   specBody: RequestBodyModel | undefined;
-  requestBody: any;
   onChange: any;
   isFormData: boolean;
+  error: string | undefined;
   setIsFormData: (any) => void;
   setError: (string) => void;
 }
@@ -17,17 +17,17 @@ interface BodyProps {
 /**
  *
  * @param specBody Request body of current operation, matching the request model from spec
- * @param requestBody Request body state that might be altered, this will be the payload sent
  * @param isFormData Indicates whether form data is selected (i.e. true) or the raw JSON (i.e. false)
  * @param onChange State callback to change requestBody (payload) param
  * @param setIsFormData State callback to handle data format change from dropdown
+ * @param error State error
  * @param setError State callback to set encountered errors so that they can be handled in parent
  */
 export const Body = ({
   specBody,
-  requestBody,
   onChange,
   isFormData,
+  error,
   setIsFormData,
   setError,
 }: BodyProps) => {
@@ -58,7 +58,13 @@ export const Body = ({
             />
           </>
         ) : (
-          <JsonViewer data={requestBody} editable setParsedJSON={onChange} setError={setError} />
+          <JsonViewer
+            data={{}}
+            editable
+            setParsedJSON={onChange}
+            error={error}
+            setError={setError}
+          />
         )}
       </>
     </>
