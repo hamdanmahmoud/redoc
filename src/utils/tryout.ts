@@ -133,7 +133,7 @@ const getUpdatedArrayFromObject = (object, fieldName, value, index) => {
   if (!object[fieldName]) object[fieldName] = []; // fieldName undefined, so define it
   const newArray = object[fieldName];
   newArray[index] = value;
-  return newArray;
+  return getCleanArray(newArray); // assumes UI input index === state array index, see RemovableInput in ArrayForm
 };
 
 /**
@@ -145,7 +145,7 @@ const getUpdatedArrayFromObject = (object, fieldName, value, index) => {
  * @param value New value to be assigned to either object[parent0][parent1][...][fieldName] or to corresponding array element at specified index.
  * @returns Reference to initial object, after change is handled
  */
-export const getUpdatedPayload = (
+export const getUpdatedObject = (
   object: RequestBodyPayloadType,
   fieldName,
   value,
@@ -154,7 +154,7 @@ export const getUpdatedPayload = (
 ) => {
   if (!object) throw new Error(`Cannot set field ${fieldName} on ${object} object.`);
 
-  // on root of request body
+  // on root of object
   if (ancestors.length === 0) {
     if (isEmpty(fieldName)) {
       // case when primitive value is directly on root (e.g. string, number, array)
@@ -197,7 +197,7 @@ export const getUpdatedPayload = (
  * Method used for cleaning up an object from fields having empty strings as values
  * as those make no sense in some use cases, such as for request parameters (query, path etc).
  * This method esentially deletes fields that have values such as '', ' ', '     ' (i.e. empty string),
- * rest of the fields are not touched whatsoever.
+ * and arrays, rest of the fields are not touched whatsoever.
  *
  * @param obj Reference to object that will be cleaned up
  * @returns Reference to initial object, after clean up takes place
@@ -207,7 +207,11 @@ const cleanEmptyFields = (obj: Record<string, any>): Record<string, any> => {
   if (entries.length === 0) return obj;
 
   entries.forEach(([key, value]) => {
-    typeof obj[key] === 'string' && isEmpty(obj[key].replace(/\s/g, '')) ? delete obj[key] : value;
+    typeof obj[key] === 'string' && isEmpty(obj[key].replace(/\s/g, ''))
+      ? delete obj[key]
+      : Array.isArray(value)
+      ? getCleanArray(value)
+      : value;
   });
 
   return obj;

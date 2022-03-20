@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 
 import { OperationModel } from '../../services';
-import { getCleanRequest, getUpdatedPayload } from '../../utils/tryout';
+import { getCleanRequest, getUpdatedObject } from '../../utils/tryout';
 import { ResponseSamples as ResponseSection } from '../ResponseSamples/ResponseSamples';
 import { Body } from './Body';
 import { Params } from './Params';
@@ -93,43 +93,103 @@ export const TryOut = observer(
       const ancestorsCopy = ancestors && cloneDeep(ancestors); // directly mutating original ancestors would lead to inconsistencies across inputs
       switch (location) {
         case 'path': {
-          setRequest(request => ({
-            ...request,
-            pathParams: {
-              ...request.pathParams,
-              [fieldName as string]: value,
-            },
-          }));
+          setRequest(request => {
+            if (arrayIndex !== undefined) {
+              const updatedObject = getUpdatedObject(
+                request.queryParams,
+                fieldName,
+                value,
+                arrayIndex,
+                cloneDeep(ancestorsCopy),
+              ) as object;
+              return {
+                ...request,
+                pathParams: updatedObject,
+              };
+            }
+            return {
+              ...request,
+              pathParams: {
+                ...request.pathParams,
+                [fieldName as string]: value,
+              },
+            };
+          });
           break;
         }
         case 'query': {
-          setRequest(request => ({
-            ...request,
-            queryParams: {
-              ...request.queryParams,
-              [fieldName as string]: value,
-            },
-          }));
+          setRequest(request => {
+            if (arrayIndex !== undefined) {
+              const updatedObject = getUpdatedObject(
+                request.queryParams,
+                fieldName,
+                value,
+                arrayIndex,
+                cloneDeep(ancestorsCopy),
+              ) as object;
+              return {
+                ...request,
+                queryParams: updatedObject,
+              };
+            }
+            return {
+              ...request,
+              queryParams: {
+                ...request.queryParams,
+                [fieldName as string]: value,
+              },
+            };
+          });
           break;
         }
         case 'cookie': {
-          setRequest(request => ({
-            ...request,
-            cookieParams: {
-              ...request.cookieParams,
-              [fieldName as string]: value,
-            },
-          }));
+          setRequest(request => {
+            if (arrayIndex !== undefined) {
+              const updatedObject = getUpdatedObject(
+                request.queryParams,
+                fieldName,
+                value,
+                arrayIndex,
+                cloneDeep(ancestorsCopy),
+              ) as object;
+              return {
+                ...request,
+                cookieParams: updatedObject,
+              };
+            }
+            return {
+              ...request,
+              cookieParams: {
+                ...request.cookieParams,
+                [fieldName as string]: value,
+              },
+            };
+          });
           break;
         }
         case 'header': {
-          setRequest(request => ({
-            ...request,
-            header: {
-              ...request.header,
-              [fieldName as string]: value,
-            },
-          }));
+          setRequest(request => {
+            if (arrayIndex !== undefined) {
+              const updatedObject = getUpdatedObject(
+                request.queryParams,
+                fieldName,
+                value,
+                arrayIndex,
+                cloneDeep(ancestorsCopy),
+              ) as object;
+              return {
+                ...request,
+                header: updatedObject,
+              };
+            }
+            return {
+              ...request,
+              header: {
+                ...request.header,
+                [fieldName as string]: value,
+              },
+            };
+          });
           break;
         }
         default: {
@@ -139,7 +199,7 @@ export const TryOut = observer(
             // clone of ancestors is passed to avoid ancestors array being empty on follow-up executions
             // of the initial setRequest call, thus avoiding request body nested object keys
             // being spread throughout the root request body as well
-            const updatedObject = getUpdatedPayload(
+            const updatedObject = getUpdatedObject(
               request.body,
               fieldName,
               value,

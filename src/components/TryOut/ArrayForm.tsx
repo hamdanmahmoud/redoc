@@ -5,8 +5,8 @@ import { JsonViewer } from '../JsonViewer/JsonViewer';
 import { ActionOnArrayButton, Input } from './styled.elements';
 
 enum ArrayAction {
-  remove = `remove`,
-  add = `add`,
+  REMOVE = `remove`,
+  ADD = `add`,
 }
 
 const containerStyle: React.CSSProperties = {
@@ -29,7 +29,49 @@ const addButtonStyle: React.CSSProperties = {
   cursor: 'pointer',
 };
 
-export const ArrayForm = ({ name, schema, required, onChange, ancestors }) => {
+interface RemovableInputProps {
+  id: string;
+  onChange: any;
+  name: string;
+  itemsType: any;
+  index: number;
+  ancestors: any;
+  location: string | undefined;
+  onRemove: any;
+}
+
+const RemovableInput = ({
+  id,
+  onChange,
+  name,
+  itemsType,
+  index,
+  ancestors,
+  location,
+  onRemove,
+}: RemovableInputProps) => {
+  return (
+    <div key={id} style={{ position: 'relative' }}>
+      <Input
+        onChange={e =>
+          onChange &&
+          onChange(
+            name,
+            itemsType === 'number' ? Number(e.target.value) : e.target.value,
+            index, // assumes UI input index === state array index, see getUpdatedArrayFromObject in tryout.ts
+            ancestors,
+            location,
+          )
+        }
+      />
+      <div onClick={onRemove} style={removeButtonStyle}>
+        x
+      </div>
+    </div>
+  );
+};
+
+export const ArrayForm = ({ name, schema, required, onChange, ancestors, location }) => {
   switch (schema.items.type) {
     case 'string':
     case 'number': {
@@ -45,72 +87,38 @@ export const ArrayForm = ({ name, schema, required, onChange, ancestors }) => {
         const id = uuidv4();
         arr.push({
           id,
-          component: (
-            <div style={{ position: 'relative' }}>
-              <Input
-                key={id}
-                onChange={e =>
-                  onChange &&
-                  onChange(
-                    name,
-                    itemsType === 'number' ? Number(e.target.value) : e.target.value,
-                    index,
-                    ancestors,
-                  )
-                }
-              />
-              <div
-                onClick={() => handleButtonClick(ArrayAction.remove, id, index)}
-                style={removeButtonStyle}
-              >
-                x
-              </div>
-            </div>
-          ),
+          onChange,
+          name,
+          itemsType,
+          ancestors,
+          location,
         });
       }
       const [array, setArray] = React.useState<any>(arr);
 
       const handleButtonClick = (action: ArrayAction, id?: string, index?: number) => {
         switch (action) {
-          case ArrayAction.remove: {
+          case ArrayAction.REMOVE: {
             setArray(array => {
               if (array.length - 1 < minLength || !id || index === undefined) return array;
               const newArr = [...array].filter(element => element.id !== id);
-              onChange && onChange(name, undefined, index, ancestors);
+              onChange && onChange(name, undefined, index, ancestors, location);
               return newArr;
             });
             break;
           }
-          case ArrayAction.add: {
+          case ArrayAction.ADD: {
             setArray(array => {
               if (maxLength && array.length + 1 > maxLength) return array;
               const newArr = [...array];
               const id = uuidv4();
               newArr.push({
                 id,
-                component: (
-                  <div style={{ position: 'relative' }}>
-                    <Input
-                      key={id}
-                      onChange={e =>
-                        onChange &&
-                        onChange(
-                          name,
-                          itemsType === 'number' ? Number(e.target.value) : e.target.value,
-                          array.length,
-                          ancestors,
-                        )
-                      }
-                    />
-                    <div
-                      onClick={() => handleButtonClick(ArrayAction.remove, id, array.length)}
-                      style={removeButtonStyle}
-                    >
-                      x
-                    </div>
-                  </div>
-                ),
+                onChange,
+                name,
+                itemsType,
+                ancestors,
+                location,
               });
               return newArr;
             });
@@ -125,10 +133,25 @@ export const ArrayForm = ({ name, schema, required, onChange, ancestors }) => {
 
       return (
         <div style={containerStyle}>
-          {array.map(element => element.component)}
+          {array.map((element, index) => {
+            const { id, onChange, name, itemsType, ancestors, location } = element;
+            return (
+              <RemovableInput
+                id={id}
+                key={id}
+                onChange={onChange}
+                name={name}
+                itemsType={itemsType}
+                index={index}
+                ancestors={ancestors}
+                location={location}
+                onRemove={() => handleButtonClick(ArrayAction.REMOVE, id, index)}
+              />
+            );
+          })}
           <div
             style={{ ...addButtonStyle, color: `${addButtonDisabled ? '#AEAEAE' : '#21608a'}` }}
-            onClick={() => handleButtonClick(ArrayAction.add)}
+            onClick={() => handleButtonClick(ArrayAction.ADD)}
           >
             <ActionOnArrayButton disabled={addButtonDisabled}>{`+`}</ActionOnArrayButton>
             <div>{'Add Element'}</div>
