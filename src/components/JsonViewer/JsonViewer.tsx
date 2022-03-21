@@ -13,6 +13,7 @@ export interface JsonProps {
   className?: string;
   editable?: boolean;
   hideButtons?: boolean;
+  error?: string | undefined;
   setParsedJSON?: (any) => void;
   setError?: (string) => void;
 }
@@ -117,6 +118,9 @@ class Json extends React.PureComponent<JsonProps> {
               {this.props.data.content && !this.props.editable && (
                 <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>
               )}
+              {this.props.error && (
+                <StatusCodeSpan type={'error'}>{this.props.error}</StatusCodeSpan>
+              )}
               <PrismDiv
                 className={this.props.className}
                 // tslint:disable-next-line
@@ -155,6 +159,7 @@ class Json extends React.PureComponent<JsonProps> {
             {this.props.data.content && !this.props.editable && (
               <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>
             )}
+            {this.props.error && <StatusCodeSpan type={'error'}>{this.props.error}</StatusCodeSpan>}
             <PrismDiv
               className={this.props.className}
               // tslint:disable-next-line

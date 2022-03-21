@@ -46,12 +46,12 @@ enum NoRequestBodyHttpVerb {
   GET = 'get',
   HEAD = 'head',
   OPTIONS = 'options',
-  DELETE = 'delete',
   TRACE = 'trace',
 }
 
-const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
 const DEFAULT_CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error' };
+const DEFAULT_JSON_RESPONSE_PARSING_ERROR =
+  "Response content type specified as 'application/json' but response payload is not a valid JSON";
 
 interface OperationProps {
   operation: OperationModel;
@@ -92,8 +92,6 @@ export class Operation extends React.Component<OperationProps, OperationState> {
       operation: { httpVerb, path },
     } = this.props;
 
-    headers = { ...DEFAULT_HEADERS, ...headers };
-
     const request: RequestInit =
       Object.values(NoRequestBodyHttpVerb)
         .map(value => String(value))
@@ -115,10 +113,17 @@ export class Operation extends React.Component<OperationProps, OperationState> {
       .then((response: any) => {
         const statusCode = response.status;
         const contentType = response.headers.get('content-type');
-        response =
-          contentType && contentType.indexOf('application/json') !== -1
-            ? response.json()
-            : response.text();
+        if (contentType && contentType.indexOf('application/json') !== -1) {
+          try {
+            response = response.json();
+          } catch (_e) {
+            // most likely contentType specified as json by backend, but payload is mistakenly set to plain text
+            response = response.text();
+            console.error(DEFAULT_JSON_RESPONSE_PARSING_ERROR);
+          }
+        } else {
+          response = response.text();
+        }
 
         response.then(data => {
           console.log('Parsed response is:', data);

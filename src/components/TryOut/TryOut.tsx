@@ -60,12 +60,10 @@ export const TryOut = observer(
     const [showError, setShowError] = React.useState(false);
 
     React.useEffect(() => {
-      if (isFormData) {
-        setRequest(request => ({
-          ...request,
-          body: getInitialBodyByOperation(operation), // if isFormData set to true, body state is reset
-        }));
-      }
+      setRequest(request => ({
+        ...request,
+        body: getInitialBodyByOperation(operation),
+      }));
     }, [isFormData]);
 
     /**
@@ -233,9 +231,9 @@ export const TryOut = observer(
         {showError && <>{error}</>}
         <Body
           specBody={operation.requestBody}
-          requestBody={request.body}
           onChange={onBodyChange}
           isFormData={isFormData}
+          error={error}
           setIsFormData={setIsFormData}
           setError={setError}
         />
