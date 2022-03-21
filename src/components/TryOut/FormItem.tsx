@@ -84,6 +84,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
               required={required}
               onChange={onChange}
               ancestors={ancestors}
+              location={item.in}
             />
           );
         }
