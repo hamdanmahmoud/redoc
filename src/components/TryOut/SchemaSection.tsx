@@ -7,8 +7,9 @@ import { JsonViewer } from '../JsonViewer/JsonViewer';
 import { FormSection } from './FormSection';
 
 const TextArea = styled.textarea`
-  margin: 1em 0em;
-  width: 100%;
+  margin: 30px;
+  width: 90%;
+  resize: none;
 `;
 
 interface SchemaSectionProps {
