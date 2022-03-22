@@ -148,7 +148,18 @@ export class Operation extends React.Component<OperationProps, OperationState> {
       .catch(e =>
         setTimeout(() => {
           console.log(e);
-          if (!this.state.response.code) this.setState({ response: DEFAULT_CLIENT_ERROR_RESPONSE });
+          if (!this.state.response.code) {
+            this.setState({ response: DEFAULT_CLIENT_ERROR_RESPONSE });
+          } else {
+            this.setState({
+              response: {
+                content:
+                  'Ooops! Encountered an error. Most likely returned payload does not match Content-type response header.',
+                code: this.state.response.code,
+                type: 'error',
+              },
+            });
+          }
         }, 1000),
       )
       .finally(() => setTimeout(() => this.setState({ pendingRequest: false }), 1000));
