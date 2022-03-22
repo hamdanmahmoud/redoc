@@ -89,8 +89,15 @@ export class Operation extends React.Component<OperationProps, OperationState> {
    */
   handleApiCall = ({ queryParams, pathParams, cookieParams, header: headers, body }: Request) => {
     const {
-      operation: { httpVerb, path },
+      operation: { httpVerb, path, requestBody },
     } = this.props;
+
+    const requestBodyContent = requestBody?.content;
+    const activeMimeIdx = requestBodyContent?.activeMimeIdx;
+    const contentType =
+      activeMimeIdx !== undefined && requestBodyContent?.mediaTypes[activeMimeIdx]?.name;
+
+    headers = { 'Content-Type': contentType || 'application/json', ...headers };
 
     const request: RequestInit =
       Object.values(NoRequestBodyHttpVerb)
