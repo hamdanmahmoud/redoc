@@ -103,7 +103,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
         : {
             method: httpVerb,
             headers,
-            body: JSON.stringify(body),
+            body: typeof body === 'string' ? body : JSON.stringify(body),
           };
 
     setCookieParams(cookieParams);
