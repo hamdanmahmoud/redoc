@@ -71,14 +71,15 @@ class Json extends React.PureComponent<JsonProps> {
   }
 
   onKeyDown(e) {
-    if (e.keyCode === 9) {
-      // tab
+    const TAB_KEY = 9;
+    const LBRACKET_KEY = 219;
+
+    if (e.keyCode === TAB_KEY) {
       e.preventDefault();
       document.execCommand('insertHTML', false, '  ');
     }
 
-    if (e.keyCode === 219) {
-      // bracket
+    if (e.keyCode === LBRACKET_KEY) {
       e.preventDefault();
       if (e.shiftKey) {
         // curly bracket
@@ -98,6 +99,12 @@ class Json extends React.PureComponent<JsonProps> {
         }
       }
     }
+  }
+
+  onPaste(e) {
+    e.preventDefault();
+    const plainText = (e.clipboardData || e.originalEvent.clipboardData).getData('text/plain');
+    document.execCommand('insertHTML', false, plainText);
   }
 
   // TODO: Implement this differently, without code duplication,
@@ -136,6 +143,7 @@ class Json extends React.PureComponent<JsonProps> {
                 spellCheck={false}
                 tabIndex={0}
                 onKeyDown={this.onKeyDown}
+                onPaste={e => this.props.editable && this.onPaste(e)}
               />
             </>
           )}
@@ -175,6 +183,7 @@ class Json extends React.PureComponent<JsonProps> {
               spellCheck={false}
               tabIndex={0}
               onKeyDown={this.onKeyDown}
+              onPaste={e => this.props.editable && this.onPaste(e)}
             />
           </>
         )}
