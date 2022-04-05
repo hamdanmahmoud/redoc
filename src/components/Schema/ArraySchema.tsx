@@ -6,6 +6,7 @@ import { ArrayClosingLabel, ArrayOpenningLabel } from '../../common-elements';
 import styled from '../../styled-components';
 import { humanizeConstraints } from '../../utils';
 import { TypeName } from '../../common-elements/fields';
+import { Markdown } from '../Markdown/Markdown';
 
 const PaddedSchema = styled.div`
   padding-left: ${({ theme }) => theme.spacing.unit * 2}px;
@@ -36,6 +37,9 @@ export class ArraySchema extends React.PureComponent<SchemaProps> {
           <Schema {...this.props} schema={itemsSchema} />
         </PaddedSchema>
         <ArrayClosingLabel />
+        <div>
+          <Markdown compact={true} source={schema.description} />
+        </div>
       </div>
     );
   }
