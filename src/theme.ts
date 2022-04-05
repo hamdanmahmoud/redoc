@@ -73,7 +73,7 @@ const defaultTheme: ThemeInterface = {
       post: '#6EBE4A',
       put: '#FBAB18',
       options: '#d3ca12',
-      patch: '#e09d43',
+      patch: '#e07543',
       delete: '#E2231A',
       basic: '#999',
       link: '#31bbb6',
