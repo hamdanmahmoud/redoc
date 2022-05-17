@@ -11,7 +11,6 @@ export const PrismDiv = styled.div`
     background: none; */
     text-shadow: 0 -0.1em 0.2em #58585b;
     text-align: left;
-    white-space: pre;
     word-spacing: normal;
     word-break: normal;
     word-wrap: normal;
