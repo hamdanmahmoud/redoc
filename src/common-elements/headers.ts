@@ -36,8 +36,7 @@ export const H3 = styled.h2`
 
 export const RightPanelHeader = styled.h3`
   color: #58585B;
-  background: white;
- box-shadow:0px 0px 15px 1px #C6C7CA
+  box-shadow:0px 0px 15px 1px #C6C7CA
   width: 40%;
   font-size:14px;
   font-weight:bold;
