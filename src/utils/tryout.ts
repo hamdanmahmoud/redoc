@@ -6,7 +6,7 @@ const appendPathParamsToPath = (path: string, pathParams: Record<string, string>
   const entries = Object.entries(pathParams);
   for (let i = 0; i < entries.length; i++) {
     const [key, value] = entries[i];
-    path = path.replace(`{${key}}`, value);
+    path = path.replace(`{${key}}`, encodeURIComponent(value));
   }
   return path;
 };
@@ -17,7 +17,10 @@ const appendQueryParamsToPath = (path: string, queryParams: Record<string, strin
 
   for (let i = 0; i < entries.length; i++) {
     const [key, value] = entries[i];
-    paramsSuffix += paramsSuffix === '' ? `${key}=${value}` : `&${key}=${value}`;
+    paramsSuffix +=
+      paramsSuffix === ''
+        ? `${key}=${encodeURIComponent(value)}`
+        : `&${key}=${encodeURIComponent(value)}`;
   }
   return paramsSuffix === '' ? path : `${path}?${paramsSuffix}`;
 };
