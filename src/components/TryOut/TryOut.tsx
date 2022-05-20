@@ -296,6 +296,7 @@ export const TryOut = observer(
           error={error}
           setIsFormData={setIsFormData}
           setError={setError}
+          requestPayload={request?.body}
         />
         <ResponseSection customResponse={response} />
         <RunButton disabled={pendingRequest} onClick={handleRunClick}>{`Run`}</RunButton>
