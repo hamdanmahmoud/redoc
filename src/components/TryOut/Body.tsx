@@ -10,6 +10,7 @@ interface BodyProps {
   onChange: any;
   isFormData: boolean;
   error: string | undefined;
+  requestPayload: any;
   setIsFormData: (any) => void;
   setError: (string) => void;
 }
@@ -22,6 +23,7 @@ interface BodyProps {
  * @param setIsFormData State callback to handle data format change from dropdown
  * @param error State error
  * @param setError State callback to set encountered errors so that they can be handled in parent
+ * @param requestPayload Actual request state body i.e. payload that will be sent
  */
 export const Body = ({
   specBody,
@@ -30,6 +32,7 @@ export const Body = ({
   error,
   setIsFormData,
   setError,
+  requestPayload,
 }: BodyProps) => {
   if (!specBody) return null;
 
@@ -55,11 +58,12 @@ export const Body = ({
               schema={specBody.content?.active?.schema}
               contentType={specBody.content?.active?.name}
               onChange={onChange}
+              requestPayload={requestPayload}
             />
           </>
         ) : (
           <JsonViewer
-            data={{}}
+            data={requestPayload || {}}
             editable
             setParsedJSON={onChange}
             error={error}

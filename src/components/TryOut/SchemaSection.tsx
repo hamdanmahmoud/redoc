@@ -17,11 +17,11 @@ interface SchemaSectionProps {
   contentType?: string;
   ancestors?: string[];
   onChange?: any;
-  requestBody?: any;
+  requestPayload?: any;
 }
 
 export const SchemaSection = observer(
-  ({ schema, contentType, onChange, ancestors = [] }: SchemaSectionProps) => {
+  ({ schema, contentType, onChange, ancestors = [], requestPayload }: SchemaSectionProps) => {
     if (!schema) return null;
 
     switch (contentType) {
@@ -33,7 +33,7 @@ export const SchemaSection = observer(
           case 'objects': {
             return (
               <JsonViewer
-                data={[]}
+                data={requestPayload || []}
                 editable
                 hideButtons
                 setParsedJSON={jsonValue => onChange && onChange(jsonValue)}

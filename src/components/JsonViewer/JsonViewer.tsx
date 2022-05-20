@@ -47,20 +47,25 @@ class Json extends React.PureComponent<JsonProps> {
 
   constructor(props) {
     super(props);
-    this.state = {
-      error: null,
-    };
   }
 
-  render() {
-    return (
-      <CopyButtonWrapper data={this.props.data.content || this.props.data}>
-        {this.renderInner}
-      </CopyButtonWrapper>
-    );
-  }
-
+  /**
+   * This method is used for real time error feedback
+   */
   onInput(e) {
+    try {
+      JSON.parse(e.currentTarget.textContent || '{}');
+      this.props.setError?.(undefined);
+    } catch (e) {
+      this.props.setError?.('Invalid JSON Payload');
+    }
+  }
+
+  /**
+   * This method will in fact set the new JSON payload state in parent,
+   * so contenteditable div can parse JSON into HTML, styling it properly
+   */
+  onBlur(e) {
     try {
       const parsedJSON = JSON.parse(e.currentTarget.textContent || '{}');
       this.props.setParsedJSON?.(parsedJSON);
@@ -70,6 +75,9 @@ class Json extends React.PureComponent<JsonProps> {
     }
   }
 
+  /**
+   * Method is mostly use to track '{' or '[' insertion for autocomplete for a better UX
+   */
   onKeyDown(e) {
     const TAB_KEY = 9;
     const LBRACKET_KEY = 219;
@@ -101,98 +109,16 @@ class Json extends React.PureComponent<JsonProps> {
     }
   }
 
+  /**
+   * This way we ensure only text is pasted, trimming fonts and styles out when copy-pasting text
+   */
   onPaste(e) {
     e.preventDefault();
     const plainText = (e.clipboardData || e.originalEvent.clipboardData).getData('text/plain');
     document.execCommand('insertHTML', false, plainText);
   }
 
-  // TODO: Implement this differently, without code duplication,
-  // in order to rerender this.renderInner from above with new props
-  componentDidUpdate() {
-    this.renderInner = ({ renderCopyButton }) => (
-      <JsonViewerWrap>
-        {!this.props.hideButtons && (
-          <SampleControls>
-            {renderCopyButton()}
-            {<button onClick={this.expandAll}> Expand all </button>}
-            {<button onClick={this.collapseAll}> Collapse all </button>}
-          </SampleControls>
-        )}
-        <OptionsContext.Consumer>
-          {options => (
-            <>
-              {this.props.data.content && !this.props.editable && (
-                <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>
-              )}
-              {this.props.error && (
-                <StatusCodeSpan type={'error'}>{this.props.error}</StatusCodeSpan>
-              )}
-              <PrismDiv
-                className={this.props.className}
-                // tslint:disable-next-line
-                ref={node => (this.node = node!)}
-                dangerouslySetInnerHTML={{
-                  __html: jsonToHTML(
-                    this.props.data.content || this.props.data,
-                    options.jsonSampleExpandLevel,
-                  ),
-                }}
-                contentEditable={this.props.editable} // <-- TODO ref: this line right here
-                onInput={e => this.props.editable && this.onInput(e)}
-                spellCheck={false}
-                tabIndex={0}
-                onKeyDown={this.onKeyDown}
-                onPaste={e => this.props.editable && this.onPaste(e)}
-              />
-            </>
-          )}
-        </OptionsContext.Consumer>
-      </JsonViewerWrap>
-    );
-  }
-
-  renderInner = ({ renderCopyButton }) => (
-    <JsonViewerWrap>
-      {!this.props.hideButtons && (
-        <SampleControls>
-          {renderCopyButton()}
-          {<button onClick={this.expandAll}> Expand all </button>}
-          {<button onClick={this.collapseAll}> Collapse all </button>}
-        </SampleControls>
-      )}
-      <OptionsContext.Consumer>
-        {options => (
-          <>
-            {this.props.data.content && !this.props.editable && (
-              <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>
-            )}
-            {this.props.error && <StatusCodeSpan type={'error'}>{this.props.error}</StatusCodeSpan>}
-            <PrismDiv
-              className={this.props.className}
-              // tslint:disable-next-line
-              ref={node => (this.node = node!)}
-              dangerouslySetInnerHTML={{
-                __html: jsonToHTML(
-                  this.props.data.content || this.props.data,
-                  options.jsonSampleExpandLevel,
-                ),
-              }}
-              contentEditable={this.props.editable}
-              onInput={e => this.props.editable && this.onInput(e)}
-              spellCheck={false}
-              tabIndex={0}
-              onKeyDown={this.onKeyDown}
-              onPaste={e => this.props.editable && this.onPaste(e)}
-            />
-          </>
-        )}
-      </OptionsContext.Consumer>
-    </JsonViewerWrap>
-  );
-
   expandAll = () => {
-    console.log(this.node);
     const elements = this.node.getElementsByClassName('collapsible');
     for (const collapsed of Array.prototype.slice.call(elements)) {
       (collapsed.parentNode as Element)!.classList.remove('collapsed');
@@ -228,6 +154,54 @@ class Json extends React.PureComponent<JsonProps> {
 
   componentWillUnmount() {
     this.node!.removeEventListener('click', this.clickListener);
+  }
+
+  render() {
+    return (
+      <CopyButtonWrapper data={this.props.data.content || this.props.data}>
+        {({ renderCopyButton }) => (
+          <JsonViewerWrap>
+            {!this.props.hideButtons && !this.props.error && (
+              <SampleControls>
+                {renderCopyButton()}
+                {<button onClick={this.expandAll}> Expand all </button>}
+                {<button onClick={this.collapseAll}> Collapse all </button>}
+              </SampleControls>
+            )}
+            <>
+              {this.props.data.content && !this.props.editable && (
+                <StatusCodeSpan type={this.props.data.type}>{this.props.data.code}</StatusCodeSpan>
+              )}
+              {this.props.error && (
+                <StatusCodeSpan type={'error'}>{this.props.error}</StatusCodeSpan>
+              )}
+              <OptionsContext.Consumer>
+                {options => (
+                  <PrismDiv
+                    className={this.props.className}
+                    spellCheck={false}
+                    tabIndex={0}
+                    // tslint:disable-next-line
+                    ref={node => (this.node = node!)}
+                    dangerouslySetInnerHTML={{
+                      __html: jsonToHTML(
+                        this.props.data.content || this.props.data,
+                        options.jsonSampleExpandLevel,
+                      ),
+                    }}
+                    contentEditable={this.props.editable}
+                    onInput={e => this.props.editable && this.onInput(e)}
+                    onKeyDown={e => this.props.editable && this.onKeyDown(e)}
+                    onPaste={e => this.props.editable && this.onPaste(e)}
+                    onBlur={e => this.props.editable && this.onBlur(e)}
+                  />
+                )}
+              </OptionsContext.Consumer>
+            </>
+          </JsonViewerWrap>
+        )}
+      </CopyButtonWrapper>
+    );
   }
 }
 
