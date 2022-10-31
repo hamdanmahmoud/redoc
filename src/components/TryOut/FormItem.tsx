@@ -5,8 +5,8 @@ import { RequiredLabel, TypeFormat, TypeName, TypePrefix } from '../../common-el
 import { ShelfIcon } from '../../common-elements/shelfs';
 import { FieldModel, SchemaModel } from '../../services';
 import { DiscriminatorDropdown } from '../Schema/DiscriminatorDropdown';
-import { ArrayForm } from './ArrayForm';
-import { DictionaryForm } from './DictionaryForm';
+import { JsonViewer } from '../JsonViewer/JsonViewer';
+import { ArrayForm, containerStyle } from './ArrayForm';
 import { SchemaSection } from './SchemaSection';
 import { Dropdown, Input, Label } from './styled.elements';
 
@@ -122,14 +122,19 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
       }
     }
     case FormItemKind.additionalProps: {
-      switch (schema.type) {
-        case FormItemType.string: {
-          return <DictionaryForm onChange={onChange} ancestors={ancestors} />;
-        }
-        default: {
-          return <> {`Could not find an item type for this item`} </>;
-        }
-      }
+      const dictionaryName = ancestors.pop();
+      return (
+        <div style={containerStyle}>
+          <JsonViewer
+            data={{}}
+            editable
+            hideButtons
+            setParsedJSON={jsonValue =>
+              onChange && onChange(dictionaryName, jsonValue, undefined, ancestors)
+            }
+          />
+        </div>
+      );
     }
     default: {
       return <> {`Could not find an item kind for this item`} </>;
@@ -168,6 +173,7 @@ export const FormItem = observer(
     const oneOfSchema = oneOf?.[activeOneOf];
     const alignItemsStyle = type !== FormItemType.array ? 'center' : 'normal';
     const withSubSchema = !isPrimitive && !isCircular;
+    const isNotDictionary = name !== 'property name*';
     return (
       <div
         style={{
@@ -189,11 +195,13 @@ export const FormItem = observer(
         >
           <div style={{ minWidth: 0, flexBasis: '50%' }}>
             <div
-              onClick={() => (withSubSchema && type === 'object' ? item.toggle() : f => f)}
-              style={{ cursor: 'pointer' }}
+              onClick={() =>
+                isNotDictionary && withSubSchema && type === 'object' ? item.toggle() : f => f
+              }
+              style={{ cursor: `${isNotDictionary ? 'pointer' : 'auto'}` }}
             >
-              <Label key={`${name}-label`}>{name !== 'property name*' ? name : 'dictionary'}</Label>
-              {withSubSchema && type === 'object' && (
+              <Label key={`${name}-label`}>{isNotDictionary ? name : 'dictionary'}</Label>
+              {isNotDictionary && withSubSchema && type === 'object' && (
                 <ShelfIcon direction={expanded ? 'down' : 'right'} />
               )}
             </div>

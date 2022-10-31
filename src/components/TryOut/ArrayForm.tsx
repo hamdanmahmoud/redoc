@@ -9,7 +9,7 @@ enum ArrayAction {
   ADD = `add`,
 }
 
-const containerStyle: React.CSSProperties = {
+export const containerStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   margin: '0.5rem 0rem 2rem 0rem',
