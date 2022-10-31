@@ -12,6 +12,8 @@ import { Dropdown, Input, Label } from './styled.elements';
 
 const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
   const { schema, name, example, description, required, kind } = item;
+  const { oneOf, activeOneOf } = schema;
+  const oneOfSchema = oneOf?.[activeOneOf];
 
   switch (kind) {
     case FormItemKind.field: {
@@ -104,6 +106,16 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
             </div>
           );
         }
+        case FormItemType.any: {
+          if (!oneOfSchema) return null;
+          return (
+            <SchemaSection
+              schema={item.schema}
+              onChange={onChange}
+              ancestors={[...ancestors, item.name]}
+            />
+          );
+        }
         default: {
           return <> {`Could not find an item type for this item`} </>;
         }
@@ -151,36 +163,38 @@ interface FormItemProps {
 
 export const FormItem = observer(
   ({ item, onChange, discriminator, ancestors = [] }: FormItemProps) => {
-    const alignItemsStyle = item.schema.type !== FormItemType.array ? 'center' : 'normal';
-    const withSubSchema = !item.schema.isPrimitive && !item.schema.isCircular;
-
+    const { expanded, name, schema } = item;
+    const { activeOneOf, oneOf, isCircular, isPrimitive, type } = schema;
+    const oneOfSchema = oneOf?.[activeOneOf];
+    const alignItemsStyle = type !== FormItemType.array ? 'center' : 'normal';
+    const withSubSchema = !isPrimitive && !isCircular;
     return (
       <div
         style={{
-          alignItems: `${item.schema.type === FormItemType.object ? 'baseline' : 'center'}`,
+          alignItems: `${type === FormItemType.object || !!oneOfSchema ? 'baseline' : 'center'}`,
         }}
       >
         <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: `${alignItemsStyle}`,
-            minHeight: '2.5rem',
-            flexWrap: 'wrap',
-          }}
+          style={
+            !!oneOfSchema
+              ? {}
+              : {
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: `${alignItemsStyle}`,
+                  minHeight: '2.5rem',
+                  flexWrap: 'wrap',
+                }
+          }
         >
           <div style={{ minWidth: 0, flexBasis: '50%' }}>
             <div
-              onClick={() =>
-                withSubSchema && item.schema.type === 'object' ? item.toggle() : f => f
-              }
+              onClick={() => (withSubSchema && type === 'object' ? item.toggle() : f => f)}
               style={{ cursor: 'pointer' }}
             >
-              <Label key={`${item.name}-label`}>
-                {item.name !== 'property name*' ? item.name : 'dictionary'}
-              </Label>
-              {withSubSchema && item.schema.type === 'object' && (
-                <ShelfIcon direction={item.expanded ? 'down' : 'right'} />
+              <Label key={`${name}-label`}>{name !== 'property name*' ? name : 'dictionary'}</Label>
+              {withSubSchema && type === 'object' && (
+                <ShelfIcon direction={expanded ? 'down' : 'right'} />
               )}
             </div>
             {item.required && <RequiredLabel rightBelow={true}> required </RequiredLabel>}
@@ -201,13 +215,13 @@ export const FormItem = observer(
             />
           </div>
         </div>
-        <div style={{ transition: '1s', opacity: `${item.expanded ? '1' : '0'}` }}>
-          {item.expanded && withSubSchema && item.schema.type === 'object' && (
+        <div style={{ transition: '1s', opacity: `${expanded ? '1' : '0'}` }}>
+          {expanded && withSubSchema && type === 'object' && (
             <SchemaSection
               schema={item.schema}
               onChange={onChange}
-              ancestors={[...ancestors, item.name]}
-            /> // circular dependency intended
+              ancestors={[...ancestors, name]}
+            />
           )}
         </div>
       </div>
