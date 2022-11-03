@@ -98,7 +98,23 @@ export class Operation extends React.Component<OperationProps, OperationState> {
     const contentType =
       activeMimeIdx !== undefined && requestBodyContent?.mediaTypes[activeMimeIdx]?.name;
 
-    headers = { 'Content-Type': contentType || 'application/json', ...headers };
+    const isFormData = contentType === 'multipart/form-data';
+
+    if (!isFormData) {
+      headers = { 'Content-Type': contentType || 'application/json', ...headers };
+    }
+
+    const formData = new FormData();
+    if (isFormData && body && typeof body === 'object') {
+      Object.entries(body as any).forEach(([key, value]) => {
+        const isFileValue = (value as any) instanceof File;
+        const isJsonValue = !isFileValue && typeof value === 'object' && value !== null;
+        formData.append(
+          key,
+          isFileValue ? (value as any) : isJsonValue ? JSON.stringify(value)! : value,
+        );
+      });
+    }
 
     const request: RequestInit =
       Object.values(NoRequestBodyHttpVerb)
@@ -111,7 +127,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
         : {
             method: httpVerb,
             headers,
-            body: typeof body === 'string' ? body : JSON.stringify(body),
+            body: typeof body === 'string' ? body : isFormData ? formData : JSON.stringify(body),
           };
 
     setCookieParams(cookieParams);

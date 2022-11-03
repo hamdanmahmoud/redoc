@@ -24,13 +24,25 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
               onChange={value => onChange && onChange(name, value, undefined, ancestors, item.in)}
             />
           ) : (
-            <Input
-              placeholder={`${example || description || ''}`}
-              type={schema.format || 'text'}
-              onChange={e =>
-                onChange && onChange(name, e.target.value, undefined, ancestors, item.in)
-              }
-            />
+            <>
+              {schema.format === 'binary' ? (
+                <Input
+                  placeholder={`${example || description || ''}`}
+                  type={'file'}
+                  onChange={e =>
+                    onChange && onChange(name, e.target.files?.[0], undefined, ancestors, item.in)
+                  }
+                />
+              ) : (
+                <Input
+                  placeholder={`${example || description || ''}`}
+                  type={schema.format || 'text'}
+                  onChange={e =>
+                    onChange && onChange(name, e.target.value, undefined, ancestors, item.in)
+                  }
+                />
+              )}
+            </>
           );
         }
         case FormItemType.integer: {
