@@ -343,7 +343,11 @@ export const TryOut = observer(
           setError={setError}
           requestPayload={request?.body}
         />
-        <ResponseSection customResponse={response} />
+        <ResponseSection
+          operation={operation}
+          customResponse={response}
+          showResponseSamples={false}
+        />
         <RunButton
           disabled={pendingRequest || (isFormData && anyInvalidRequiredField(requiredFields))}
           onClick={handleRunClick}

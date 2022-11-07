@@ -6,10 +6,13 @@ import { OperationModel } from '../../services/models';
 import { RightPanelHeader, Tab, TabList, TabPanel, Tabs } from '../../common-elements';
 import { PayloadSamples } from '../PayloadSamples/PayloadSamples';
 import { l } from '../../services/Labels';
+import { DownloadResponse } from './DownloadResponse';
+const MAX_CONTENT_LENGTH = 10000;
 
 export interface ResponseSamplesProps {
   operation?: OperationModel;
   customResponse?: any;
+  showResponseSamples?: boolean;
 }
 
 @observer
@@ -17,19 +20,26 @@ export class ResponseSamples extends React.Component<ResponseSamplesProps> {
   operation: OperationModel;
 
   render() {
-    const { operation, customResponse } = this.props;
+    const { operation, customResponse, showResponseSamples = true } = this.props;
     const responses = operation?.responses.filter(response => {
       return response.content && response.content.hasSample;
     });
     const hasResponseSamples = responses && responses.length > 0;
+    const content = customResponse?.content;
+    const contentLength = content?.length || JSON.stringify(content)?.length || 0;
+    const reachedMaxPayloadLength = contentLength > MAX_CONTENT_LENGTH;
 
-    return customResponse || hasResponseSamples ? (
+    return customResponse || (hasResponseSamples && showResponseSamples) ? (
       <div>
         {customResponse ? (
           <>
             <RightPanelHeader> {l('response')} </RightPanelHeader>
             <div>
-              <PayloadSamples customData={customResponse} />
+              {reachedMaxPayloadLength ? (
+                <DownloadResponse operation={operation} content={content} />
+              ) : (
+                <PayloadSamples customData={customResponse} />
+              )}
             </div>
           </>
         ) : (
