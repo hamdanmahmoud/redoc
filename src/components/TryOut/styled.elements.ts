@@ -49,26 +49,7 @@ export const Dropdown = styled.select<{
   }
 `;
 
-// DictionaryForm
-
-export const RowIcon = styled.i<{
-  marginLeft?: string;
-  marginRight?: string;
-  color?: string;
-  cursor?: string;
-}>`
-  display: inline-block;
-  width: ${props => props.theme.spacing.unit * 2}px;
-  text-align: center;
-  right: ${props => props.theme.spacing.unit * 4}px;
-  vertical-align: middle;
-  margin-top: 0.5rem;
-  margin-right: ${props => props.marginRight || '0.5rem'};
-  margin-left: 1.5rem;
-  cursor: ${props => props.cursor || 'pointer'};
-  font-style: normal;
-  color: ${props => props.color || '#666'};
-`;
+// ArrayForm
 
 export const ActionOnArrayButton = styled.button<{ disabled: boolean; width?: string }>`
   border-radius: 20px;

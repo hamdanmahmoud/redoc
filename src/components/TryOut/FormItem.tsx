@@ -5,13 +5,15 @@ import { RequiredLabel, TypeFormat, TypeName, TypePrefix } from '../../common-el
 import { ShelfIcon } from '../../common-elements/shelfs';
 import { FieldModel, SchemaModel } from '../../services';
 import { DiscriminatorDropdown } from '../Schema/DiscriminatorDropdown';
-import { ArrayForm } from './ArrayForm';
-import { DictionaryForm } from './DictionaryForm';
+import { JsonViewer } from '../JsonViewer/JsonViewer';
+import { ArrayForm, containerStyle } from './ArrayForm';
 import { SchemaSection } from './SchemaSection';
 import { Dropdown, Input, Label } from './styled.elements';
 
 const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
   const { schema, name, example, description, required, kind } = item;
+  const { oneOf, activeOneOf } = schema;
+  const oneOfSchema = oneOf?.[activeOneOf];
 
   switch (kind) {
     case FormItemKind.field: {
@@ -104,20 +106,35 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
             </div>
           );
         }
+        case FormItemType.any: {
+          if (!oneOfSchema) return null;
+          return (
+            <SchemaSection
+              schema={item.schema}
+              onChange={onChange}
+              ancestors={[...ancestors, item.name]}
+            />
+          );
+        }
         default: {
           return <> {`Could not find an item type for this item`} </>;
         }
       }
     }
     case FormItemKind.additionalProps: {
-      switch (schema.type) {
-        case FormItemType.string: {
-          return <DictionaryForm onChange={onChange} ancestors={ancestors} />;
-        }
-        default: {
-          return <> {`Could not find an item type for this item`} </>;
-        }
-      }
+      const dictionaryName = ancestors.pop();
+      return (
+        <div style={containerStyle}>
+          <JsonViewer
+            data={{}}
+            editable
+            hideButtons
+            setParsedJSON={jsonValue =>
+              onChange && onChange(dictionaryName, jsonValue, undefined, ancestors)
+            }
+          />
+        </div>
+      );
     }
     default: {
       return <> {`Could not find an item kind for this item`} </>;
@@ -151,36 +168,41 @@ interface FormItemProps {
 
 export const FormItem = observer(
   ({ item, onChange, discriminator, ancestors = [] }: FormItemProps) => {
-    const alignItemsStyle = item.schema.type !== FormItemType.array ? 'center' : 'normal';
-    const withSubSchema = !item.schema.isPrimitive && !item.schema.isCircular;
-
+    const { expanded, name, schema } = item;
+    const { activeOneOf, oneOf, isCircular, isPrimitive, type } = schema;
+    const oneOfSchema = oneOf?.[activeOneOf];
+    const alignItemsStyle = type !== FormItemType.array ? 'center' : 'normal';
+    const withSubSchema = !isPrimitive && !isCircular;
+    const isNotDictionary = name !== 'property name*';
     return (
       <div
         style={{
-          alignItems: `${item.schema.type === FormItemType.object ? 'baseline' : 'center'}`,
+          alignItems: `${type === FormItemType.object || !!oneOfSchema ? 'baseline' : 'center'}`,
         }}
       >
         <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: `${alignItemsStyle}`,
-            minHeight: '2.5rem',
-            flexWrap: 'wrap',
-          }}
+          style={
+            !!oneOfSchema
+              ? {}
+              : {
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: `${alignItemsStyle}`,
+                  minHeight: '2.5rem',
+                  flexWrap: 'wrap',
+                }
+          }
         >
           <div style={{ minWidth: 0, flexBasis: '50%' }}>
             <div
               onClick={() =>
-                withSubSchema && item.schema.type === 'object' ? item.toggle() : f => f
+                isNotDictionary && withSubSchema && type === 'object' ? item.toggle() : f => f
               }
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: `${isNotDictionary ? 'pointer' : 'auto'}` }}
             >
-              <Label key={`${item.name}-label`}>
-                {item.name !== 'property name*' ? item.name : 'dictionary'}
-              </Label>
-              {withSubSchema && item.schema.type === 'object' && (
-                <ShelfIcon direction={item.expanded ? 'down' : 'right'} />
+              <Label key={`${name}-label`}>{isNotDictionary ? name : 'dictionary'}</Label>
+              {isNotDictionary && withSubSchema && type === 'object' && (
+                <ShelfIcon direction={expanded ? 'down' : 'right'} />
               )}
             </div>
             {item.required && <RequiredLabel rightBelow={true}> required </RequiredLabel>}
@@ -201,13 +223,13 @@ export const FormItem = observer(
             />
           </div>
         </div>
-        <div style={{ transition: '1s', opacity: `${item.expanded ? '1' : '0'}` }}>
-          {item.expanded && withSubSchema && item.schema.type === 'object' && (
+        <div style={{ transition: '1s', opacity: `${expanded ? '1' : '0'}` }}>
+          {expanded && withSubSchema && type === 'object' && (
             <SchemaSection
               schema={item.schema}
               onChange={onChange}
-              ancestors={[...ancestors, item.name]}
-            /> // circular dependency intended
+              ancestors={[...ancestors, name]}
+            />
           )}
         </div>
       </div>

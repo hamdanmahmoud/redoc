@@ -4,7 +4,13 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 
 import { OperationModel } from '../../services';
-import { getCleanRequest, getUpdatedObject } from '../../utils/tryout';
+import {
+  anyInvalidRequiredField,
+  getCleanRequest,
+  getRequiredFields,
+  getUpdatedObject,
+  RequiredField,
+} from '../../utils/tryout';
 import { ResponseSamples as ResponseSection } from '../ResponseSamples/ResponseSamples';
 import { Body } from './Body';
 import { Params } from './Params';
@@ -58,6 +64,9 @@ export const TryOut = observer(
     const [isFormData, setIsFormData] = React.useState(true);
     const [error, setError] = React.useState(undefined);
     const [showError, setShowError] = React.useState(false);
+    const [requiredFields, setRequiredFields] = React.useState<RequiredField[]>(
+      getRequiredFields(operation),
+    );
 
     React.useEffect(() => {
       setRequest(request => ({
@@ -89,6 +98,40 @@ export const TryOut = observer(
           `If location parameter is defined as ${location}, it is mandatory for fieldName to be defined as well.`,
         );
       const ancestorsCopy = ancestors && cloneDeep(ancestors); // directly mutating original ancestors would lead to inconsistencies across inputs
+
+      // for this particular field if required
+      const requiredField = requiredFields.find(item => item.fieldName === fieldName);
+      if (requiredField && !arrayIndex) {
+        setRequiredFields(requiredFields => {
+          const restOfFields = requiredFields.filter(field => field !== requiredField);
+          const newRequiredField = { ...requiredField };
+          newRequiredField.valid = !!value;
+          return [...restOfFields, newRequiredField];
+        });
+      }
+
+      // for required ancestors
+      if (!arrayIndex && value !== undefined) {
+        ancestors?.forEach(ancestor => {
+          setRequiredFields(requiredFields => {
+            const requiredField = requiredFields.find(item => {
+              const hasAncestorName = item.fieldName === ancestor;
+              const descendsFromThisAncestor =
+                ancestors.join('.').indexOf(item.ancestors.join('.')) !== -1;
+              return hasAncestorName && descendsFromThisAncestor;
+            });
+            if (!requiredField) return requiredFields;
+
+            const restOfFields = requiredFields.filter(field => field !== requiredField);
+            const newRequiredField = {
+              ...requiredField,
+              valid: true,
+            };
+            return [...restOfFields, newRequiredField];
+          });
+        });
+      }
+
       switch (location) {
         case 'path': {
           setRequest(request => {
@@ -299,7 +342,10 @@ export const TryOut = observer(
           requestPayload={request?.body}
         />
         <ResponseSection customResponse={response} />
-        <RunButton disabled={pendingRequest} onClick={handleRunClick}>{`Run`}</RunButton>
+        <RunButton
+          disabled={pendingRequest || (isFormData && anyInvalidRequiredField(requiredFields))}
+          onClick={handleRunClick}
+        >{`Run`}</RunButton>
       </>
     );
   },

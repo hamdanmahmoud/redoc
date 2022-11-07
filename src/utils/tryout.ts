@@ -1,6 +1,7 @@
 import { omitBy, inRange, isEmpty, isFunction } from 'lodash';
 
 import { RequestBodyPayloadType } from '../components';
+import { OperationModel } from '../services/models/Operation';
 
 const appendPathParamsToPath = (path: string, pathParams: Record<string, string>): string => {
   const entries = Object.entries(pathParams);
@@ -240,4 +241,66 @@ export const getCleanRequest = request => {
     header: cleanEmptyFields(request.header),
     body: getCleanObject(request.body),
   };
+};
+
+/**
+ *
+ * @param fields Fields objects as input
+ * @returns Equivalent fields, with name, empty ancestors list (as there is no nesting in params, only in body), and whether by default field would be valid
+ */
+export const requiredParamsToFields = fields => {
+  return (
+    fields?.map(({ required, name }) => ({
+      fieldName: name,
+      ancestors: [],
+      valid: !required,
+    })) || []
+  );
+};
+
+export interface RequiredField {
+  fieldName: string;
+  ancestors: string[];
+  valid: boolean;
+}
+
+/**
+ *
+ * @param operation Reference to operation object that owns the fields
+ * @returns All required fields, including params and body fields, in a {fieldName, ancestors, valid} object format
+ */
+export const getRequiredFields = (operation: OperationModel): RequiredField[] => {
+  const requiredFields: any[] = [];
+  const fieldsTraversal = (node, ancestors, depth = 0) => {
+    if (!node || !ancestors) return [];
+    const { schema, name, required } = node;
+    if (required) {
+      requiredFields.push({
+        fieldName: name,
+        ancestors,
+        valid: false,
+      });
+    }
+    const { oneOf, fields, activeOneOf, items } = schema;
+    const hasDiscriminator: boolean = !!oneOf;
+    const hasOwnFields: boolean = fields && fields.length !== 0;
+    const hasOwnItems: boolean = !!items;
+
+    const children = hasDiscriminator
+      ? oneOf![activeOneOf].fields
+      : hasOwnFields
+      ? fields
+      : hasOwnItems
+      ? items?.fields
+      : [];
+    children?.forEach(child =>
+      fieldsTraversal(child, depth !== 0 ? [...ancestors, name] : [...ancestors], depth + 1),
+    );
+  };
+  fieldsTraversal(operation.requestBody?.content?.active, []);
+  return [...requiredParamsToFields(operation?.parameters), ...requiredFields];
+};
+
+export const anyInvalidRequiredField = requiredFields => {
+  return requiredFields?.some(field => !field.valid);
 };
