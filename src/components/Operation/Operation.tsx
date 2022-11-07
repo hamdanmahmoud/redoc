@@ -52,7 +52,6 @@ enum NoRequestBodyHttpVerb {
 const DEFAULT_CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error' };
 const DEFAULT_JSON_RESPONSE_PARSING_ERROR =
   "Response content type specified as 'application/json' but response payload is not a valid JSON";
-const MAX_CONTENT_LENGTH = 10000;
 
 interface OperationProps {
   operation: OperationModel;
@@ -150,23 +149,14 @@ export class Operation extends React.Component<OperationProps, OperationState> {
         }
 
         response.then(data => {
-          console.log('Parsed response is:', data);
-          const contentLength = data.length || JSON.stringify(data).length || 0;
-
           this.setState({
             response: {
               type: mapStatusCodeToType(statusCode),
               code: statusCode || 0,
-              content:
-                contentLength <= MAX_CONTENT_LENGTH
-                  ? data
-                  : `Response maximum payload length of ${MAX_CONTENT_LENGTH} exceeded: (${
-                      contentLength || 'too many'
-                    } characters)`,
+              content: data,
             },
           });
         });
-
         return response;
       })
       .catch(e =>
