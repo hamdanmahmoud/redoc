@@ -298,15 +298,17 @@ export const TryOut = observer(
     const pathParams = operation.parameters?.filter(param => param.in === 'path');
     const cookieParams = operation.parameters?.filter(param => param.in === 'cookie');
 
-    const isJsonContent =
-      toLower(operation?.requestBody?.content?.active?.name) === 'application/json';
+    const contentType = toLower(operation?.requestBody?.content?.active?.name);
+    const isJsonContent = contentType === 'application/json';
+    const isFormDataContent = contentType === 'multipart/form-data';
 
     const schemaType = operation.requestBody?.content?.mediaTypes[0]?.schema?.type;
 
     const onHeaderChange = (fieldName, value, arrayIndex, ancestors, location) =>
       onRequestInputChange(fieldName, value, arrayIndex, ancestors, location);
+
     const onBodyChange =
-      isFormData && isJsonContent && schemaType === 'object'
+      isFormData && (isJsonContent || isFormDataContent) && schemaType === 'object'
         ? (fieldName, value, arrayIndex, ancestors) =>
             onRequestInputChange(fieldName, value, arrayIndex, ancestors, undefined)
         : value => {

@@ -103,7 +103,6 @@ export const getCleanObject = obj => {
   };
 
   const decoratedObject = decorate(obj);
-
   return decoratedObject.removeUndefinedFields().cleanArrayFields().omitFunctionFields();
 };
 
