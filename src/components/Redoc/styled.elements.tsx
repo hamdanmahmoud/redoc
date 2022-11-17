@@ -29,6 +29,8 @@ export const ApiContentWrap = styled.div`
   z-index: 1;
   position: relative;
   overflow: hidden;
+  background: #f7f7f7;
+  padding: 40px;
   width: calc(100% - ${props => props.theme.sidebar.width});
   ${media.lessThan('small', true)`
     width: 100%;
@@ -54,4 +56,12 @@ export const BackgroundStub = styled.div`
   ${media.lessThan('medium', true)`
     display: none;
   `};
+`;
+
+export const Link = styled.div<{ color?: string }>`
+  color: ${props => props.color || '#326cd1'};
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
 `;

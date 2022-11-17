@@ -139,5 +139,5 @@ export const MimeLabel = styled.span`
   margin-left: 10px;
   text-transform: none;
   font-size: 0.929em;
-  color: #58585b;
+  color: #373838;
 `;

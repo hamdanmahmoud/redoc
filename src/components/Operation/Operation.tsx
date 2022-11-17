@@ -32,16 +32,6 @@ const Description = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.unit * 6}px;
 `;
 
-const Details = styled.div`
-  color: #58585b;
-  font-weight: 100;
-  background: transparent;
-  font-size: 24px;
-  border-bottom: 1px solid #dfdfdf;
-  margin: 5% 0% 10% 0%;
-  padding-bottom: 8%;
-`;
-
 enum NoRequestBodyHttpVerb {
   GET = 'get',
   HEAD = 'head',
@@ -187,9 +177,9 @@ export class Operation extends React.Component<OperationProps, OperationState> {
     return (
       <OptionsContext.Consumer>
         {options => (
-          <Row>
+          <Row background="white" borderRadius="8px" padding="24px" bordered>
             <MiddlePanel>
-              <H2>
+              <H2 noMargin>
                 {summary} {deprecated && <Badge type="warning"> Deprecated </Badge>}
                 {isWebhook && <Badge type="primary"> Webhook </Badge>}
               </H2>
@@ -213,14 +203,13 @@ export class Operation extends React.Component<OperationProps, OperationState> {
               <CallbacksList callbacks={operation.callbacks} />
             </MiddlePanel>
             <RightPanel>
-              <Details>Details</Details>
               <Tabs defaultIndex={0} onSelect={tabIndex => this.setState({ tabIndex })}>
                 <TabList>
                   <Tab className={'tab-try-out'} key={'Try out'}>
-                    {'Run'}
+                    <span>{'Run'}</span>
                   </Tab>
                   <Tab className={'tab-examples'} key={'Examples'}>
-                    {'Example'}
+                    <span>{'Example'}</span>
                   </Tab>
                 </TabList>
                 <TabPanel key={'Try out panel'}>
@@ -234,10 +223,10 @@ export class Operation extends React.Component<OperationProps, OperationState> {
                 <TabPanel key={'Examples panel'}>
                   <Tabs defaultIndex={0}>
                     <TabList>
-                      <Tab className={'tab-examples-request'} key={'Request'}>
+                      <Tab className={'tab-examples-request toggle left-toggle'} key={'Request'}>
                         {'Request'}
                       </Tab>
-                      <Tab className={'tab-examples-response'} key={'Response'}>
+                      <Tab className={'tab-examples-response toggle right-toggle'} key={'Response'}>
                         {'Response'}
                       </Tab>
                     </TabList>

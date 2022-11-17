@@ -2,7 +2,8 @@ import * as React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { JsonViewer } from '../JsonViewer/JsonViewer';
-import { ActionOnArrayButton, Input } from './styled.elements';
+import { Input } from './styled.elements';
+import { Link } from '../Redoc/styled.elements';
 
 enum ArrayAction {
   REMOVE = `remove`,
@@ -14,13 +15,7 @@ export const containerStyle: React.CSSProperties = {
   flexDirection: 'column',
   margin: '0.5rem 0rem 2rem 0rem',
 };
-const removeButtonStyle: React.CSSProperties = {
-  position: 'absolute',
-  top: '0.5rem',
-  right: '0.5rem',
-  color: 'red',
-  cursor: 'pointer',
-};
+
 const addButtonStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'flex-end',
@@ -64,8 +59,8 @@ const RemovableInput = ({
           )
         }
       />
-      <div onClick={onRemove} style={removeButtonStyle}>
-        x
+      <div onClick={onRemove}>
+        <Link color="red">{'Remove Element'}</Link>
       </div>
     </div>
   );
@@ -153,8 +148,7 @@ export const ArrayForm = ({ name, schema, required, onChange, ancestors, locatio
             style={{ ...addButtonStyle, color: `${addButtonDisabled ? '#AEAEAE' : '#21608a'}` }}
             onClick={() => handleButtonClick(ArrayAction.ADD)}
           >
-            <ActionOnArrayButton disabled={addButtonDisabled}>{`+`}</ActionOnArrayButton>
-            <div>{'Add Element'}</div>
+            <Link>{'Add Element'}</Link>
           </div>
         </div>
       );

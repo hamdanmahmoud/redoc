@@ -9,7 +9,7 @@ export const PrismDiv = styled.div`
   pre[class*='language-'] {
     /* color: white;
     background: none; */
-    text-shadow: 0 -0.1em 0.2em #58585b;
+    text-shadow: 0 -0.1em 0.2em #373838;
     text-align: left;
     word-spacing: normal;
     word-break: normal;
@@ -67,6 +67,10 @@ export const PrismDiv = styled.div`
 
   .token.boolean {
     color: firebrick;
+  }
+
+  .token.string {
+    word-break: break-all;
   }
 
   .token.selector,

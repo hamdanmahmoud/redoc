@@ -8,6 +8,9 @@ export const ApiInfoWrap = MiddlePanel;
 export const ApiHeader = styled(H1)`
   margin-top: 0;
   margin-bottom: 0.5em;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 43px;
 
   ${extensionsHook('ApiHeader')};
 `;

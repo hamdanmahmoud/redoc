@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import styled, { media } from '../../styled-components';
 
-import { UnderlinedHeader } from '../../common-elements/';
+import { BoldHeader } from '../../common-elements/';
 import { SecurityRequirementModel } from '../../services/models/SecurityRequirement';
 import { linksCss } from '../Markdown/styled.elements';
 
@@ -97,7 +97,7 @@ const SecuritiesColumn = styled.div`
   `}
 `;
 
-const AuthHeader = styled(UnderlinedHeader)`
+const AuthHeader = styled(BoldHeader)`
   display: inline-block;
   margin: 0;
 `;

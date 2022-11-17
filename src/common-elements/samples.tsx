@@ -11,7 +11,8 @@ export const SampleControls = styled.div`
   > button {
     background-color: transparent;
     border: 0;
-    color: inherit;
+    color: #326cd1;
+    font-weight: 700;
     padding: 2px 10px;
     font-family: ${({ theme }) => theme.typography.fontFamily};
     font-size: ${({ theme }) => theme.typography.fontSize};

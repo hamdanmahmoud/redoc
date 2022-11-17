@@ -42,7 +42,9 @@ export const Body = ({
         <div>Body</div>
         <Dropdown
           width={'5rem'}
-          borderStyle={'none'}
+          borderColor={'#E0E0E0'}
+          borderWidth={'2px'}
+          borderRadius={'8px'}
           outline={'none'}
           cursor={'pointer'}
           onChange={({ target: { value } }) => setIsFormData(value === 'form-data')}

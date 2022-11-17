@@ -6,22 +6,34 @@ export const Label = styled.label`
   color: #1e1e1e;
   font-weight: bolder;
   font-size: 13px;
-  padding: 0.5em;
-  margin: 0.5em 0.5em 0.5em 0;
   background: transparent;
 `;
 
-export const Input = styled.input<{ margin?: string; borderColor?: string; color?: string }>`
+export const Input = styled.input<{
+  margin?: string;
+  color?: string;
+  backgroundColor?: string;
+}>`
   padding: 0.5em;
   margin: ${props => props.margin || `0.5em 0em 0.5em 0`};
   width: 100%;
   font-size: 13px;
-  color: ${props => props.color || `#1e1e1e`};
+  &::file-selector-button {
+    border-radius: 8px;
+    width: 8em;
+    color: ${props => props.color || `#1e1e1e`};
+    background-color: ${props => props.backgroundColor};
+    line-height: 2.5em;
+    font-weight: bolder;
+    outline: none;
+    cursor: pointer;
+    border: none;
+  }
   background: white;
   border-style: solid;
   border-width: thin;
-  border-radius: 4px;
-  border-color: ${props => props.borderColor || `initial`};
+  border-radius: 6px;
+  border: 2px solid #e0e0e0;
   ::placeholder {
     color: grey;
   }
@@ -32,6 +44,9 @@ export const Dropdown = styled.select<{
   borderStyle?: string;
   outline?: string;
   cursor?: string;
+  borderColor?: string;
+  borderWidth?: string;
+  borderRadius?: string;
 }>`
   padding: 0.5em;
   margin: 0.5em 0em 0.5em 0;
@@ -40,8 +55,9 @@ export const Dropdown = styled.select<{
   color: #1e1e1e;
   background: white;
   border-style: ${props => props.borderStyle || 'solid'};
-  border-width: thin;
-  border-radius: 4px;
+  border-width: ${props => props.borderWidth || 'thin'};
+  border-color: ${props => props.borderColor};
+  border-radius: ${props => props.borderRadius || '4px'};
   outline: ${props => props.outline || ''};
   cursor: ${props => props.cursor || ''};
   ::placeholder {
@@ -49,24 +65,10 @@ export const Dropdown = styled.select<{
   }
 `;
 
-// ArrayForm
-
-export const ActionOnArrayButton = styled.button<{ disabled: boolean; width?: string }>`
-  border-radius: 20px;
-  background-color: ${props => (props.disabled ? `#AEAEAE` : `#21608a`)};
-  margin: 0 0.25rem;
-  color: #ffffff;
-  font-weight: bolder;
-  outline: none;
-  float: right;
-  cursor: pointer;
-  font-size: medium;
-`;
-
 // TryOut
 
 export const SectionHeader = styled.div`
-  color: #58585b;
+  color: #373838;
   font-weight: bold;
   background: transparent;
   font-size: 14px;
@@ -76,24 +78,15 @@ export const SectionHeader = styled.div`
 `;
 
 export const RunButton = styled.button<{ disabled: boolean }>`
-  border-radius: 20px;
+  border-radius: 6px;
   line-height: 2.5em;
-  width: 7em;
-  background-color: ${props => (props.disabled ? `#AEAEAE` : `#1E4F70`)};
+  width: 4em;
+  background-color: ${props => (props.disabled ? `#AEAEAE` : `#326CD1`)};
   color: #ffffff;
   font-weight: bolder;
   outline: none;
   float: right;
   cursor: pointer;
   margin-top: 10px;
-`;
-
-export const MenuItemLi = styled.li<{ depth: number }>`
-  list-style: none inside none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0;
-  background-color: #163e58;
-
-  ${props => (props.depth === 0 ? 'margin-top: 15px' : '')};
+  border: none;
 `;

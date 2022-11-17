@@ -14,33 +14,10 @@ import { ApiContentWrap, BackgroundStub, RedocWrap } from './styled.elements';
 
 import { SearchBox } from '../SearchBox/SearchBox';
 import { StoreProvider } from '../StoreBuilder';
-import styled from '../../styled-components';
+
 export interface RedocProps {
   store: AppStore;
 }
-
-const NavBarHeader = styled.div`
-  color: #58585b;
-  font-weight: lighter;
-  background: transparent;
-  height: 65px;
-  border-bottom: 1px #f2f2f2 solid;
-  font-size: 24px;
-  text-align: left;
-  padding: 1.7% 0% 0% 8.5%;
-`;
-
-const SideMenuHeader = styled.div`
-  color: white;
-  font-weight: 100;
-  background: transparent;
-  min-height: 65px;
-  border-bottom: 1px white solid;
-  text-align: left;
-  padding-top: 8%;
-  padding-left: 6%;
-  font-size: 18px;
-`;
 
 export class Redoc extends React.Component<RedocProps> {
   static propTypes = {
@@ -66,7 +43,6 @@ export class Redoc extends React.Component<RedocProps> {
           <OptionsProvider value={options}>
             <RedocWrap className="redoc-wrap">
               <StickyResponsiveSidebar menu={menu} className="menu-content">
-                <SideMenuHeader>API DOCS</SideMenuHeader>
                 <ApiLogo info={spec.info} />
                 {(!options.disableSearch && (
                   <SearchBox
@@ -80,7 +56,6 @@ export class Redoc extends React.Component<RedocProps> {
                 <SideMenu menu={menu} />
               </StickyResponsiveSidebar>
               <ApiContentWrap className="api-content">
-                <NavBarHeader></NavBarHeader>
                 <ApiInfo store={store} />
                 <ContentItems items={menu.items as any} />
               </ApiContentWrap>

@@ -72,9 +72,7 @@ export class SectionItem extends React.Component<ContentItemProps> {
     return (
       <>
         <Row>
-          <MiddlePanel compact={false}>
-            <Header>{name}</Header>
-          </MiddlePanel>
+          <Header>{name}</Header>
         </Row>
         <AdvancedMarkdown source={description || ''} htmlWrap={middlePanelWrap} />
         {externalDocs && (

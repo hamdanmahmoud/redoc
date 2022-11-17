@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import { Code } from './styled.elements';
-import { ShelfIcon } from '../../common-elements';
 import { Markdown } from '../Markdown/Markdown';
+import { ShelfIcon } from '../../common-elements';
+import { Link } from '../Redoc/styled.elements';
 
 export interface ResponseTitleProps {
   code: string;
@@ -16,7 +17,6 @@ export interface ResponseTitleProps {
 
 function ResponseTitleComponent({
   title,
-  type,
   empty,
   code,
   opened,
@@ -24,22 +24,15 @@ function ResponseTitleComponent({
   onClick,
 }: ResponseTitleProps): React.ReactElement {
   return (
-    <button
-      className={className}
-      onClick={(!empty && onClick) || undefined}
-      aria-expanded={opened}
-      disabled={empty}
-    >
-      {!empty && (
-        <ShelfIcon
-          size={'1.5em'}
-          color={type}
-          direction={opened ? 'down' : 'right'}
-          float={'left'}
-        />
-      )}
+    <button className={className} aria-expanded={opened} disabled={empty}>
       <Code>{code} </Code>
       <Markdown compact={true} inline={true} source={title} />
+      <Link onClick={(!empty && onClick) || undefined}>
+        <span>{`${opened ? 'Hide' : 'View'} Details`}</span>
+        {!empty && (
+          <ShelfIcon size={'1.5em'} color={'#326CD1'} direction={opened ? 'down' : 'right'} />
+        )}
+      </Link>
     </button>
   );
 }

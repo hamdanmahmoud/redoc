@@ -31,6 +31,8 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
                 <Input
                   placeholder={`${example || description || ''}`}
                   type={'file'}
+                  color={'white'}
+                  backgroundColor={'#326CD1'}
                   onChange={e =>
                     onChange && onChange(name, e.target.files?.[0], undefined, ancestors, item.in)
                   }
@@ -183,7 +185,6 @@ export const FormItem = observer(
     const { expanded, name, schema } = item;
     const { activeOneOf, oneOf, isCircular, isPrimitive, type } = schema;
     const oneOfSchema = oneOf?.[activeOneOf];
-    const alignItemsStyle = type !== FormItemType.array ? 'center' : 'normal';
     const withSubSchema = !isPrimitive && !isCircular;
     const isNotDictionary = name !== 'property name*';
     return (
@@ -198,10 +199,13 @@ export const FormItem = observer(
               ? {}
               : {
                   display: 'flex',
+                  flexDirection: 'column',
                   justifyContent: 'space-between',
-                  alignItems: `${alignItemsStyle}`,
                   minHeight: '2.5rem',
                   flexWrap: 'wrap',
+                  width: '50%',
+                  maxWidth: '100%',
+                  marginBottom: '26px',
                 }
           }
         >
@@ -213,11 +217,11 @@ export const FormItem = observer(
               style={{ cursor: `${isNotDictionary ? 'pointer' : 'auto'}` }}
             >
               <Label key={`${name}-label`}>{isNotDictionary ? name : 'dictionary'}</Label>
+              {item.required && <RequiredLabel>*</RequiredLabel>}
               {isNotDictionary && withSubSchema && type === 'object' && (
                 <ShelfIcon direction={expanded ? 'down' : 'right'} />
               )}
             </div>
-            {item.required && <RequiredLabel rightBelow={true}> required </RequiredLabel>}
           </div>
           <div
             style={{
