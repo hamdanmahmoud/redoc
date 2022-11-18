@@ -9,7 +9,7 @@ interface DownloadResponseProps {
 export const DownloadResponse = ({ operation, content }: DownloadResponseProps) => {
   const downloadItAnchor = (
     <a
-      style={{ color: '#307390', cursor: 'pointer' }}
+      style={{ color: '#326CD1', cursor: 'pointer', fontWeight: 600 }}
       href={`data:text/plain;charset=utf-8,${content}`}
       download={`${operation?.id || ''}Response`}
     >

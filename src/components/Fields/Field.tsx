@@ -65,15 +65,15 @@ export class Field extends React.Component<FieldProps> {
           aria-label="expand properties"
         >
           <span>{name}</span>
+          {required && <RequiredLabel>*</RequiredLabel>}
           <ShelfIcon direction={expanded ? 'down' : 'right'} />
         </button>
-        {required && <RequiredLabel> required </RequiredLabel>}
       </ClickablePropertyNameCell>
     ) : (
       <PropertyNameCell className={deprecated ? 'deprecated' : undefined} kind={kind} title={name}>
         <PropertyBullet />
         <span>{name}</span>
-        {required && <RequiredLabel> required </RequiredLabel>}
+        {required && <RequiredLabel>*</RequiredLabel>}
       </PropertyNameCell>
     );
 

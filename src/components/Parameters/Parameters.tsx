@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DropdownOrLabel } from '../DropdownOrLabel/DropdownOrLabel';
 import { ParametersGroup } from './ParametersGroup';
 
-import { UnderlinedHeader } from '../../common-elements';
+import { BoldHeader } from '../../common-elements';
 
 import { MediaContentModel } from '../../services';
 import { FieldModel, RequestBodyModel } from '../../services/models';
@@ -60,9 +60,9 @@ export class Parameters extends React.PureComponent<ParametersProps> {
 
 function DropdownWithinHeader(props) {
   return (
-    <UnderlinedHeader key="header">
+    <BoldHeader key="header">
       Request Body schema: <DropdownOrLabel {...props} />
-    </UnderlinedHeader>
+    </BoldHeader>
   );
 }
 

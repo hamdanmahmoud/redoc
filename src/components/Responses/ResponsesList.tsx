@@ -5,11 +5,11 @@ import styled from '../../styled-components';
 import { ResponseView } from './Response';
 
 const ResponsesHeader = styled.h3`
-  color: #58585b;
+  color: #373838;
   font-weight: bold;
   background: transparent;
   font-size: 14px;
-  margin: 5% 0% 0% 0%;
+  margin: 5% 0% 16px 0%;
 `;
 
 export interface ResponseListProps {

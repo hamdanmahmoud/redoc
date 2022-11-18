@@ -1,8 +1,8 @@
-import { darken, desaturate, lighten, readableColor, transparentize } from 'polished';
+import { darken, lighten, readableColor, transparentize } from 'polished';
 
 const defaultTheme: ThemeInterface = {
   spacing: {
-    unit: 5,
+    unit: 3,
     sectionHorizontal: ({ spacing }) => spacing.unit * 8,
     sectionVertical: ({ spacing }) => spacing.unit * 4,
   },
@@ -14,13 +14,13 @@ const defaultTheme: ThemeInterface = {
   colors: {
     tonalOffset: 0.3,
     primary: {
-      main: '#007493',
+      main: '#373838',
       light: ({ colors }) => lighten(colors.tonalOffset, colors.primary.main),
       dark: ({ colors }) => darken(colors.tonalOffset, colors.primary.main),
       contrastText: ({ colors }) => readableColor(colors.primary.main),
     },
     success: {
-      main: '#6EBE4A',
+      main: '#45991F',
       light: ({ colors }) => lighten(colors.tonalOffset * 2, colors.success.main),
       dark: ({ colors }) => darken(colors.tonalOffset, colors.success.main),
       contrastText: ({ colors }) => readableColor(colors.success.main),
@@ -43,13 +43,12 @@ const defaultTheme: ThemeInterface = {
     },
     text: {
       primary: '#626469',
-      secondary: ({ colors }) => lighten(colors.tonalOffset, colors.text.primary),
+      secondary: '#707070',
     },
     border: {
       dark: 'rgba(0,0,0, 0.1)',
       light: '#ffffff',
     },
-
     responses: {
       success: {
         color: ({ colors }) => colors.success.main,
@@ -69,27 +68,24 @@ const defaultTheme: ThemeInterface = {
       },
     },
     http: {
-      get: 'rgb(100, 187, 227)',
-      post: '#6EBE4A',
-      put: '#FBAB18',
-      options: '#d3ca12',
-      patch: '#e07543',
-      delete: '#E2231A',
+      get: '#D9E7FF',
+      post: '#D1F5BF',
+      put: '#F7ECB2',
+      options: '#e8e5ac',
+      patch: '#fcc59a',
+      delete: '#FCE2DE',
       basic: '#999',
-      link: '#31bbb6',
-      head: '#c167e4',
+      link: '#a9dbd9',
+      head: '#d4ace3',
     },
   },
   schema: {
-    linesColor: theme =>
-      lighten(
-        theme.colors.tonalOffset,
-        desaturate(theme.colors.tonalOffset, theme.colors.primary.main),
-      ),
+    linesColor: theme => theme.colors.text.secondary,
     defaultDetailsWidth: '75%',
     typeNameColor: theme => theme.colors.text.secondary,
     typeTitleColor: theme => theme.schema.typeNameColor,
-    requireLabelColor: theme => theme.colors.error.main,
+    requireLabelColor: '#326CD1',
+    requireLabelTextSize: '14px',
     labelsTextSize: '0.9em',
     nestingSpacing: '1em',
     nestedBackground: '#fafafa',
@@ -104,22 +100,22 @@ const defaultTheme: ThemeInterface = {
     fontWeightRegular: '400',
     fontWeightBold: '600',
     fontWeightLight: '300',
-    fontFamily: 'Arial',
+    fontFamily: 'Inter',
     smoothing: 'antialiased',
     optimizeSpeed: true,
     headings: {
-      fontFamily: 'Arial',
+      fontFamily: 'Roboto',
       fontWeight: '400',
       lineHeight: '1.6em',
     },
     code: {
       fontSize: '13px',
-      fontFamily: 'Arial',
+      fontFamily: 'Inter',
       lineHeight: ({ typography }) => typography.lineHeight,
       fontWeight: ({ typography }) => typography.fontWeightRegular,
-      color: '#58585B',
+      color: '#373838',
       backgroundColor: '#F2F2F2',
-      wrap: false,
+      wrap: true,
     },
     links: {
       color: ({ colors }) => colors.primary.main,
@@ -129,9 +125,10 @@ const defaultTheme: ThemeInterface = {
   },
   sidebar: {
     width: '280px',
-    backgroundColor: '#1E4F70',
-    textColor: '#FFFFFF',
-    activeTextColor: '#FFFFFF',
+    backgroundColor: '#f7f7f7',
+    activeBackgroundColor: '#ececec',
+    textColor: '#757575',
+    activeTextColor: '#4e4e4e',
 
     groupItems: {
       textTransform: 'uppercase',
@@ -152,7 +149,7 @@ const defaultTheme: ThemeInterface = {
   rightPanel: {
     backgroundColor: '#FFFFFF',
     width: '43.75%',
-    textColor: '#58585B',
+    textColor: '#373838',
     border: '#FFFFFF',
   },
   codeBlock: {
@@ -269,6 +266,7 @@ export interface ResolvedThemeInterface {
     typeNameColor: string;
     typeTitleColor: string;
     requireLabelColor: string;
+    requireLabelTextSize: string;
     labelsTextSize: string;
     nestingSpacing: string;
     nestedBackground: string;
@@ -307,6 +305,7 @@ export interface ResolvedThemeInterface {
   sidebar: {
     width: string;
     backgroundColor: string;
+    activeBackgroundColor: string;
     textColor: string;
     activeTextColor: string;
     groupItems: {

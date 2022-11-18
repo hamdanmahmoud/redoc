@@ -20,22 +20,23 @@ export const H1 = styled.h1`
   ${extensionsHook('H1')};
 `;
 
-export const H2 = styled.h2`
+export const H2 = styled.h2<{ noMargin?: boolean }>`
   ${headerCommonMixin(2)};
-  color: #58585b;
+  color: #373838;
+  margin: ${({ noMargin }) => (noMargin ? 0 : '')};
 
   ${extensionsHook('H2')};
 `;
 
 export const H3 = styled.h2`
   ${headerCommonMixin(3)};
-  color: #58585b;
+  color: #373838;
 
   ${extensionsHook('H3')};
 `;
 
 export const RightPanelHeader = styled.h3`
-  color: #58585B;
+  color: #373838;
   box-shadow:0px 0px 15px 1px #C6C7CA
   width: 40%;
   font-size:14px;
@@ -43,14 +44,12 @@ export const RightPanelHeader = styled.h3`
   ${extensionsHook('RightPanelHeader')};
 `;
 
-export const UnderlinedHeader = styled.h5`
-  border-bottom: 1px solid rgba(38, 50, 56, 0.3);
+export const BoldHeader = styled.h5`
   margin: 1em 0 1em 0;
-  color: rgba(38, 50, 56, 0.5);
-  font-weight: normal;
-  text-transform: uppercase;
-  font-size: 0.929em;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 700;
+  color: black;
 
-  ${extensionsHook('UnderlinedHeader')};
+  ${extensionsHook('BoldHeader')};
 `;

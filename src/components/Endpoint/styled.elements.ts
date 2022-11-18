@@ -15,7 +15,7 @@ export const ServerRelativeURL = styled.span`
 `;
 
 export const EndpointInfo = styled.div<{ expanded?: boolean; inverted?: boolean }>`
-  color: #307390;
+  color: #326cd1;
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -24,6 +24,7 @@ export const EndpointInfo = styled.div<{ expanded?: boolean; inverted?: boolean 
   white-space: nowrap;
   align-items: center;
   font-size: 14px;
+  font-weight: 600;
 
   ${props =>
     (props.expanded && !props.inverted && `border-color: ${props.theme.colors.border.dark};`) || ''}
@@ -60,13 +61,12 @@ export const HttpVerb = styled.span.attrs((props: { type: string; compact?: bool
 }))<{ type: string; compact?: boolean }>`
   line-height: ${props => (props.compact ? '18px' : '20px')};
   background-color: ${props => props.theme.colors.http[props.type] || '#999999'};
-  color: #ffffff;
+  color: #494a4a;
   padding: ${props => (props.compact ? '2px 8px' : '3px 10px')};
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-family: ${props => props.theme.typography.headings.fontFamily};
   margin: 0;
-  border-radius: 5px;
-  width: 15%;
+  border-radius: 20px;
   text-align: center;
   font-size: 12px;
 `;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { ShelfIcon } from '../../common-elements';
 import { OperationModel } from '../../services';
 import { Markdown } from '../Markdown/Markdown';
 import { OptionsContext } from '../OptionsProvider';
@@ -54,13 +53,6 @@ export class Endpoint extends React.Component<EndpointProps, EndpointState> {
                 {operation.httpVerb}
               </HttpVerb>
               <ServerRelativeURL>{operation.path}</ServerRelativeURL>
-              {/* <ShelfIcon
-                float={'right'}
-                color={inverted ? 'black' : 'white'}
-                size={'20px'}
-                direction={expanded ? 'up' : 'down'}
-                style={{ marginRight: '-25px' }}
-              /> */}
             </EndpointInfo>
             <ServersOverlay expanded={expanded} aria-hidden={!expanded}>
               {operation.servers.map(server => {

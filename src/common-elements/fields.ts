@@ -48,11 +48,11 @@ export const TypeTitle = styled(FieldLabel)`
 
 export const TypeFormat = TypeName;
 
-export const RequiredLabel = styled(FieldLabel.withComponent('div'))<{ rightBelow?: boolean }>`
+export const RequiredLabel = styled(FieldLabel.withComponent('span'))`
   color: ${props => props.theme.schema.requireLabelColor};
-  font-size: ${props => props.theme.schema.labelsTextSize};
+  font-size: ${props => props.theme.schema.requireLabelTextSize};
   font-weight: normal;
-  margin-left: ${props => (props.rightBelow ? `8px` : `20px`)};
+  margin-left: 2px;
   line-height: 1;
 `;
 

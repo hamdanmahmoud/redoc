@@ -6,7 +6,6 @@ import { MenuItemLabel } from '../SideMenu/styled.elements';
 
 export const SearchWrap = styled.div`
   padding: 5px 0;
-  border-bottom: 1px solid white;
   padding-bottom: 30px;
 `;
 
@@ -28,7 +27,7 @@ export const SearchInput = styled.input.attrs(() => ({
   font-family: Arial;
   font-weight: 100;
   font-size: 14px;
-  color: #58585b;
+  color: #373838;
   outline: none;
   line-height: 1.5em;
 `;
