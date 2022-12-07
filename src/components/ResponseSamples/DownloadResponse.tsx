@@ -7,6 +7,7 @@ interface DownloadResponseProps {
 }
 
 export const DownloadResponse = ({ operation, content }: DownloadResponseProps) => {
+  content = typeof content === 'object' && content !== null ? JSON.stringify(content) : content;
   const downloadItAnchor = (
     <a
       style={{ color: '#326CD1', cursor: 'pointer', fontWeight: 600 }}
