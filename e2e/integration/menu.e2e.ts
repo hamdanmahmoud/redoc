@@ -18,7 +18,7 @@ describe('Menu', () => {
       .wait(100)
       .get('[role=menuitem].active')
       .children()
-      .last()
+      .first()
       .should('have.text', 'Add a new pet to the store')
       .should('be.visible');
   });
@@ -29,7 +29,7 @@ describe('Menu', () => {
       .wait(100)
       .get('[role=menuitem].active')
       .children()
-      .last()
+      .first()
       .should('have.text', 'Add a new pet to the store')
       .should('be.visible');
 
@@ -69,7 +69,9 @@ describe('Menu', () => {
       .should('have.text', 'Responses')
       .parent()
       .find('div:first button')
+      .find('div:last')
       .click()
+      .parent()
       .should('have.attr', 'aria-expanded', 'true')
       .parent()
       .find('div h5')
