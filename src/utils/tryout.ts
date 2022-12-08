@@ -40,17 +40,37 @@ const appendQueryParamsToPath = (path: string, queryParams: Record<string, strin
 /**
  *
  * @returns equivalent params, with dictionary params converted to string params
- * e.g. reqParam = {id: 3, severity:5} becomes reqParam=id%3D%3D3%26%26severity%3D%3D5 or reqParam=id==3&&severity==5
+ * by spreading them on root (or we could say collapse nested map/dictionary params)
+ * e.g.
+ * {
+ *  someFilter: "location%3D%3DSingapore",
+ *  reqParam: {
+ *    filter: "age%3D%3D7",
+ *    scope: true
+ *  }
+ * }
+ * becomes
+ * {
+ *  someFilter: "location%3D%3DSingapore",
+ *  filter: "age%3D%3D7",
+ *  scope: true
+ * }
  */
-const formatQueryParams = params => {
+const spreadNestedParams = params => {
   if (isEmpty(params)) return params;
-  return Object.fromEntries(
-    Object.entries(params).map(([key, value]) => {
-      const isObjectParam = typeof value === 'object' && value !== null;
-      if (!isObjectParam) return [key, value];
-      return [key, entriesToQueryString(Object.entries(value as object))];
-    }),
-  );
+  const allParams = {};
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === null) return;
+    const isObjectParam = typeof value === 'object';
+    if (isObjectParam) {
+      Object.entries(value as object)?.forEach(([nestedParamKey, nestedParamValue]) => {
+        allParams[nestedParamKey] = nestedParamValue;
+      });
+    } else {
+      allParams[key] = value;
+    }
+  });
+  return allParams;
 };
 
 export const appendParamsToPath = (
@@ -59,7 +79,7 @@ export const appendParamsToPath = (
   queryParams: Record<string, string>,
 ): string => {
   path = appendPathParamsToPath(path, pathParams);
-  path = appendQueryParamsToPath(path, formatQueryParams(queryParams));
+  path = appendQueryParamsToPath(path, spreadNestedParams(queryParams));
   return path;
 };
 
