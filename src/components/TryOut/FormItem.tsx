@@ -140,17 +140,16 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors, locatio
       }
     }
     case FormItemKind.additionalProps: {
-      const dictionaryName = ancestors.pop();
       return (
         <div style={containerStyle}>
           <JsonViewer
             data={{}}
             editable
             hideButtons
-            setParsedJSON={jsonValue =>
+            setParsedJSON={jsonValue => {
               onChange &&
-              onChange(dictionaryName, jsonValue, undefined, ancestors, item.in || location)
-            }
+                onChange(ancestors.pop(), jsonValue, undefined, ancestors, item.in || location);
+            }}
           />
         </div>
       );
