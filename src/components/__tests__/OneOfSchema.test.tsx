@@ -4,7 +4,8 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { OneOfSchema, Schema } from '../';
-import { OpenAPIParser, SchemaModel } from '../../services';
+import { OpenAPIParser } from '../../services';
+import { SchemaModel } from '../../services/models';
 import { RedocNormalizedOptions } from '../../services/RedocNormalizedOptions';
 
 const options = new RedocNormalizedOptions({});
