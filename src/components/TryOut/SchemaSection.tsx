@@ -18,10 +18,18 @@ interface SchemaSectionProps {
   ancestors?: string[];
   onChange?: any;
   requestPayload?: any;
+  location?: string;
 }
 
 export const SchemaSection = observer(
-  ({ schema, contentType, onChange, ancestors = [], requestPayload }: SchemaSectionProps) => {
+  ({
+    schema,
+    contentType,
+    onChange,
+    ancestors = [],
+    requestPayload,
+    location,
+  }: SchemaSectionProps) => {
     if (!schema) return null;
 
     switch (contentType) {
@@ -87,6 +95,7 @@ export const SchemaSection = observer(
               <FormSection
                 items={fields}
                 ancestors={ancestors}
+                location={location}
                 onChange={onChange}
                 discriminator={{
                   fieldName: schema.discriminatorProp,

@@ -18,6 +18,7 @@ const Form = styled.div`
 interface FormSectionProps {
   items: FieldModel[];
   ancestors?: string[];
+  location?: string;
   onChange: () => void;
   discriminator?: {
     fieldName: string;
@@ -30,14 +31,16 @@ export const FormSection = ({
   onChange,
   discriminator,
   ancestors = [],
+  location,
 }: FormSectionProps) => {
   return (
     <Form>
       {items.map((item, idx) => (
         <FormItem
+          key={idx}
           item={item}
           ancestors={ancestors}
-          key={idx}
+          location={location}
           onChange={onChange}
           discriminator={discriminator}
         />

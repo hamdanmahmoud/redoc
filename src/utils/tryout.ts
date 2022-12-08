@@ -12,18 +12,45 @@ const appendPathParamsToPath = (path: string, pathParams: Record<string, string>
   return path;
 };
 
-const appendQueryParamsToPath = (path: string, queryParams: Record<string, string>): string => {
-  const entries = Object.entries(queryParams);
-  let paramsSuffix = '';
-
+/**
+ * e.g. [
+ *  ["a", "b"],
+ *  ["c", "d"]
+ * ]
+ * becomes "a=b&c=d"
+ */
+const entriesToQueryString = (entries): string => {
+  let queryString = '';
   for (let i = 0; i < entries.length; i++) {
     const [key, value] = entries[i];
-    paramsSuffix +=
-      paramsSuffix === ''
+    queryString +=
+      queryString === ''
         ? `${key}=${encodeURIComponent(value)}`
         : `&${key}=${encodeURIComponent(value)}`;
   }
+  return queryString;
+};
+
+const appendQueryParamsToPath = (path: string, queryParams: Record<string, string>): string => {
+  const entries = Object.entries(queryParams);
+  const paramsSuffix = entriesToQueryString(entries);
   return paramsSuffix === '' ? path : `${path}?${paramsSuffix}`;
+};
+
+/**
+ *
+ * @returns equivalent params, with dictionary params converted to string params
+ * e.g. reqParam = {id: 3, severity:5} becomes reqParam=id%3D%3D3%26%26severity%3D%3D5 or reqParam=id==3&&severity==5
+ */
+const formatQueryParams = params => {
+  if (isEmpty(params)) return params;
+  return Object.fromEntries(
+    Object.entries(params).map(([key, value]) => {
+      const isObjectParam = typeof value === 'object' && value !== null;
+      if (!isObjectParam) return [key, value];
+      return [key, entriesToQueryString(Object.entries(value as object))];
+    }),
+  );
 };
 
 export const appendParamsToPath = (
@@ -32,7 +59,7 @@ export const appendParamsToPath = (
   queryParams: Record<string, string>,
 ): string => {
   path = appendPathParamsToPath(path, pathParams);
-  path = appendQueryParamsToPath(path, queryParams);
+  path = appendQueryParamsToPath(path, formatQueryParams(queryParams));
   return path;
 };
 
@@ -197,7 +224,7 @@ export const getUpdatedObject = (
 };
 
 /**
- * Method used for cleaning up an object from fields having empty strings as values
+ * Method used for cleaning up an object from fields having empty strings or empty objects as values
  * as those make no sense in some use cases, such as for request parameters (query, path etc).
  * This method esentially deletes fields that have values such as '', ' ', '     ' (i.e. empty string),
  * and arrays, rest of the fields are not touched whatsoever.
@@ -210,7 +237,9 @@ const cleanEmptyFields = (obj: Record<string, any>): Record<string, any> => {
   if (entries.length === 0) return obj;
 
   entries.forEach(([key, value]) => {
-    typeof obj[key] === 'string' && isEmpty(obj[key].replace(/\s/g, ''))
+    const isEmptyString = typeof obj[key] === 'string' && isEmpty(obj[key].replace(/\s/g, ''));
+    const isEmptyObject = typeof obj[key] === 'object' && obj[key] !== null && isEmpty(obj[key]);
+    isEmptyString || isEmptyObject
       ? delete obj[key]
       : Array.isArray(value)
       ? getCleanArray(value)

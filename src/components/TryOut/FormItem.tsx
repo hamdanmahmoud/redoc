@@ -10,7 +10,7 @@ import { ArrayForm, containerStyle } from './ArrayForm';
 import { SchemaSection } from './SchemaSection';
 import { Dropdown, Input, Label } from './styled.elements';
 
-const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
+const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors, location }) => {
   const { schema, name, example, description, required, kind } = item;
   const { oneOf, activeOneOf } = schema;
   const oneOfSchema = oneOf?.[activeOneOf];
@@ -23,7 +23,9 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
             <DiscriminatorDropdown
               parent={discriminator.parentSchema}
               enumValues={schema.enum}
-              onChange={value => onChange && onChange(name, value, undefined, ancestors, item.in)}
+              onChange={value =>
+                onChange && onChange(name, value, undefined, ancestors, item.in || location)
+              }
             />
           ) : (
             <>
@@ -34,7 +36,8 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
                   color={'white'}
                   backgroundColor={'#326CD1'}
                   onChange={e =>
-                    onChange && onChange(name, e.target.files?.[0], undefined, ancestors, item.in)
+                    onChange &&
+                    onChange(name, e.target.files?.[0], undefined, ancestors, item.in || location)
                   }
                 />
               ) : (
@@ -42,7 +45,8 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
                   placeholder={`${example || description || ''}`}
                   type={schema.format || 'text'}
                   onChange={e =>
-                    onChange && onChange(name, e.target.value, undefined, ancestors, item.in)
+                    onChange &&
+                    onChange(name, e.target.value, undefined, ancestors, item.in || location)
                   }
                 />
               )}
@@ -61,7 +65,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
                   !isNaN(Number(e.target.value)) ? Number(e.target.value) : e.target.value,
                   undefined,
                   ancestors,
-                  item.in,
+                  item.in || location,
                 )
               }
             />
@@ -78,7 +82,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
                     selectObject.target.value === 'true' ? true : false,
                     undefined,
                     ancestors,
-                    item.in,
+                    item.in || location,
                   );
               }}
             >
@@ -100,7 +104,7 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
               required={required}
               onChange={onChange}
               ancestors={ancestors}
-              location={item.in}
+              location={item.in || location}
             />
           );
         }
@@ -144,7 +148,8 @@ const FormItemTypesSwitch = ({ item, onChange, discriminator, ancestors }) => {
             editable
             hideButtons
             setParsedJSON={jsonValue =>
-              onChange && onChange(dictionaryName, jsonValue, undefined, ancestors)
+              onChange &&
+              onChange(dictionaryName, jsonValue, undefined, ancestors, item.in || location)
             }
           />
         </div>
@@ -173,6 +178,7 @@ enum FormItemType {
 interface FormItemProps {
   item: FieldModel;
   ancestors: string[];
+  location?: string;
   onChange: () => void;
   discriminator?: {
     fieldName: string;
@@ -181,7 +187,7 @@ interface FormItemProps {
 }
 
 export const FormItem = observer(
-  ({ item, onChange, discriminator, ancestors = [] }: FormItemProps) => {
+  ({ item, onChange, discriminator, ancestors = [], location }: FormItemProps) => {
     const { expanded, name, schema } = item;
     const { activeOneOf, oneOf, isCircular, isPrimitive, type } = schema;
     const oneOfSchema = oneOf?.[activeOneOf];
@@ -236,6 +242,7 @@ export const FormItem = observer(
               onChange={onChange}
               discriminator={discriminator}
               ancestors={ancestors}
+              location={location}
             />
           </div>
         </div>
@@ -245,6 +252,7 @@ export const FormItem = observer(
               schema={item.schema}
               onChange={onChange}
               ancestors={[...ancestors, name]}
+              location={item.in}
             />
           )}
         </div>

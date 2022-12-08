@@ -137,7 +137,7 @@ export const TryOut = observer(
           setRequest(request => {
             if (arrayIndex !== undefined) {
               const updatedObject = getUpdatedObject(
-                request.queryParams,
+                request.pathParams,
                 fieldName,
                 value,
                 arrayIndex,
@@ -187,7 +187,7 @@ export const TryOut = observer(
           setRequest(request => {
             if (arrayIndex !== undefined) {
               const updatedObject = getUpdatedObject(
-                request.queryParams,
+                request.cookieParams,
                 fieldName,
                 value,
                 arrayIndex,
@@ -212,7 +212,7 @@ export const TryOut = observer(
           setRequest(request => {
             if (arrayIndex !== undefined) {
               const updatedObject = getUpdatedObject(
-                request.queryParams,
+                request.header,
                 fieldName,
                 value,
                 arrayIndex,
