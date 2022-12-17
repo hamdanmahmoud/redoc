@@ -57,7 +57,7 @@ export const SearchIcon = styled((props: { className?: string }) => (
 
 export const SearchResultsBox = styled.div`
   padding: ${props => props.theme.spacing.unit}px 0;
-  background-color: ${({ theme }) => darken(0.05, theme.sidebar.backgroundColor)}};
+  background-color: transparent;
   color: ${props => props.theme.sidebar.textColor};
   max-height: 200px;
   border-top: ${({ theme }) => darken(0.1, theme.sidebar.backgroundColor)}};
@@ -74,11 +74,11 @@ font-size: 14px;
   ${MenuItemLabel} {
     padding-top: 6px;
     padding-bottom: 6px;
-    background-color: #163E58;
+    background-color: transparent;
 
     &:hover,
     &.active {
-      background-color: #13374E;
+      background-color: ${({ theme }) => darken(0.05, theme.sidebar.backgroundColor)}};
     }
 
     > svg {
@@ -92,7 +92,7 @@ export const ClearIcon = styled.i`
   display: inline-block;
   width: ${props => props.theme.spacing.unit * 2}px;
   text-align: center;
-  right: ${props => props.theme.spacing.unit * 4}px;
+  right: ${props => props.theme.spacing.unit * 8}px;
   line-height: 6em;
   vertical-align: middle;
   margin-right: 2px;
