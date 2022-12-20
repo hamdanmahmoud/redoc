@@ -105,7 +105,7 @@ export const TryOut = observer(
         setRequiredFields(requiredFields => {
           const restOfFields = requiredFields.filter(field => field !== requiredField);
           const newRequiredField = { ...requiredField };
-          newRequiredField.valid = !!value;
+          newRequiredField.valid = value === false || !!value;
           return [...restOfFields, newRequiredField];
         });
       }
