@@ -4,7 +4,7 @@ import styled from '../../styled-components';
 
 export const Label = styled.label`
   color: #1e1e1e;
-  font-weight: bolder;
+  font-weight: ${props => props.theme.typography.fontWeightRegular};
   font-size: 13px;
   background: transparent;
 `;

@@ -63,6 +63,7 @@ export const PropertyNameCell = styled(PropertyCell)`
   white-space: nowrap;
   font-size: 13px;
   font-family: ${props => props.theme.typography.code.fontFamily};
+  font-weight: ${props => props.theme.typography.code.fontWeight};
 
   &.deprecated {
     ${deprecatedCss};

@@ -97,9 +97,9 @@ const defaultTheme: ThemeInterface = {
   typography: {
     fontSize: '14px',
     lineHeight: '1.5em',
-    fontWeightRegular: '400',
-    fontWeightBold: '600',
-    fontWeightLight: '300',
+    fontWeightRegular: '600',
+    fontWeightBold: '800',
+    fontWeightLight: '400',
     fontFamily: 'Inter',
     smoothing: 'antialiased',
     optimizeSpeed: true,
@@ -129,12 +129,17 @@ const defaultTheme: ThemeInterface = {
     activeBackgroundColor: '#ececec',
     textColor: '#757575',
     activeTextColor: '#4e4e4e',
-
+    fontWeight: '600',
     groupItems: {
       textTransform: 'uppercase',
     },
     level1Items: {
       textTransform: 'none',
+      fontWeight: '900',
+    },
+    level2Items: {
+      fontWeight: '500',
+      textColor: '#5d5c5c',
     },
     arrow: {
       size: '1.5em',
@@ -308,11 +313,17 @@ export interface ResolvedThemeInterface {
     activeBackgroundColor: string;
     textColor: string;
     activeTextColor: string;
+    fontWeight: string;
     groupItems: {
       textTransform: string;
     };
     level1Items: {
       textTransform: string;
+      fontWeight: string;
+    };
+    level2Items: {
+      fontWeight: string;
+      textColor: string;
     };
     arrow: {
       size: string;
