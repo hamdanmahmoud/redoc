@@ -27,7 +27,7 @@ export const StyledMarkdownBlock = styled(
   >,
 )`
   font-family: 'Arial';
-  font-weight: ${props => props.theme.typography.fontWeightRegular};
+  font-weight: ${props => props.theme.typography.fontWeightLight};
   line-height: ${props => props.theme.typography.lineHeight};
 
   p {
@@ -73,7 +73,7 @@ export const StyledMarkdownBlock = styled(
     border: 1px solid rgba(38, 50, 56, 0.1);
     padding: 0 ${({ theme }) => theme.spacing.unit}px;
     font-size: ${props => props.theme.typography.code.fontSize};
-    font-weight: ${({ theme }) => theme.typography.code.fontWeight};
+    font-weight: ${({ theme }) => theme.typography.fontWeightLight};
 
     word-break: break-word;
   }

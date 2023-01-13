@@ -31,6 +31,7 @@ export const FieldLabel = styled.span`
   vertical-align: middle;
   font-size: ${({ theme }) => theme.typography.code.fontSize};
   line-height: 20px;
+  font-weight: ${({ theme }) => theme.typography.fontWeightLight};
 `;
 
 export const TypePrefix = styled(FieldLabel)`

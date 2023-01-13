@@ -102,20 +102,22 @@ export const menuItemDepth = {
     padding-bottom: 0;
     cursor: default;
     background-color: #f7f7f7;
-
+    font-weight: ${({ theme }) => theme.sidebar.fontWeight};
     color: ${props => props.theme.sidebar.textColor};
   `,
   1: css`
     font-size: 0.929em;
     text-transform: ${({ theme }) => theme.sidebar.level1Items.textTransform};
     background-color: #f7f7f7;
+    font-weight: ${({ theme }) => theme.sidebar.level1Items.fontWeight};
     &:hover {
       color: '#13374E';
     }
   `,
   2: css`
-    color: ${props => props.theme.sidebar.textColor};
+    color: ${props => props.theme.sidebar.level2Items.textColor};
     background-color: #f7f7f7;
+    font-weight: ${({ theme }) => theme.sidebar.level2Items.fontWeight};
   `,
 };
 
