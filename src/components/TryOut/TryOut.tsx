@@ -301,6 +301,7 @@ export const TryOut = observer(
     const contentType = toLower(operation?.requestBody?.content?.active?.name);
     const isJsonContent = contentType === 'application/json';
     const isFormDataContent = contentType === 'multipart/form-data';
+    const isEncodedFormContent = contentType === 'application/x-www-form-urlencoded';
 
     const schemaType = operation.requestBody?.content?.mediaTypes[0]?.schema?.type;
 
@@ -308,7 +309,9 @@ export const TryOut = observer(
       onRequestInputChange(fieldName, value, arrayIndex, ancestors, location);
 
     const onBodyChange =
-      isFormData && (isJsonContent || isFormDataContent) && schemaType === 'object'
+      isFormData &&
+      (isJsonContent || isFormDataContent || isEncodedFormContent) &&
+      schemaType === 'object'
         ? (fieldName, value, arrayIndex, ancestors) =>
             onRequestInputChange(fieldName, value, arrayIndex, ancestors, undefined)
         : value => {
