@@ -346,7 +346,8 @@ export const getRequiredFields = (operation: OperationModel): RequiredField[] =>
     );
   };
   fieldsTraversal(operation.requestBody?.content?.active, []);
-  return [...requiredParamsToFields(operation?.parameters), ...requiredFields];
+  const requiredParams = operation?.parameters?.filter(param => param.required);
+  return [...requiredParamsToFields(requiredParams), ...requiredFields];
 };
 
 export const anyInvalidRequiredField = requiredFields => {
