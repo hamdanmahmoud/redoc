@@ -40,8 +40,6 @@ enum NoRequestBodyHttpVerb {
 }
 
 const DEFAULT_CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error' };
-const DEFAULT_JSON_RESPONSE_PARSING_ERROR =
-  "Response content type specified as 'application/json' but response payload is not a valid JSON";
 
 interface OperationProps {
   operation: OperationModel;
@@ -126,24 +124,21 @@ export class Operation extends React.Component<OperationProps, OperationState> {
       .then((response: any) => {
         const statusCode = response.status;
         const contentType = response.headers.get('content-type');
-        if (contentType && contentType.indexOf('application/json') !== -1) {
-          try {
-            response = response.json();
-          } catch (_e) {
-            // most likely contentType specified as json by backend, but payload is mistakenly set to plain text
-            response = response.text();
-            console.error(DEFAULT_JSON_RESPONSE_PARSING_ERROR);
-          }
-        } else {
-          response = response.text();
-        }
 
-        response.then(data => {
+        response.text().then(data => {
+          let content = data;
+          if (contentType && contentType.indexOf('application/json') !== -1) {
+            try {
+              content = JSON.parse(data);
+            } catch (_e) {
+              // we can safely swallow error, as content is already set few lines above
+            }
+          }
           this.setState({
             response: {
               type: mapStatusCodeToType(statusCode),
               code: statusCode || 0,
-              content: data,
+              content,
             },
           });
         });
