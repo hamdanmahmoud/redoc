@@ -353,3 +353,11 @@ export const getRequiredFields = (operation: OperationModel): RequiredField[] =>
 export const anyInvalidRequiredField = requiredFields => {
   return requiredFields?.some(field => !field.valid);
 };
+
+export const areArraysEqual = (arr1, arr2) => arr1.every((val, idx) => val === arr2[idx]);
+
+export const areFieldsEqual = (field1, field2) => {
+  const { ancestors: ancestors1, fieldName: fieldName1 } = field1;
+  const { ancestors: ancestors2, fieldName: fieldName2 } = field2;
+  return fieldName1 === fieldName2 && areArraysEqual(ancestors1, ancestors2);
+};
