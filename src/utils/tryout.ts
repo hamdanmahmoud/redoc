@@ -122,11 +122,14 @@ export const getCleanObject = obj => {
         if (entries.length === 0) return this;
 
         entries.forEach(([key, value]) => {
-          this[key] === undefined
-            ? delete this[key]
-            : typeof this[key] === 'object'
-            ? removeUndefinedFields.bind(this[key])()
-            : value;
+          if (this[key] === undefined) {
+            delete this[key];
+          }
+
+          const isObjectNotArray = typeof this[key] === 'object' && !Array.isArray(value);
+          if (isObjectNotArray) {
+            removeUndefinedFields.bind(this[key])();
+          }
         });
         return this;
       },
