@@ -6,6 +6,7 @@ import * as React from 'react';
 import { OperationModel } from '../../services';
 import {
   anyInvalidRequiredField,
+  areFieldsEqual,
   getCleanRequest,
   getRequiredFields,
   getUpdatedObject,
@@ -103,7 +104,9 @@ export const TryOut = observer(
       const requiredField = requiredFields.find(item => item.fieldName === fieldName);
       if (requiredField && !arrayIndex) {
         setRequiredFields(requiredFields => {
-          const restOfFields = requiredFields.filter(field => field !== requiredField);
+          const restOfFields = requiredFields.filter(
+            field => !areFieldsEqual(field, requiredField),
+          );
           const newRequiredField = { ...requiredField };
           newRequiredField.valid = value === false || !!value;
           return [...restOfFields, newRequiredField];
