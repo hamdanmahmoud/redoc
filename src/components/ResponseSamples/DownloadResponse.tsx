@@ -11,7 +11,7 @@ export const DownloadResponse = ({ operation, content }: DownloadResponseProps) 
   const downloadItAnchor = (
     <a
       style={{ color: '#326CD1', cursor: 'pointer', fontWeight: 600 }}
-      href={`data:text/plain;charset=utf-8,${content}`}
+      href={`data:text/plain;charset=utf-8,${encodeURIComponent(content)}`}
       download={`${operation?.id || ''}Response`}
     >
       download it
