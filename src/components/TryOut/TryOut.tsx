@@ -22,11 +22,14 @@ enum RequestObjectType {
   BODY = 'body',
 }
 
+const UNSAFE_HTTP_METHODS = ['put', 'patch', 'post', 'delete'];
+
 interface TryOutProps {
   operation: OperationModel;
   response: any;
   pendingRequest: boolean;
   handleApiCall: (request: any) => void;
+  disableUnsafeCalls: boolean;
 }
 
 export type RequestBodyPayloadType = string | number | boolean | object | null;
@@ -54,7 +57,7 @@ const getInitialBodyByOperation = (operation: OperationModel): RequestBodyPayloa
 };
 
 export const TryOut = observer(
-  ({ operation, response, pendingRequest, handleApiCall }: TryOutProps) => {
+  ({ operation, response, pendingRequest, handleApiCall, disableUnsafeCalls }: TryOutProps) => {
     const [request, setRequest] = React.useState({
       queryParams: {},
       pathParams: {},
@@ -62,7 +65,7 @@ export const TryOut = observer(
       header: {},
       body: getInitialBodyByOperation(operation),
     });
-    const [isFormData, setIsFormData] = React.useState(true);
+    const [isFormData, setIsFormData] = React.useState(false);
     const [error, setError] = React.useState(undefined);
     const [showError, setShowError] = React.useState(false);
     const [requiredFields, setRequiredFields] = React.useState<RequiredField[]>(
@@ -355,7 +358,11 @@ export const TryOut = observer(
           showResponseSamples={false}
         />
         <RunButton
-          disabled={pendingRequest || (isFormData && anyInvalidRequiredField(requiredFields))}
+          disabled={
+            (disableUnsafeCalls && UNSAFE_HTTP_METHODS.includes(operation.httpVerb)) ||
+            pendingRequest ||
+            (isFormData && anyInvalidRequiredField(requiredFields))
+          }
           onClick={handleRunClick}
         >{`Run`}</RunButton>
       </>

@@ -53,6 +53,7 @@ export interface RedocRawOptions {
   ignoreNamedSchemas?: string[] | string;
   hideSchemaPattern?: boolean;
   generatedPayloadSamplesMaxDepth?: number;
+  disableUnsafeCalls?: boolean | string;
 }
 
 export function argValueToBoolean(val?: string | boolean, defaultValue?: boolean): boolean {
@@ -245,6 +246,7 @@ export class RedocNormalizedOptions {
   ignoreNamedSchemas: Set<string>;
   hideSchemaPattern: boolean;
   generatedPayloadSamplesMaxDepth: number;
+  disableUnsafeCalls: boolean;
 
   constructor(raw: RedocRawOptions, defaults: RedocRawOptions = {}) {
     raw = { ...defaults, ...raw };
@@ -315,5 +317,6 @@ export class RedocNormalizedOptions {
       RedocNormalizedOptions.normalizeGeneratedPayloadSamplesMaxDepth(
         raw.generatedPayloadSamplesMaxDepth,
       );
+    this.disableUnsafeCalls = argValueToBoolean(raw.disableUnsafeCalls);
   }
 }

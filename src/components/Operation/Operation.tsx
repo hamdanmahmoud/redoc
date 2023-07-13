@@ -213,6 +213,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
                     response={this.state.response}
                     pendingRequest={this.state.pendingRequest}
                     handleApiCall={this.handleApiCall}
+                    disableUnsafeCalls={options.disableUnsafeCalls}
                   />
                 </TabPanel>
                 <TabPanel key={'Examples panel'}>
