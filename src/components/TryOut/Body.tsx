@@ -49,8 +49,8 @@ export const Body = ({
           cursor={'pointer'}
           onChange={({ target: { value } }) => setIsFormData(value === 'form-data')}
         >
-          <option value="form-data">Form</option>
           <option value="raw-json">JSON</option>
+          <option value="form-data">Form</option>
         </Dropdown>
       </SectionHeader>
       <>
