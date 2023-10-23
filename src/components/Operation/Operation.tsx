@@ -139,6 +139,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
           type: mapStatusCodeToType(statusCode),
           code: statusCode || 0,
           content: formatResponseContent(data, contentType),
+          format: contentType,
         },
       });
     });
