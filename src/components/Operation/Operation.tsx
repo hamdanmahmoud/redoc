@@ -14,7 +14,6 @@ import {
 } from '../../common-elements';
 import { OperationModel } from '../../services/models';
 import styled from '../../styled-components';
-import { appendParamsToPath, mapStatusCodeToType, setCookieParams } from '../../utils/tryout';
 import { CallbacksList } from '../Callbacks';
 import { Endpoint } from '../Endpoint/Endpoint';
 import { ExternalDocumentation } from '../ExternalDocumentation/ExternalDocumentation';
@@ -28,6 +27,16 @@ import { ResponseSamples } from '../ResponseSamples/ResponseSamples';
 import { SecurityRequirements } from '../SecurityRequirement/SecurityRequirement';
 import { TryOut } from '../TryOut/TryOut';
 
+import {
+  appendParamsToPath,
+  bodyToFormData,
+  getRequestContentType,
+  getRequestHeaders,
+  formatResponseContent,
+  mapStatusCodeToType,
+  setCookieParams,
+} from '../../utils/tryout';
+
 const Description = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.unit * 6}px;
 `;
@@ -39,7 +48,12 @@ enum NoRequestBodyHttpVerb {
   TRACE = 'trace',
 }
 
-const DEFAULT_CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error' };
+interface RequestBuilderConfig {
+  method: string;
+  headers: HeadersInit | undefined;
+  body: BodyInit | null | undefined;
+  formData: FormData | null;
+}
 
 interface OperationProps {
   operation: OperationModel;
@@ -58,6 +72,24 @@ interface Request {
   cookieParams?: any;
   body?: BodyInit | null;
 }
+
+export const buildRequest = (config: RequestBuilderConfig): RequestInit => {
+  const { method, headers, body, formData } = config;
+  return Object.values(NoRequestBodyHttpVerb)
+    .map(value => String(value))
+    .indexOf(method) !== -1
+    ? {
+        method,
+        headers,
+      }
+    : {
+        method,
+        headers,
+        body: typeof body === 'string' ? body : formData || JSON.stringify(body),
+      };
+};
+
+const DEFAULT_CLIENT_ERROR_RESPONSE = { content: {}, code: `Error`, type: 'error' };
 
 @observer
 export class Operation extends React.Component<OperationProps, OperationState> {
@@ -81,87 +113,54 @@ export class Operation extends React.Component<OperationProps, OperationState> {
     } = this.props;
 
     const requestBodyContent = requestBody?.content;
-    const activeMimeIdx = requestBodyContent?.activeMimeIdx;
-    const contentType =
-      activeMimeIdx !== undefined && requestBodyContent?.mediaTypes[activeMimeIdx]?.name;
+    const contentType = getRequestContentType(requestBodyContent);
 
     const isFormData = contentType === 'multipart/form-data';
-
-    if (!isFormData) {
-      headers = { 'Content-Type': contentType || 'application/json', ...headers };
-    }
-
-    const formData = new FormData();
-    if (isFormData && body && typeof body === 'object') {
-      Object.entries(body as any).forEach(([key, value]) => {
-        const isFileValue = (value as any) instanceof File;
-        const isJsonValue = !isFileValue && typeof value === 'object' && value !== null;
-        formData.append(
-          key,
-          isFileValue ? (value as any) : isJsonValue ? JSON.stringify(value)! : value,
-        );
-      });
-    }
-
-    const request: RequestInit =
-      Object.values(NoRequestBodyHttpVerb)
-        .map(value => String(value))
-        .indexOf(httpVerb) !== -1
-        ? {
-            method: httpVerb,
-            headers,
-          }
-        : {
-            method: httpVerb,
-            headers,
-            body: typeof body === 'string' ? body : isFormData ? formData : JSON.stringify(body),
-          };
+    headers = getRequestHeaders(headers, isFormData, contentType);
+    const formData = bodyToFormData(body, isFormData);
+    const request: RequestInit = buildRequest({ method: httpVerb, headers, body, formData });
 
     setCookieParams(cookieParams);
 
     this.setState({ pendingRequest: true });
     fetch(`${appendParamsToPath(path, pathParams, queryParams)}`, request)
-      .then((response: any) => {
-        const statusCode = response.status;
-        const contentType = response.headers.get('content-type');
-
-        response.text().then(data => {
-          let content = data;
-          if (contentType && contentType.indexOf('application/json') !== -1) {
-            try {
-              content = JSON.parse(data);
-            } catch (_e) {
-              // we can safely swallow error, as content is already set few lines above
-            }
-          }
-          this.setState({
-            response: {
-              type: mapStatusCodeToType(statusCode),
-              code: statusCode || 0,
-              content,
-            },
-          });
-        });
-        return response;
-      })
-      .catch(e =>
-        setTimeout(() => {
-          console.log(e);
-          if (!this.state.response.code) {
-            this.setState({ response: DEFAULT_CLIENT_ERROR_RESPONSE });
-          } else {
-            this.setState({
-              response: {
-                content:
-                  'Ooops! Encountered an error. Most likely returned payload does not match Content-type response header.',
-                code: this.state.response.code,
-                type: 'error',
-              },
-            });
-          }
-        }, 1000),
-      )
+      .then(this.handleApiResponse)
+      .catch(this.handleApiError)
       .finally(() => setTimeout(() => this.setState({ pendingRequest: false }), 1000));
+  };
+
+  handleApiResponse = (response: any) => {
+    const statusCode = response.status;
+    const contentType = response.headers.get('content-type');
+
+    response.text().then(data => {
+      this.setState({
+        response: {
+          type: mapStatusCodeToType(statusCode),
+          code: statusCode || 0,
+          content: formatResponseContent(data, contentType),
+        },
+      });
+    });
+    return response;
+  };
+
+  handleApiError = e => {
+    setTimeout(() => {
+      console.log(e);
+      if (!this.state.response.code) {
+        this.setState({ response: DEFAULT_CLIENT_ERROR_RESPONSE });
+      } else {
+        this.setState({
+          response: {
+            content:
+              'Ooops! Encountered an error. Most likely returned payload does not match Content-type response header.',
+            code: this.state.response.code,
+            type: 'error',
+          },
+        });
+      }
+    }, 1000);
   };
 
   render() {

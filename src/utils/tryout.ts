@@ -2,6 +2,7 @@ import { omitBy, inRange, isEmpty, isFunction } from 'lodash';
 
 import { RequestBodyPayloadType } from '../components';
 import { OperationModel } from '../services/models/Operation';
+import { MediaContentModel } from '../services/models/MediaContent';
 
 const appendPathParamsToPath = (path: string, pathParams: Record<string, string>): string => {
   const entries = Object.entries(pathParams);
@@ -363,4 +364,60 @@ export const areFieldsEqual = (field1, field2) => {
   const { ancestors: ancestors1, fieldName: fieldName1 } = field1;
   const { ancestors: ancestors2, fieldName: fieldName2 } = field2;
   return fieldName1 === fieldName2 && areArraysEqual(ancestors1, ancestors2);
+};
+
+export const getRequestContentType = (
+  content: MediaContentModel | undefined,
+): string | undefined => {
+  const activeMimeIdx = content?.activeMimeIdx;
+  const contentType =
+    (activeMimeIdx !== undefined && content?.mediaTypes[activeMimeIdx]?.name) || undefined;
+  return contentType;
+};
+
+export const bodyToFormData = (
+  body: BodyInit | null | undefined,
+  isFormData: boolean,
+): FormData | null => {
+  if (!isFormData || !body || typeof body !== 'object') {
+    return null;
+  }
+  const formData = new FormData();
+  Object.entries(body as any).forEach(([key, value]) => {
+    const isFileValue = (value as any) instanceof File;
+    const isJsonValue = !isFileValue && typeof value === 'object' && value !== null;
+    formData.append(
+      key,
+      isFileValue ? (value as any) : isJsonValue ? JSON.stringify(value)! : value,
+    );
+  });
+  return formData;
+};
+
+export const getRequestHeaders = (
+  headers: HeadersInit | undefined,
+  isFormData: boolean,
+  contentType: string | undefined,
+) => {
+  if (isFormData) {
+    return headers;
+  }
+  headers = { 'Content-Type': contentType || 'application/json', ...headers };
+  return headers;
+};
+
+export const formatResponseContent = (data, contentType: string | undefined) => {
+  let content = data;
+  const isJSON = contentType && contentType.indexOf('application/json') !== -1;
+  if (!isJSON) {
+    return content;
+  }
+  try {
+    content = JSON.parse(data);
+  } catch (_e) {
+    // we can safely swallow error, as content is already set few lines above
+    // this case should not be reached, but if it is, that means contentType is specified
+    // as JSON however the actual content can't be parsed properly for some reason
+  }
+  return content;
 };
