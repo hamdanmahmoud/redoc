@@ -59,7 +59,7 @@ export class Field extends React.Component<FieldProps> {
       <>
         {kind === 'additionalProperties' && <PropertyLabel>additional property</PropertyLabel>}
         {kind === 'patternProperties' && <PropertyLabel>pattern property</PropertyLabel>}
-        {required && <RequiredLabel>required</RequiredLabel>}
+        {required && <RequiredLabel>*</RequiredLabel>}
       </>
     );
 
@@ -76,6 +76,7 @@ export class Field extends React.Component<FieldProps> {
           aria-label={`expand ${name}`}
         >
           <span className="property-name">{name}</span>
+          {required && <RequiredLabel>*</RequiredLabel>}
           <ShelfIcon direction={expanded ? 'down' : 'right'} />
         </button>
         {labels}

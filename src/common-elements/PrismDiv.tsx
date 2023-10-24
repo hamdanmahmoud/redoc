@@ -9,9 +9,8 @@ export const PrismDiv = styled.div`
   pre[class*='language-'] {
     /* color: white;
     background: none; */
-    text-shadow: 0 -0.1em 0.2em black;
+    text-shadow: 0 -0.1em 0.2em #373838;
     text-align: left;
-    white-space: pre;
     word-spacing: normal;
     word-break: normal;
     word-wrap: normal;
@@ -45,7 +44,8 @@ export const PrismDiv = styled.div`
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: hsl(30, 20%, 50%);
+    // color: hsl(30, 20%, 50%);
+    color: grey;
   }
 
   .token.punctuation {
@@ -61,11 +61,16 @@ export const PrismDiv = styled.div`
   .token.number,
   .token.constant,
   .token.symbol {
-    color: #4a8bb3;
+    // color: #4a8bb3;
+    color: grey;
   }
 
   .token.boolean {
-    color: #e64441;
+    color: firebrick;
+  }
+
+  .token.string {
+    word-break: break-all;
   }
 
   .token.selector,
@@ -74,34 +79,40 @@ export const PrismDiv = styled.div`
   .token.char,
   .token.builtin,
   .token.inserted {
-    color: #a0fbaa;
+    // color: #a0fbaa;
+    color: grey;
     & + a,
     & + a:visited {
-      color: #4ed2ba;
+      // color: #4ed2ba;
+      color: grey;
       text-decoration: underline;
     }
   }
 
   .token.property.string {
-    color: white;
+    // color: white;
+    color: #1e4f70;
   }
 
   .token.operator,
   .token.entity,
   .token.url,
   .token.variable {
-    color: hsl(40, 90%, 60%);
+    // color: hsl(40, 90%, 60%);
+    color: grey;
   }
 
   .token.atrule,
   .token.attr-value,
   .token.keyword {
-    color: hsl(350, 40%, 70%);
+    // color: hsl(350, 40%, 70%);
+    color: grey;
   }
 
   .token.regex,
   .token.important {
-    color: #e90;
+    // color: #e90;
+    color: grey;
   }
 
   .token.important,
@@ -121,4 +132,6 @@ export const PrismDiv = styled.div`
   }
 
   ${extensionsHook('Prism')};
+
+  outline: none;
 `;

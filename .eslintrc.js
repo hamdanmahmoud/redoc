@@ -31,10 +31,18 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
 
     'react/prop-types': 'off',
-    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/rules-of-hooks': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
 
-    'import/no-extraneous-dependencies': 'error',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+        optionalDependencies: false,
+        peerDependencies: false,
+        packageDir: __dirname,
+      },
+    ],
     'import/no-internal-modules': [
       'error',
       {

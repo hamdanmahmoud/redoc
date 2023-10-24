@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { ExternalDocumentation } from '../ExternalDocumentation/ExternalDocumentation';
 import { AdvancedMarkdown } from '../Markdown/AdvancedMarkdown';
-import { H1, H2, MiddlePanel, Row, Section, ShareLink } from '../../common-elements';
+import { H1, H2, MiddlePanel, Row, Section } from '../../common-elements';
 import type { ContentItemModel } from '../../services';
 import type { GroupModel, OperationModel } from '../../services/models';
 import { Operation } from '../Operation/Operation';
@@ -72,12 +72,7 @@ export class SectionItem extends React.Component<ContentItemProps> {
     return (
       <>
         <Row>
-          <MiddlePanel $compact={false}>
-            <Header>
-              <ShareLink to={this.props.item.id} />
-              {name}
-            </Header>
-          </MiddlePanel>
+          <Header>{name}</Header>
         </Row>
         <AdvancedMarkdown
           parentId={this.props.item.id}

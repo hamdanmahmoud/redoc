@@ -2,7 +2,7 @@ import styled from '../styled-components';
 import { PrismDiv } from './PrismDiv';
 
 export const SampleControls = styled.div`
-  opacity: 0.7;
+  opacity: 0.4;
   transition: opacity 0.3s ease;
   text-align: right;
   &:focus-within {
@@ -11,7 +11,8 @@ export const SampleControls = styled.div`
   > button {
     background-color: transparent;
     border: 0;
-    color: inherit;
+    color: #326cd1;
+    font-weight: 700;
     padding: 2px 10px;
     font-family: ${({ theme }) => theme.typography.fontFamily};
     font-size: ${({ theme }) => theme.typography.fontSize};

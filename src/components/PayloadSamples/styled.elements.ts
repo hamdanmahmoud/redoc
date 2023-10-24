@@ -4,7 +4,7 @@ import { Dropdown } from '../../common-elements/Dropdown';
 
 export const MimeLabel = styled.div`
   padding: 0.9em;
-  background-color: ${({ theme }) => transparentize(0.6, theme.rightPanel.backgroundColor)};
+  background-color: #f2f2f2;
   margin: 0 0 10px 0;
   display: block;
   font-family: ${({ theme }) => theme.typography.headings.fontFamily};
@@ -17,10 +17,9 @@ export const DropdownLabel = styled.span`
   font-size: 12px;
   position: absolute;
   z-index: 1;
-  top: -11px;
-  left: 12px;
+  top: -20px;
   font-weight: ${({ theme }) => theme.typography.fontWeightBold};
-  color: ${({ theme }) => transparentize(0.3, theme.rightPanel.textColor)};
+  color: ${({ theme }) => transparentize(0.6, theme.rightPanel.textColor)};
 `;
 
 export const DropdownWrapper = styled.div`

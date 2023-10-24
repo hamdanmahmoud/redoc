@@ -180,7 +180,7 @@ export class MenuStore {
     updateLocation: boolean = true,
     rewriteHistory: boolean = false,
   ) {
-    if ((this.activeItem && this.activeItem.id) === (item && item.id)) {
+    if ((this.activeItem && this.activeItem.id) === (item && item.id) && item && item.expanded) {
       return;
     }
 

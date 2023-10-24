@@ -27,14 +27,14 @@ const stickyfill = Stickyfill && Stickyfill();
 
 const StyledStickySidebar = styled.div<{ $open?: boolean }>`
   width: ${props => props.theme.sidebar.width};
-  background-color: ${props => props.theme.sidebar.backgroundColor};
+  // background-color: #056682;
+  background-color: ${props => props.theme.sidebar.backgroundColor || '#1E4F70'};
   overflow: hidden;
   display: flex;
   flex-direction: column;
 
   backface-visibility: hidden;
   /* contain: strict; TODO: breaks layout since Chrome 80*/
-
   height: 100vh;
   position: sticky;
   position: -webkit-sticky;

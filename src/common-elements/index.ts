@@ -1,6 +1,5 @@
 export * from './panels';
 export * from './headers';
-export * from './linkify';
 export * from './shelfs';
 export * from './fields-layout';
 export * from './schema';

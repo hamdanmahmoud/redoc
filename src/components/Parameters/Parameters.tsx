@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DropdownOrLabel, DropdownOrLabelProps } from '../DropdownOrLabel/DropdownOrLabel';
 import { ParametersGroup } from './ParametersGroup';
 
-import { UnderlinedHeader } from '../../common-elements';
+import { BoldHeader } from '../../common-elements';
 
 import { MediaContentModel } from '../../services';
 import { FieldModel, RequestBodyModel } from '../../services/models';
@@ -27,7 +27,6 @@ export interface ParametersProps {
 }
 
 const PARAM_PLACES = ['path', 'query', 'cookie', 'header'];
-
 export class Parameters extends React.PureComponent<ParametersProps> {
   orderParams(params: FieldModel[]): Record<string, FieldModel[]> {
     const res = {};
@@ -78,11 +77,11 @@ function DropdownWithinHeader({
   const isOptional = typeof bodyRequired === 'boolean' && !bodyRequired;
 
   return (
-    <UnderlinedHeader key="header">
+    <BoldHeader key="header">
       Request Body schema: <DropdownOrLabel {...props} />
       {isRequired && <RequiredBody>required</RequiredBody>}
       {isOptional && <OptionalBody>optional</OptionalBody>}
-    </UnderlinedHeader>
+    </BoldHeader>
   );
 }
 

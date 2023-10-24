@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { UnderlinedHeader } from '../../common-elements';
+import { BoldHeader } from '../../common-elements';
 import { PropertiesTable } from '../../common-elements/fields-layout';
 
 import { FieldModel } from '../../services/models';
@@ -22,7 +22,7 @@ export class ParametersGroup extends React.PureComponent<ParametersGroupProps, a
 
     return (
       <div key={place}>
-        <UnderlinedHeader>{place} Parameters</UnderlinedHeader>
+        <BoldHeader>{place} Parameters</BoldHeader>
         <PropertiesTable>
           <tbody>
             {mapWithLast(parameters, (field, isLast) => (

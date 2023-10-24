@@ -3,14 +3,14 @@ import styled, { media } from '../styled-components';
 
 export const MiddlePanel = styled.div<{ $compact?: boolean }>`
   width: calc(100% - ${props => props.theme.rightPanel.width});
-  padding: 0 ${props => props.theme.spacing.sectionHorizontal}px;
+  flex: 0 0 50%;
+  margin-right: 36px;
 
   ${({ $compact, theme }) =>
     media.lessThan('medium', true)`
     width: 100%;
-    padding: ${`${$compact ? 0 : theme.spacing.sectionVertical}px ${
-      theme.spacing.sectionHorizontal
-    }px`};
+    margin: 0;
+    padding: ${`${$compact ? 0 : theme.spacing.sectionVertical}px 0`};
   `};
 `;
 
@@ -41,17 +41,18 @@ export const Section = styled.div.attrs(props => ({
       width: 100%;
       display: block;
       content: '';
-      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     }
   `) ||
     ''}
 `;
 
 export const RightPanel = styled.div`
-  width: ${props => props.theme.rightPanel.width};
   color: ${({ theme }) => theme.rightPanel.textColor};
-  background-color: ${props => props.theme.rightPanel.backgroundColor};
-  padding: 0 ${props => props.theme.spacing.sectionHorizontal}px;
+  padding: 40px ${props => props.theme.spacing.sectionHorizontal}px;
+  min-height: 470px;
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
 
   ${media.lessThan('medium', true)`
     width: 100%;
@@ -64,10 +65,18 @@ export const DarkRightPanel = styled(RightPanel)`
   background-color: ${props => props.theme.rightPanel.backgroundColor};
 `;
 
-export const Row = styled.div`
+export const Row = styled.div<{
+  background?: string;
+  borderRadius?: string;
+  padding?: string;
+  bordered?: boolean;
+}>`
   display: flex;
   width: 100%;
-  padding: 0;
+  padding: ${props => props.padding || '0'};
+  background: ${props => props.background};
+  border-radius: ${props => props.borderRadius};
+  border: ${props => (props.bordered ? '2px solid #E0E0E0' : 'none')};
 
   ${media.lessThan('medium', true)`
     flex-direction: column;

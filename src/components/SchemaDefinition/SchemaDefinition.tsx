@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { DarkRightPanel, MiddlePanel, MimeLabel, Row, Section } from '../../common-elements';
+import { RightPanel, MiddlePanel, MimeLabel, Row, Section } from '../../common-elements';
 import { MediaTypeModel, OpenAPIParser, RedocNormalizedOptions } from '../../services';
 import styled from '../../styled-components';
 import { OpenAPIMediaType } from '../../types';
@@ -66,14 +66,14 @@ export class SchemaDefinition extends React.PureComponent<ObjectDescriptionProps
             />
           </MiddlePanel>
           {showExample && (
-            <DarkRightPanel>
+            <RightPanel>
               <MediaSamplesWrap>
                 <MediaTypeSamples
                   renderDropdown={this.renderDropdown}
                   mediaType={this.mediaModel}
                 />
               </MediaSamplesWrap>
-            </DarkRightPanel>
+            </RightPanel>
           )}
         </Row>
       </Section>

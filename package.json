@@ -146,6 +146,7 @@
     "dompurify": "^2.2.8",
     "eventemitter3": "^4.0.7",
     "json-pointer": "^0.6.2",
+    "lodash": "^4.17.21",
     "lunr": "^2.3.9",
     "mark.js": "^8.11.1",
     "marked": "^4.0.15",
@@ -160,7 +161,8 @@
     "slugify": "~1.4.7",
     "stickyfill": "^1.1.1",
     "swagger2openapi": "^7.0.6",
-    "url-template": "^2.0.8"
+    "url-template": "^2.0.8",
+    "uuid": "^8.3.2"
   },
   "size-limit": [
     {

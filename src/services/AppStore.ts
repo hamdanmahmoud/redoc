@@ -146,7 +146,7 @@ export class AppStore {
   }
 }
 
-const DEFAULT_OPTIONS: RedocRawOptions = {
+export const DEFAULT_OPTIONS: RedocRawOptions = {
   allowedMdComponents: {
     [SECURITY_DEFINITIONS_JSX_NAME]: {
       component: SecurityDefs,

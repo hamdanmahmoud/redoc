@@ -164,7 +164,7 @@ const Heading = styled.nav`
 
   display: flex;
   align-items: center;
-  font-family: Roboto, sans-serif;
+  font-family: 'Arial';
 `;
 
 const Logo = styled.img`

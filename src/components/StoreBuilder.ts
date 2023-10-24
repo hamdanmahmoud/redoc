@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createContext, useContext } from 'react';
+import { act } from 'react-dom/test-utils';
 
 import { AppStore } from '../services/';
 import { RedocRawOptions } from '../services/RedocNormalizedOptions';
@@ -46,7 +47,7 @@ export function StoreBuilder(props: StoreBuilderProps) {
       setResolvedSpec(null);
       try {
         const resolved = await loadAndBundleSpec(spec || specUrl!);
-        setResolvedSpec(resolved);
+        act(() => setResolvedSpec(resolved));
       } catch (e) {
         if (onLoaded) {
           onLoaded(e);

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { SecuritySchemesModel } from '../../services';
-import { H2, Row, ShareLink, MiddlePanel, Section } from '../../common-elements';
+import { SecuritySchemesModel } from '../../services/models';
+
+import { H2, MiddlePanel, Row, Section } from '../../common-elements';
 import { Markdown } from '../Markdown/Markdown';
 import { SecurityDetails } from '../SecurityRequirement/SecurityDetails';
 import { SecurityDetailsStyle, SecurityRow } from '../SecurityRequirement/styled.elements';
@@ -23,10 +24,7 @@ export class SecurityDefs extends React.PureComponent<SecurityDefsProps> {
       <Section id={scheme.sectionId} key={scheme.id}>
         <Row>
           <MiddlePanel>
-            <H2>
-              <ShareLink to={scheme.sectionId} />
-              {scheme.displayName}
-            </H2>
+            <H2>{scheme.displayName}</H2>
             <Markdown source={scheme.description || ''} />
             <SecurityDetailsStyle>
               <SecurityRow>

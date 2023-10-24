@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ShelfIcon } from '../../common-elements';
 import { OperationModel } from '../../services';
 import { Markdown } from '../Markdown/Markdown';
 import { OptionsContext } from '../OptionsProvider';
@@ -36,7 +35,7 @@ export class Endpoint extends React.Component<EndpointProps, EndpointState> {
     };
   }
 
-  toggle = () => {
+  toggleEndpointInfo = () => {
     this.setState({ expanded: !this.state.expanded });
   };
 
@@ -49,18 +48,15 @@ export class Endpoint extends React.Component<EndpointProps, EndpointState> {
       <OptionsContext.Consumer>
         {options => (
           <OperationEndpointWrap>
-            <EndpointInfo onClick={this.toggle} $expanded={expanded} $inverted={inverted}>
+            <EndpointInfo
+              onClick={this.toggleEndpointInfo}
+              $expanded={expanded}
+              $inverted={inverted}
+            >
               <HttpVerb type={operation.httpVerb} $compact={this.props.compact}>
                 {operation.httpVerb}
               </HttpVerb>
               <ServerRelativeURL>{operation.path}</ServerRelativeURL>
-              <ShelfIcon
-                float={'right'}
-                color={inverted ? 'black' : 'white'}
-                size={'20px'}
-                direction={expanded ? 'up' : 'down'}
-                style={{ marginRight: '-25px' }}
-              />
             </EndpointInfo>
             <ServersOverlay $expanded={expanded} aria-hidden={!expanded}>
               {operation.servers.map(server => {
