@@ -19,6 +19,8 @@ const labels: LabelsConfig = {
   callbackResponses: 'Callback responses',
   requestBody: 'Request body',
   response: 'Response',
+  requestSamples: 'Request samples',
+  responseSamples: 'Response samples',
 };
 
 export function setRedocLabels(_labels?: LabelsConfigRaw) {

@@ -76,7 +76,6 @@ export class Field extends React.Component<FieldProps> {
           aria-label={`expand ${name}`}
         >
           <span className="property-name">{name}</span>
-          {required && <RequiredLabel>*</RequiredLabel>}
           <ShelfIcon direction={expanded ? 'down' : 'right'} />
         </button>
         {labels}

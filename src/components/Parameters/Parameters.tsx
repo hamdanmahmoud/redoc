@@ -74,13 +74,11 @@ function DropdownWithinHeader({
   ...props
 }: DropdownOrLabelProps & { bodyRequired?: boolean }) {
   const isRequired = typeof bodyRequired === 'boolean' && !!bodyRequired;
-  const isOptional = typeof bodyRequired === 'boolean' && !bodyRequired;
 
   return (
     <BoldHeader key="header">
       Request Body schema: <DropdownOrLabel {...props} />
-      {isRequired && <RequiredBody>required</RequiredBody>}
-      {isOptional && <OptionalBody>optional</OptionalBody>}
+      {isRequired && <RequiredBody>*</RequiredBody>}
     </BoldHeader>
   );
 }
@@ -125,10 +123,4 @@ const commonStyles = `
 
 const RequiredBody = styled(RequiredLabel)`
   ${commonStyles}
-`;
-
-const OptionalBody = styled('div')`
-  ${commonStyles}
-  color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: ${props => props.theme.schema.labelsTextSize};
 `;

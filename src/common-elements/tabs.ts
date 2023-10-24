@@ -44,7 +44,7 @@ export const Tabs = styled(ReactTabs)`
       &:first-child:not(.toggle) {
         margin: 0 17px 0 0;
       }
-      &:last-child:not(.toggle) {
+      &:last-child:not(.toggle):not(:only-of-type) {
         margin: 0 0 0 17px;
       }
       &.react-tabs__tab--selected:not(.toggle):not(.status-code) {
@@ -55,7 +55,6 @@ export const Tabs = styled(ReactTabs)`
         border-bottom: 3px solid #326cd1;
         border-radius: 2px;
         &:focus {
-          outline: auto;
           background: white;
         }
       }
@@ -79,7 +78,6 @@ export const Tabs = styled(ReactTabs)`
     }
   }
   > .react-tabs__tab-panel {
-    & > div,
     & > pre {
       margin: 0;
     }

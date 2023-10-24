@@ -75,6 +75,10 @@ export const SectionHeader = styled.div`
   margin: 10% 0% 0% 0%;
   display: flex;
   justify-content: space-between;
+
+  &:first-child {
+    margin: 0;
+  }
 `;
 
 export const RunButton = styled.button<{ disabled: boolean }>`

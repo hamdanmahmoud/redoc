@@ -71,7 +71,7 @@ export const TypeTitle = styled(FieldLabel)`
 export const TypeFormat = TypeName;
 
 export const RequiredLabel = styled(FieldLabel).attrs({
-  as: 'div',
+  as: 'span',
 })`
   color: ${props => props.theme.schema.requireLabelColor};
   font-size: ${props => props.theme.schema.requireLabelTextSize};
