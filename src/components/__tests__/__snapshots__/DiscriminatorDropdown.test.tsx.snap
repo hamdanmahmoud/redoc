@@ -77,6 +77,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "options": RedocNormalizedOptions {
                     "allowedMdComponents": Object {},
                     "disableSearch": false,
+                    "disableUnsafeCalls": false,
                     "downloadDefinitionUrl": undefined,
                     "downloadFileName": undefined,
                     "enumSkipQuotes": false,
@@ -205,6 +206,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                       "rightPanel": Object {
                         "backgroundColor": "#FFFFFF",
                         "border": "#FFFFFF",
+                        "servers": Object {
+                          "overlay": Object {
+                            "backgroundColor": "#fafafa",
+                            "textColor": "#263238",
+                          },
+                          "url": Object {
+                            "backgroundColor": "#fff",
+                          },
+                        },
                         "textColor": "#373838",
                         "width": "43.75%",
                       },
@@ -233,11 +243,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "backgroundColor": "#f7f7f7",
                         "fontWeight": "600",
                         "groupItems": Object {
-                          "activeBackgroundColor": "#e1e1e1",
-                          "activeTextColor": "#32329f",
+                          "activeBackgroundColor": "#dedede",
+                          "activeTextColor": "#4e4e4e",
                           "textTransform": "uppercase",
                         },
                         "level1Items": Object {
+                          "activeBackgroundColor": "#eaeaea",
+                          "activeTextColor": "#4e4e4e",
                           "fontWeight": "900",
                           "textTransform": "none",
                         },
@@ -277,6 +289,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "links": Object {
                           "color": "#373838",
                           "hover": "#6a6b6b",
+                          "hoverTextDecoration": "auto",
+                          "textDecoration": "auto",
                           "visited": "#373838",
                         },
                         "optimizeSpeed": true,
@@ -341,6 +355,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "options": RedocNormalizedOptions {
                     "allowedMdComponents": Object {},
                     "disableSearch": false,
+                    "disableUnsafeCalls": false,
                     "downloadDefinitionUrl": undefined,
                     "downloadFileName": undefined,
                     "enumSkipQuotes": false,
@@ -469,6 +484,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                       "rightPanel": Object {
                         "backgroundColor": "#FFFFFF",
                         "border": "#FFFFFF",
+                        "servers": Object {
+                          "overlay": Object {
+                            "backgroundColor": "#fafafa",
+                            "textColor": "#263238",
+                          },
+                          "url": Object {
+                            "backgroundColor": "#fff",
+                          },
+                        },
                         "textColor": "#373838",
                         "width": "43.75%",
                       },
@@ -497,11 +521,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "backgroundColor": "#f7f7f7",
                         "fontWeight": "600",
                         "groupItems": Object {
-                          "activeBackgroundColor": "#e1e1e1",
-                          "activeTextColor": "#32329f",
+                          "activeBackgroundColor": "#dedede",
+                          "activeTextColor": "#4e4e4e",
                           "textTransform": "uppercase",
                         },
                         "level1Items": Object {
+                          "activeBackgroundColor": "#eaeaea",
+                          "activeTextColor": "#4e4e4e",
                           "fontWeight": "900",
                           "textTransform": "none",
                         },
@@ -541,6 +567,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "links": Object {
                           "color": "#373838",
                           "hover": "#6a6b6b",
+                          "hoverTextDecoration": "auto",
+                          "textDecoration": "auto",
                           "visited": "#373838",
                         },
                         "optimizeSpeed": true,
@@ -592,6 +620,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "options": RedocNormalizedOptions {
               "allowedMdComponents": Object {},
               "disableSearch": false,
+              "disableUnsafeCalls": false,
               "downloadDefinitionUrl": undefined,
               "downloadFileName": undefined,
               "enumSkipQuotes": false,
@@ -720,6 +749,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                 "rightPanel": Object {
                   "backgroundColor": "#FFFFFF",
                   "border": "#FFFFFF",
+                  "servers": Object {
+                    "overlay": Object {
+                      "backgroundColor": "#fafafa",
+                      "textColor": "#263238",
+                    },
+                    "url": Object {
+                      "backgroundColor": "#fff",
+                    },
+                  },
                   "textColor": "#373838",
                   "width": "43.75%",
                 },
@@ -748,11 +786,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "backgroundColor": "#f7f7f7",
                   "fontWeight": "600",
                   "groupItems": Object {
-                    "activeBackgroundColor": "#e1e1e1",
-                    "activeTextColor": "#32329f",
+                    "activeBackgroundColor": "#dedede",
+                    "activeTextColor": "#4e4e4e",
                     "textTransform": "uppercase",
                   },
                   "level1Items": Object {
+                    "activeBackgroundColor": "#eaeaea",
+                    "activeTextColor": "#4e4e4e",
                     "fontWeight": "900",
                     "textTransform": "none",
                   },
@@ -792,6 +832,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "links": Object {
                     "color": "#373838",
                     "hover": "#6a6b6b",
+                    "hoverTextDecoration": "auto",
+                    "textDecoration": "auto",
                     "visited": "#373838",
                   },
                   "optimizeSpeed": true,
@@ -905,6 +947,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "options": RedocNormalizedOptions {
                     "allowedMdComponents": Object {},
                     "disableSearch": false,
+                    "disableUnsafeCalls": false,
                     "downloadDefinitionUrl": undefined,
                     "downloadFileName": undefined,
                     "enumSkipQuotes": false,
@@ -1033,6 +1076,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                       "rightPanel": Object {
                         "backgroundColor": "#FFFFFF",
                         "border": "#FFFFFF",
+                        "servers": Object {
+                          "overlay": Object {
+                            "backgroundColor": "#fafafa",
+                            "textColor": "#263238",
+                          },
+                          "url": Object {
+                            "backgroundColor": "#fff",
+                          },
+                        },
                         "textColor": "#373838",
                         "width": "43.75%",
                       },
@@ -1061,11 +1113,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "backgroundColor": "#f7f7f7",
                         "fontWeight": "600",
                         "groupItems": Object {
-                          "activeBackgroundColor": "#e1e1e1",
-                          "activeTextColor": "#32329f",
+                          "activeBackgroundColor": "#dedede",
+                          "activeTextColor": "#4e4e4e",
                           "textTransform": "uppercase",
                         },
                         "level1Items": Object {
+                          "activeBackgroundColor": "#eaeaea",
+                          "activeTextColor": "#4e4e4e",
                           "fontWeight": "900",
                           "textTransform": "none",
                         },
@@ -1105,6 +1159,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "links": Object {
                           "color": "#373838",
                           "hover": "#6a6b6b",
+                          "hoverTextDecoration": "auto",
+                          "textDecoration": "auto",
                           "visited": "#373838",
                         },
                         "optimizeSpeed": true,
@@ -1181,6 +1237,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "options": RedocNormalizedOptions {
                     "allowedMdComponents": Object {},
                     "disableSearch": false,
+                    "disableUnsafeCalls": false,
                     "downloadDefinitionUrl": undefined,
                     "downloadFileName": undefined,
                     "enumSkipQuotes": false,
@@ -1309,6 +1366,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                       "rightPanel": Object {
                         "backgroundColor": "#FFFFFF",
                         "border": "#FFFFFF",
+                        "servers": Object {
+                          "overlay": Object {
+                            "backgroundColor": "#fafafa",
+                            "textColor": "#263238",
+                          },
+                          "url": Object {
+                            "backgroundColor": "#fff",
+                          },
+                        },
                         "textColor": "#373838",
                         "width": "43.75%",
                       },
@@ -1337,11 +1403,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "backgroundColor": "#f7f7f7",
                         "fontWeight": "600",
                         "groupItems": Object {
-                          "activeBackgroundColor": "#e1e1e1",
-                          "activeTextColor": "#32329f",
+                          "activeBackgroundColor": "#dedede",
+                          "activeTextColor": "#4e4e4e",
                           "textTransform": "uppercase",
                         },
                         "level1Items": Object {
+                          "activeBackgroundColor": "#eaeaea",
+                          "activeTextColor": "#4e4e4e",
                           "fontWeight": "900",
                           "textTransform": "none",
                         },
@@ -1381,6 +1449,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                         "links": Object {
                           "color": "#373838",
                           "hover": "#6a6b6b",
+                          "hoverTextDecoration": "auto",
+                          "textDecoration": "auto",
                           "visited": "#373838",
                         },
                         "optimizeSpeed": true,
@@ -1428,6 +1498,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "options": RedocNormalizedOptions {
               "allowedMdComponents": Object {},
               "disableSearch": false,
+              "disableUnsafeCalls": false,
               "downloadDefinitionUrl": undefined,
               "downloadFileName": undefined,
               "enumSkipQuotes": false,
@@ -1556,6 +1627,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                 "rightPanel": Object {
                   "backgroundColor": "#FFFFFF",
                   "border": "#FFFFFF",
+                  "servers": Object {
+                    "overlay": Object {
+                      "backgroundColor": "#fafafa",
+                      "textColor": "#263238",
+                    },
+                    "url": Object {
+                      "backgroundColor": "#fff",
+                    },
+                  },
                   "textColor": "#373838",
                   "width": "43.75%",
                 },
@@ -1584,11 +1664,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "backgroundColor": "#f7f7f7",
                   "fontWeight": "600",
                   "groupItems": Object {
-                    "activeBackgroundColor": "#e1e1e1",
-                    "activeTextColor": "#32329f",
+                    "activeBackgroundColor": "#dedede",
+                    "activeTextColor": "#4e4e4e",
                     "textTransform": "uppercase",
                   },
                   "level1Items": Object {
+                    "activeBackgroundColor": "#eaeaea",
+                    "activeTextColor": "#4e4e4e",
                     "fontWeight": "900",
                     "textTransform": "none",
                   },
@@ -1628,6 +1710,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "links": Object {
                     "color": "#373838",
                     "hover": "#6a6b6b",
+                    "hoverTextDecoration": "auto",
+                    "textDecoration": "auto",
                     "visited": "#373838",
                   },
                   "optimizeSpeed": true,
@@ -1700,6 +1784,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
         "options": RedocNormalizedOptions {
           "allowedMdComponents": Object {},
           "disableSearch": false,
+          "disableUnsafeCalls": false,
           "downloadDefinitionUrl": undefined,
           "downloadFileName": undefined,
           "enumSkipQuotes": false,
@@ -1828,6 +1913,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "rightPanel": Object {
               "backgroundColor": "#FFFFFF",
               "border": "#FFFFFF",
+              "servers": Object {
+                "overlay": Object {
+                  "backgroundColor": "#fafafa",
+                  "textColor": "#263238",
+                },
+                "url": Object {
+                  "backgroundColor": "#fff",
+                },
+              },
               "textColor": "#373838",
               "width": "43.75%",
             },
@@ -1856,11 +1950,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
               "backgroundColor": "#f7f7f7",
               "fontWeight": "600",
               "groupItems": Object {
-                "activeBackgroundColor": "#e1e1e1",
-                "activeTextColor": "#32329f",
+                "activeBackgroundColor": "#dedede",
+                "activeTextColor": "#4e4e4e",
                 "textTransform": "uppercase",
               },
               "level1Items": Object {
+                "activeBackgroundColor": "#eaeaea",
+                "activeTextColor": "#4e4e4e",
                 "fontWeight": "900",
                 "textTransform": "none",
               },
@@ -1900,6 +1996,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
               "links": Object {
                 "color": "#373838",
                 "hover": "#6a6b6b",
+                "hoverTextDecoration": "auto",
+                "textDecoration": "auto",
                 "visited": "#373838",
               },
               "optimizeSpeed": true,
@@ -2002,6 +2100,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "options": RedocNormalizedOptions {
               "allowedMdComponents": Object {},
               "disableSearch": false,
+              "disableUnsafeCalls": false,
               "downloadDefinitionUrl": undefined,
               "downloadFileName": undefined,
               "enumSkipQuotes": false,
@@ -2130,6 +2229,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                 "rightPanel": Object {
                   "backgroundColor": "#FFFFFF",
                   "border": "#FFFFFF",
+                  "servers": Object {
+                    "overlay": Object {
+                      "backgroundColor": "#fafafa",
+                      "textColor": "#263238",
+                    },
+                    "url": Object {
+                      "backgroundColor": "#fff",
+                    },
+                  },
                   "textColor": "#373838",
                   "width": "43.75%",
                 },
@@ -2158,11 +2266,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "backgroundColor": "#f7f7f7",
                   "fontWeight": "600",
                   "groupItems": Object {
-                    "activeBackgroundColor": "#e1e1e1",
-                    "activeTextColor": "#32329f",
+                    "activeBackgroundColor": "#dedede",
+                    "activeTextColor": "#4e4e4e",
                     "textTransform": "uppercase",
                   },
                   "level1Items": Object {
+                    "activeBackgroundColor": "#eaeaea",
+                    "activeTextColor": "#4e4e4e",
                     "fontWeight": "900",
                     "textTransform": "none",
                   },
@@ -2202,6 +2312,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "links": Object {
                     "color": "#373838",
                     "hover": "#6a6b6b",
+                    "hoverTextDecoration": "auto",
+                    "textDecoration": "auto",
                     "visited": "#373838",
                   },
                   "optimizeSpeed": true,
@@ -2266,6 +2378,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "options": RedocNormalizedOptions {
               "allowedMdComponents": Object {},
               "disableSearch": false,
+              "disableUnsafeCalls": false,
               "downloadDefinitionUrl": undefined,
               "downloadFileName": undefined,
               "enumSkipQuotes": false,
@@ -2394,6 +2507,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                 "rightPanel": Object {
                   "backgroundColor": "#FFFFFF",
                   "border": "#FFFFFF",
+                  "servers": Object {
+                    "overlay": Object {
+                      "backgroundColor": "#fafafa",
+                      "textColor": "#263238",
+                    },
+                    "url": Object {
+                      "backgroundColor": "#fff",
+                    },
+                  },
                   "textColor": "#373838",
                   "width": "43.75%",
                 },
@@ -2422,11 +2544,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "backgroundColor": "#f7f7f7",
                   "fontWeight": "600",
                   "groupItems": Object {
-                    "activeBackgroundColor": "#e1e1e1",
-                    "activeTextColor": "#32329f",
+                    "activeBackgroundColor": "#dedede",
+                    "activeTextColor": "#4e4e4e",
                     "textTransform": "uppercase",
                   },
                   "level1Items": Object {
+                    "activeBackgroundColor": "#eaeaea",
+                    "activeTextColor": "#4e4e4e",
                     "fontWeight": "900",
                     "textTransform": "none",
                   },
@@ -2466,6 +2590,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
                   "links": Object {
                     "color": "#373838",
                     "hover": "#6a6b6b",
+                    "hoverTextDecoration": "auto",
+                    "textDecoration": "auto",
                     "visited": "#373838",
                   },
                   "optimizeSpeed": true,
@@ -2517,6 +2643,7 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
       "options": RedocNormalizedOptions {
         "allowedMdComponents": Object {},
         "disableSearch": false,
+        "disableUnsafeCalls": false,
         "downloadDefinitionUrl": undefined,
         "downloadFileName": undefined,
         "enumSkipQuotes": false,
@@ -2645,6 +2772,15 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
           "rightPanel": Object {
             "backgroundColor": "#FFFFFF",
             "border": "#FFFFFF",
+            "servers": Object {
+              "overlay": Object {
+                "backgroundColor": "#fafafa",
+                "textColor": "#263238",
+              },
+              "url": Object {
+                "backgroundColor": "#fff",
+              },
+            },
             "textColor": "#373838",
             "width": "43.75%",
           },
@@ -2673,11 +2809,13 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "backgroundColor": "#f7f7f7",
             "fontWeight": "600",
             "groupItems": Object {
-              "activeBackgroundColor": "#e1e1e1",
-              "activeTextColor": "#32329f",
+              "activeBackgroundColor": "#dedede",
+              "activeTextColor": "#4e4e4e",
               "textTransform": "uppercase",
             },
             "level1Items": Object {
+              "activeBackgroundColor": "#eaeaea",
+              "activeTextColor": "#4e4e4e",
               "fontWeight": "900",
               "textTransform": "none",
             },
@@ -2717,6 +2855,8 @@ exports[`Components SchemaView discriminator should correctly render SchemaView 
             "links": Object {
               "color": "#373838",
               "hover": "#6a6b6b",
+              "hoverTextDecoration": "auto",
+              "textDecoration": "auto",
               "visited": "#373838",
             },
             "optimizeSpeed": true,

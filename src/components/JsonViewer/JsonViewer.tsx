@@ -157,6 +157,9 @@ class Json extends React.PureComponent<JsonProps> {
   }
 
   render() {
+    const { data } = this.props;
+    const showFoldingButtons =
+      data && Object.values(data).some(value => typeof value === 'object' && value !== null);
     return (
       <CopyButtonWrapper data={this.props.data.content || this.props.data}>
         {({ renderCopyButton }) => (
@@ -164,8 +167,12 @@ class Json extends React.PureComponent<JsonProps> {
             {!this.props.hideButtons && !this.props.error && (
               <SampleControls>
                 {renderCopyButton()}
-                {<button onClick={this.expandAll}> Expand all </button>}
-                {<button onClick={this.collapseAll}> Collapse all </button>}
+                {showFoldingButtons && (
+                  <>
+                    <button onClick={this.expandAll}> Expand all </button>
+                    <button onClick={this.collapseAll}> Collapse all </button>
+                  </>
+                )}
               </SampleControls>
             )}
             <>

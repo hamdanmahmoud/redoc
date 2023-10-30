@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { RightPanel, MiddlePanel, MimeLabel, Row, Section } from '../../common-elements';
-import { MediaTypeModel, OpenAPIParser, RedocNormalizedOptions } from '../../services';
+import { OpenAPIParser, RedocNormalizedOptions } from '../../services';
+import { MediaTypeModel } from '../../services/models';
 import styled from '../../styled-components';
 import { OpenAPIMediaType } from '../../types';
 import { DropdownOrLabel } from '../DropdownOrLabel/DropdownOrLabel';

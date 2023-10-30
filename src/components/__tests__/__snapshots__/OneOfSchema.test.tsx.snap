@@ -3,27 +3,27 @@
 exports[`Components SchemaView OneOf deprecated should match snapshot 1`] = `
 <div>
   <span
-    class="sc-fUnMCh hPwMmL"
+    class="sc-gFqAkR kuMzrK"
   >
      One of 
   </span>
   <div
-    class="sc-feUZmu bTropM"
+    class="sc-fPXMVe itTKpk"
   >
     <button
-      class="sc-hzhJZQ ilKqWS"
+      class="sc-ikkxIA kuVwkF"
     >
       string
     </button>
     <button
-      class="sc-hzhJZQ emRRrf"
+      class="sc-ikkxIA cEqWki"
     >
       integer
     </button>
   </div>
   <div>
     <span
-      class="sc-jEACwC gWyYnj"
+      class="sc-kpDqfm cliRNV"
       type="warning"
     >
       Deprecated
@@ -33,10 +33,10 @@ exports[`Components SchemaView OneOf deprecated should match snapshot 1`] = `
     <div>
       <div>
         <span
-          class="sc-Nxspf sc-cfxfcM cXxAXt jrGEaR"
+          class="sc-hknOHE sc-uVWWZ lgOCmT kSEYXZ"
         />
         <span
-          class="sc-Nxspf sc-gFAWRd cXxAXt dYzdDr"
+          class="sc-hknOHE sc-hCPjZK lgOCmT gRpOTr"
         >
           string
         </span>
@@ -44,7 +44,7 @@ exports[`Components SchemaView OneOf deprecated should match snapshot 1`] = `
        
       <div>
         <div
-          class="sc-eeDRCY sc-eBMEME gTGgei fbXBig"
+          class="sc-fHjqPf sc-kOHTFB izoHQx imYYjj"
         />
       </div>
     </div>
