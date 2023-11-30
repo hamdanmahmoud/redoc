@@ -19,7 +19,7 @@ const appendPathParamsToPath = (path: string, pathParams: Record<string, string>
  * ]
  * becomes "a=b&c=d"
  */
-const entriesToQueryString = (entries): string => {
+export const entriesToQueryString = (entries): string => {
   let queryString = '';
   for (let i = 0; i < entries.length; i++) {
     const [key, value] = entries[i];

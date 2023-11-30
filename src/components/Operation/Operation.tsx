@@ -15,7 +15,12 @@ import {
 } from '../../common-elements';
 import { OperationModel } from '../../services/models';
 import styled from '../../styled-components';
-import { appendParamsToPath, mapStatusCodeToType, setCookieParams } from '../../utils/tryout';
+import {
+  appendParamsToPath,
+  entriesToQueryString,
+  mapStatusCodeToType,
+  setCookieParams,
+} from '../../utils/tryout';
 import { CallbacksList } from '../Callbacks';
 import { Endpoint } from '../Endpoint/Endpoint';
 import { ExternalDocumentation } from '../ExternalDocumentation/ExternalDocumentation';
@@ -76,7 +81,13 @@ export class Operation extends React.Component<OperationProps, OperationState> {
    * defines param location as being one of 'path', 'query', 'cookie' or 'header', while
    * fetch API defines request as having RequestInit type, which has 'headers' as a member field
    */
-  handleApiCall = ({ queryParams, pathParams, cookieParams, header: headers, body }: Request) => {
+  handleApiCall = ({
+    queryParams,
+    pathParams,
+    cookieParams,
+    header: headers,
+    body = null,
+  }: Request) => {
     const {
       operation: { httpVerb, path, requestBody },
     } = this.props;
@@ -84,7 +95,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
     const requestBodyContent = requestBody?.content;
     const activeMimeIdx = requestBodyContent?.activeMimeIdx;
     const contentType =
-      activeMimeIdx !== undefined && requestBodyContent?.mediaTypes[activeMimeIdx]?.name;
+      activeMimeIdx === undefined ? undefined : requestBodyContent?.mediaTypes[activeMimeIdx]?.name;
 
     const isFormData = contentType === 'multipart/form-data';
 
@@ -92,9 +103,14 @@ export class Operation extends React.Component<OperationProps, OperationState> {
       headers = { 'Content-Type': contentType || 'application/json', ...headers };
     }
 
-    const formData = new FormData();
-    if (isFormData && body && typeof body === 'object') {
-      Object.entries(body as any).forEach(([key, value]) => {
+    const getFormDataWithObjectEntriesAppended = (
+      object: Record<string, any>,
+      formData: FormData,
+    ) => {
+      if (!object || typeof object !== 'object' || !formData) {
+        return formData;
+      }
+      Object.entries(object as any).forEach(([key, value]) => {
         const isFileValue = (value as any) instanceof File;
         const isJsonValue = !isFileValue && typeof value === 'object' && value !== null;
         formData.append(
@@ -102,7 +118,33 @@ export class Operation extends React.Component<OperationProps, OperationState> {
           isFileValue ? (value as any) : isJsonValue ? JSON.stringify(value)! : value,
         );
       });
-    }
+      return formData;
+    };
+
+    const getFormDataFromObject = (object: Record<string, any>) => {
+      const formData = new FormData();
+      return getFormDataWithObjectEntriesAppended(object, formData);
+    };
+
+    const getQueryStringFromObject = (object: Record<string, any>) => {
+      const entries = Object.entries(object as any);
+      return entriesToQueryString(entries);
+    };
+
+    const getBodyByContentType = (body: BodyInit | null, contentType: string | undefined): any => {
+      if (typeof body === 'string' || body === null) {
+        return body;
+      }
+      const isFormData = contentType === 'multipart/form-data';
+      const isEncodedFormContent = contentType === 'application/x-www-form-urlencoded';
+      if (isFormData) {
+        return getFormDataFromObject(body);
+      }
+      if (isEncodedFormContent) {
+        return getQueryStringFromObject(body);
+      }
+      return JSON.stringify(body);
+    };
 
     const request: RequestInit =
       Object.values(NoRequestBodyHttpVerb)
@@ -115,7 +157,7 @@ export class Operation extends React.Component<OperationProps, OperationState> {
         : {
             method: httpVerb,
             headers,
-            body: typeof body === 'string' ? body : isFormData ? formData : JSON.stringify(body),
+            body: getBodyByContentType(body, contentType),
           };
 
     setCookieParams(cookieParams);

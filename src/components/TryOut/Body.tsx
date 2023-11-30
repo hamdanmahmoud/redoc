@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { toLower } from 'lodash';
 
 import { RequestBodyModel } from '../../services';
 import { JsonViewer } from '../JsonViewer/JsonViewer';
@@ -35,6 +36,9 @@ export const Body = ({
   requestPayload,
 }: BodyProps) => {
   if (!specBody) return null;
+  const contentType = toLower(specBody?.content?.active?.name);
+  const FORM_DATA_CONTENT_TYPES = ['multipart/form-data', 'application/x-www-form-urlencoded'];
+  const shouldEnableJsonOption = !FORM_DATA_CONTENT_TYPES.includes(contentType);
 
   return (
     <>
@@ -49,7 +53,7 @@ export const Body = ({
           cursor={'pointer'}
           onChange={({ target: { value } }) => setIsFormData(value === 'form-data')}
         >
-          <option value="raw-json">JSON</option>
+          {shouldEnableJsonOption && <option value="raw-json">JSON</option>}
           <option value="form-data">Form</option>
         </Dropdown>
       </SectionHeader>
