@@ -65,7 +65,12 @@ export const TryOut = observer(
       header: {},
       body: getInitialBodyByOperation(operation),
     });
-    const [isFormData, setIsFormData] = React.useState(false);
+
+    const contentType = toLower(operation?.requestBody?.content?.active?.name);
+    const isFormDataContent = contentType === 'multipart/form-data';
+    const isEncodedFormContent = contentType === 'application/x-www-form-urlencoded';
+
+    const [isFormData, setIsFormData] = React.useState(isFormDataContent || isEncodedFormContent);
     const [error, setError] = React.useState(undefined);
     const [showError, setShowError] = React.useState(false);
     const [requiredFields, setRequiredFields] = React.useState<RequiredField[]>(
@@ -304,11 +309,7 @@ export const TryOut = observer(
     const pathParams = operation.parameters?.filter(param => param.in === 'path');
     const cookieParams = operation.parameters?.filter(param => param.in === 'cookie');
 
-    const contentType = toLower(operation?.requestBody?.content?.active?.name);
     const isJsonContent = contentType === 'application/json';
-    const isFormDataContent = contentType === 'multipart/form-data';
-    const isEncodedFormContent = contentType === 'application/x-www-form-urlencoded';
-
     const schemaType = operation.requestBody?.content?.mediaTypes[0]?.schema?.type;
 
     const onHeaderChange = (fieldName, value, arrayIndex, ancestors, location) =>
