@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
+import { last } from 'lodash';
 
 import {
   Badge,
@@ -121,9 +122,29 @@ export class Operation extends React.Component<OperationProps, OperationState> {
 
     this.setState({ pendingRequest: true });
     fetch(`${appendParamsToPath(path, pathParams, queryParams)}`, request)
-      .then((response: any) => {
+      .then(async (response: any) => {
         const statusCode = response.status;
+        const statusType = mapStatusCodeToType(statusCode);
+        const isError = statusType === 'error';
         const contentType = response.headers.get('content-type');
+
+        if (contentType?.indexOf('application/zip') !== -1 && !isError) {
+          const slug = last(path?.split('/') || []);
+          const fileName = slug || 'file';
+          const bytes = await response.blob();
+          const temporaryAnchor = document.createElement('a');
+          temporaryAnchor.href = URL.createObjectURL(bytes);
+          temporaryAnchor.setAttribute('download', fileName);
+          temporaryAnchor.click();
+          this.setState({
+            response: {
+              type: mapStatusCodeToType(statusCode),
+              code: statusCode || 0,
+              content: '',
+            },
+          });
+          return;
+        }
 
         response.text().then(data => {
           let content = data;
