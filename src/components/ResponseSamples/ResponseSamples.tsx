@@ -25,7 +25,7 @@ export class ResponseSamples extends React.Component<ResponseSamplesProps> {
       return response.content && response.content.hasSample;
     });
     const hasResponseSamples = responses && responses.length > 0;
-    const content = customResponse?.content;
+    const { content, format } = customResponse || {};
     const contentLength = content?.length || JSON.stringify(content)?.length || 0;
     const reachedMaxPayloadLength = contentLength > MAX_CONTENT_LENGTH;
 
@@ -36,7 +36,7 @@ export class ResponseSamples extends React.Component<ResponseSamplesProps> {
             <RightPanelHeader> {l('response')} </RightPanelHeader>
             <div>
               {reachedMaxPayloadLength ? (
-                <DownloadResponse operation={operation} content={content} />
+                <DownloadResponse operation={operation} content={content} format={format} />
               ) : (
                 <PayloadSamples customData={customResponse} />
               )}
